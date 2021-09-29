@@ -14,17 +14,27 @@ namespace DAL
 
         public DbSet<Author> Authors { get; set; }
 
-        public DbSet<BookTemplate> Books { get; set; }
+        public DbSet<BookTemplate> BookTemplates { get; set; }
 
-        public DbSet<EReader> EReaders { get; set; }
-
-        public DbSet<Reservation> Reservations { get; set; }
-
-        public DbSet<Review> Reviews { get; set; }
+        public DbSet<BookInstance> BookInstances { get; set; }
 
         public DbSet<BookCollection> BookCollections { get; set; }
 
+        public DbSet<Review> Reviews { get; set; }
+
         public DbSet<Genre> Genres { get; set; }
+
+        public DbSet<EBookTemplate> EBookTemplates { get; set; }
+
+        public DbSet<EBookInstance> EBookInstances { get; set; }
+
+        public DbSet<Reservation> Reservations { get; set; }
+
+        public DbSet<EReaderTemplate> EReaderTemplates { get; set; }
+
+        public DbSet<EReaderInstance> EReaderInstances { get; set; }
+
+
 
         private string ConnectionString = "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=BookReservation";
 

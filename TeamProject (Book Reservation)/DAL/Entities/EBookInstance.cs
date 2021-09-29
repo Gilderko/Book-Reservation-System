@@ -17,6 +17,6 @@ namespace DAL.Entities
         public int EReaderID { get; set; }
 
         [ForeignKey(nameof(EReaderID))]
-        public EReader EReaderPlace { get; set; }
+        public EReaderInstance EReaderPlace { get; set; }
     }
 }

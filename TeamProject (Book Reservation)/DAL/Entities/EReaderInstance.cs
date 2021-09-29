@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
-    public class EReader : BaseEntity
+    public class EReaderInstance : BaseEntity
     {
-        [MaxLength(64)]
-        public string Model { get; set; }
+        public int EReaderTemplateID { get; set; }
 
-        public int MemoryInMB { get; set; }
+        [ForeignKey(nameof(EReaderTemplateID))]
+        public EReaderTemplate EReaderTemplate { get; set; }
 
         public ICollection<EBookInstance> BooksIncluded { get; set; }
     }
