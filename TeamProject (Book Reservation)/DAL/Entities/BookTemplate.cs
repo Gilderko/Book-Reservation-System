@@ -13,7 +13,7 @@ namespace DAL.Entities
         [MaxLength(64)]
         public string Title { get; set; }
 
-        [MaxLength(256)]
+        [MaxLength(1024)]
         public string Description { get; set; }
 
         [MaxLength(255)]
@@ -34,5 +34,7 @@ namespace DAL.Entities
         public ICollection<BookInstance> BookInstances { get; set; }
 
         public ICollection<BookCollection> BookCollection { get; set; }
+
+        public ICollection<Review> Reviews { get; set; }
     }
 }

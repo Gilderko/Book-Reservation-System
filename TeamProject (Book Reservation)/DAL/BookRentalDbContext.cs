@@ -54,7 +54,9 @@ namespace DAL
                 // Conversion to provider
                 genreID => (int) genreID,
                 // Conversion from provider
-                genreID => (GenreType) genreID);           
+                genreID => (GenreType) genreID);
+
+            modelBuilder.Seed();
 
             base.OnModelCreating(modelBuilder);
         }

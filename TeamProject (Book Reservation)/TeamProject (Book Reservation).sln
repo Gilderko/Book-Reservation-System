@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamProject (Book Reservation)", "TeamProject (Book Reservation)\TeamProject (Book Reservation).csproj", "{AB001715-420D-4772-80F4-647E9EAC67CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamProject (Book Reservation)", "TeamProject (Book Reservation)\TeamProject (Book Reservation).csproj", "{AB001715-420D-4772-80F4-647E9EAC67CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{389047D0-57C5-465A-92AD-C5065654681A} = {389047D0-57C5-465A-92AD-C5065654681A}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{389047D0-57C5-465A-92AD-C5065654681A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{389047D0-57C5-465A-92AD-C5065654681A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
