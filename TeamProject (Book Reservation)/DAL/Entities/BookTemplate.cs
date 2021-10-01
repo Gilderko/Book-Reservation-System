@@ -13,7 +13,7 @@ namespace DAL.Entities
         [MaxLength(64)]
         public string Title { get; set; }
 
-        [MaxLength(512)]
+        [MaxLength(1024)]
         public string Description { get; set; }
 
         [MaxLength(255)]

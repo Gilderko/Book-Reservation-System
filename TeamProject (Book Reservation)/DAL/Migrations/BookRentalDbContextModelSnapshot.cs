@@ -32,6 +32,53 @@ namespace DAL.Migrations
                     b.HasIndex("AuthorsId");
 
                     b.ToTable("AuthorBookTemplate");
+
+                    b.HasData(
+                        new
+                        {
+                            AuthorsBooksId = 1,
+                            AuthorsId = 2
+                        },
+                        new
+                        {
+                            AuthorsBooksId = 2,
+                            AuthorsId = 1
+                        },
+                        new
+                        {
+                            AuthorsBooksId = 3,
+                            AuthorsId = 1
+                        },
+                        new
+                        {
+                            AuthorsBooksId = 4,
+                            AuthorsId = 9
+                        },
+                        new
+                        {
+                            AuthorsBooksId = 5,
+                            AuthorsId = 12
+                        },
+                        new
+                        {
+                            AuthorsBooksId = 6,
+                            AuthorsId = 11
+                        },
+                        new
+                        {
+                            AuthorsBooksId = 7,
+                            AuthorsId = 10
+                        },
+                        new
+                        {
+                            AuthorsBooksId = 8,
+                            AuthorsId = 6
+                        },
+                        new
+                        {
+                            AuthorsBooksId = 9,
+                            AuthorsId = 1
+                        });
                 });
 
             modelBuilder.Entity("BookCollectionBookTemplate", b =>
@@ -47,6 +94,23 @@ namespace DAL.Migrations
                     b.HasIndex("BooksId");
 
                     b.ToTable("BookCollectionBookTemplate");
+
+                    b.HasData(
+                        new
+                        {
+                            BookCollectionId = 1,
+                            BooksId = 1
+                        },
+                        new
+                        {
+                            BookCollectionId = 1,
+                            BooksId = 2
+                        },
+                        new
+                        {
+                            BookCollectionId = 1,
+                            BooksId = 3
+                        });
                 });
 
             modelBuilder.Entity("BookTemplateGenre", b =>
@@ -62,6 +126,53 @@ namespace DAL.Migrations
                     b.HasIndex("GenresGenreID");
 
                     b.ToTable("BookTemplateGenre");
+
+                    b.HasData(
+                        new
+                        {
+                            BooksId = 1,
+                            GenresGenreID = 6
+                        },
+                        new
+                        {
+                            BooksId = 2,
+                            GenresGenreID = 6
+                        },
+                        new
+                        {
+                            BooksId = 3,
+                            GenresGenreID = 6
+                        },
+                        new
+                        {
+                            BooksId = 4,
+                            GenresGenreID = 0
+                        },
+                        new
+                        {
+                            BooksId = 5,
+                            GenresGenreID = 1
+                        },
+                        new
+                        {
+                            BooksId = 6,
+                            GenresGenreID = 2
+                        },
+                        new
+                        {
+                            BooksId = 7,
+                            GenresGenreID = 1
+                        },
+                        new
+                        {
+                            BooksId = 8,
+                            GenresGenreID = 4
+                        },
+                        new
+                        {
+                            BooksId = 9,
+                            GenresGenreID = 6
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.Author", b =>
@@ -72,8 +183,8 @@ namespace DAL.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(32)
@@ -143,6 +254,34 @@ namespace DAL.Migrations
                             Description = "Edgar Allan Poe (born Edgar Poe; January 19, 1809 – October 7, 1849) was an American writer, poet, editor, and literary critic. Poe is best known for his poetry and short stories, particularly his tales of mystery and the macabre. ",
                             Name = "Edgar Allan",
                             Surname = "Poe"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Douglas Noël Adams was an English author, comic radio dramatist, and musician. He is best known as the author of the Hitchhiker's Guide to the Galaxy series. Hitchhiker's began on radio, and developed into a trilogy of five books (which sold more than fifteen million copies during his lifetime) as well as a television series, a comic book series, a computer game, and a feature film that was completed after Adams' death. The series has also been adapted for live theatre using various scripts; the earliest such productions used material newly written by Adams. He was known to some fans as Bop Ad (after his illegible signature), or by his initials \"DNA\".",
+                            Name = "Douglas",
+                            Surname = "Adams"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Eric Arthur Blair, better known by his pen name George Orwell, was an English author and journalist. His work is marked by keen intelligence and wit, a profound awareness of social injustice, an intense opposition to totalitarianism, a passion for clarity in language, and a belief in democratic socialism.",
+                            Name = "George",
+                            Surname = "Orwell"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Dan Brown is the author of numerous #1 bestselling novels, including The Da Vinci Code, which has become one of the best selling novels of all time as well as the subject of intellectual debate among readers and scholars. Brown’s novels are published in 52 languages around the world with 200 million copies in print.",
+                            Name = "Dan",
+                            Surname = "Brown"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Antoine de Saint-Exupéry was born in Lyons on June 29, 1900. He flew for the first time at the age of twelve, at the Ambérieu airfield, and it was then that he became determined to be a pilot. He kept that ambition even after moving to a school in Switzerland and while spending summer vacations at the family's château at Saint-Maurice-de-Rémens, in eastern France. (The house at Saint-Maurice appears again and again in Saint-Exupéry's writing.)",
+                            Name = "Antoine",
+                            Surname = "de Saint-Exupéry"
                         });
                 });
 
@@ -209,12 +348,37 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 2,
-                            BookTemplateID = 1
+                            BookTemplateID = 2
                         },
                         new
                         {
                             Id = 3,
-                            BookTemplateID = 1
+                            BookTemplateID = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BookTemplateID = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BookTemplateID = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BookTemplateID = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BookTemplateID = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BookTemplateID = 8
                         });
                 });
 
@@ -229,8 +393,8 @@ namespace DAL.Migrations
                         .HasColumnType("Date");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -286,6 +450,56 @@ namespace DAL.Migrations
                             Language = 0,
                             PageCount = 160,
                             Title = "Romeo and Juliet"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DateOfRelease = new DateTime(2007, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.",
+                            ISBN = "9780671461492",
+                            Language = 0,
+                            PageCount = 193,
+                            Title = "The Hitchhiker's Guide to the Galaxy"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DateOfRelease = new DateTime(1943, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A pilot stranded in the desert awakes one morning to see, standing before him, the most extraordinary little fellow. \"Please,\" asks the stranger, \"draw me a sheep.\" And the pilot realizes that when life's events are too difficult to understand, there is no choice but to succumb to their mysteries. He pulls out pencil and paper... And thus begins this wise and enchanting fable that, in teaching the secret of what is really important in life, has changed forever the world for its readers.",
+                            ISBN = "9783140464079",
+                            Language = 0,
+                            PageCount = 96,
+                            Title = "The Little Prince"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DateOfRelease = new DateTime(2006, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "While in Paris, Harvard symbologist Robert Langdon is awakened by a phone call in the dead of the night. The elderly curator of the Louvre has been murdered inside the museum, his body covered in baffling symbols. As Langdon and gifted French cryptologist Sophie Neveu sort through the bizarre riddles, they are stunned to discover a trail of clues hidden in the works of Leonardo da Vinci—clues visible for all to see and yet ingeniously disguised by the painter.",
+                            ISBN = "9780307277671 ",
+                            Language = 0,
+                            PageCount = 489,
+                            Title = "The Da Vinci Code"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DateOfRelease = new DateTime(1945, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A farm is taken over by its overworked, mistreated animals. With flaming idealism and stirring slogans, they set out to create a paradise of progress, justice, and equality. Thus the stage is set for one of the most telling satiric fables ever penned –a razor-edged fairy tale for grown-ups that records the evolution from revolution against tyranny to a totalitarianism just as terrible. When Animal Farm was first published, Stalinist Russia was seen as its target. Today it is devastatingly clear that wherever and whenever freedom is attacked,under whatever banner,the cutting clarity and savage comedy of George Orwell’s masterpiece have a meaning and message still ferociously fresh.",
+                            ISBN = "9780451526342",
+                            Language = 0,
+                            PageCount = 141,
+                            Title = "Animal Farm"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            DateOfRelease = new DateTime(1813, 1, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Since its immediate success in 1813, Pride and Prejudice has remained one of the most popular novels in the English language. Jane Austen called this brilliant work \"her own darling child\" and its vivacious heroine, Elizabeth Bennet, \" as delightful a creature as ever appeared in print.\" The romantic clash between the opinionated Elizabeth and her proud beau, Mr. Darcy, is a splendid performance of civilized sparring. And Jane Austen's radiant wit sparkles as her characters dance a delicate quadrille of flirtation and intrigue, making this book the most superb comedy of manners of Regency England.",
+                            ISBN = "9780679783268",
+                            Language = 0,
+                            PageCount = 279,
+                            Title = "Pride and Prejudice"
                         });
                 });
 
@@ -314,13 +528,13 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            EBookTemplateID = 4,
+                            EBookTemplateID = 9,
                             EReaderID = 1
                         },
                         new
                         {
                             Id = 2,
-                            EBookTemplateID = 4,
+                            EBookTemplateID = 9,
                             EReaderID = 1
                         });
                 });
@@ -422,6 +636,22 @@ namespace DAL.Migrations
                         new
                         {
                             GenreID = 4
+                        },
+                        new
+                        {
+                            GenreID = 6
+                        },
+                        new
+                        {
+                            GenreID = 1
+                        },
+                        new
+                        {
+                            GenreID = 3
+                        },
+                        new
+                        {
+                            GenreID = 0
                         });
                 });
 
@@ -497,6 +727,46 @@ namespace DAL.Migrations
                             DateFrom = new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateTill = new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserID = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BookInstanceID = 5,
+                            DateFrom = new DateTime(2021, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTill = new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserID = 4
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BookInstanceID = 3,
+                            DateFrom = new DateTime(2021, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTill = new DateTime(2021, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserID = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BookInstanceID = 7,
+                            DateFrom = new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTill = new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserID = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BookInstanceID = 8,
+                            DateFrom = new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTill = new DateTime(2021, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserID = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            DateFrom = new DateTime(2021, 7, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTill = new DateTime(2021, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EReaderID = 1,
+                            UserID = 4
                         });
                 });
 
@@ -548,7 +818,7 @@ namespace DAL.Migrations
                             Content = "Great!!",
                             CreationDate = new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StarsAmmount = 5,
-                            UserID = 1
+                            UserID = 2
                         },
                         new
                         {
@@ -557,7 +827,16 @@ namespace DAL.Migrations
                             Content = "huh",
                             CreationDate = new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StarsAmmount = 1,
-                            UserID = 1
+                            UserID = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BookTemplateID = 8,
+                            Content = "Changed my life",
+                            CreationDate = new DateTime(2021, 7, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StarsAmmount = 5,
+                            UserID = 4
                         });
                 });
 
@@ -618,6 +897,24 @@ namespace DAL.Migrations
                             IsAdmin = false,
                             Name = "Eve",
                             Surname = "Third"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Email = "jack@gmail.com",
+                            HashedPassword = "",
+                            IsAdmin = false,
+                            Name = "Jack",
+                            Surname = "Fourth"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Email = "malory@gmail.com",
+                            HashedPassword = "",
+                            IsAdmin = false,
+                            Name = "Malory",
+                            Surname = "Fifth"
                         });
                 });
 
@@ -636,7 +933,7 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 4,
+                            Id = 9,
                             DateOfRelease = new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.",
                             ISBN = "9780141920252",

@@ -15,7 +15,7 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
                     Surname = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,7 +29,7 @@ namespace DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true),
                     ISBN = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     PageCount = table.Column<int>(type: "int", nullable: false),
                     DateOfRelease = table.Column<DateTime>(type: "Date", nullable: false),
@@ -257,9 +257,9 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateFrom = table.Column<DateTime>(type: "Date", nullable: false),
                     DateTill = table.Column<DateTime>(type: "Date", nullable: false),
-                    BookInstanceID = table.Column<int>(type: "int", nullable: false),
+                    BookInstanceID = table.Column<int>(type: "int", nullable: true),
                     UserID = table.Column<int>(type: "int", nullable: false),
-                    ERedeaderID = table.Column<int>(type: "int", nullable: false)
+                    EReaderID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -269,13 +269,13 @@ namespace DAL.Migrations
                         column: x => x.BookInstanceID,
                         principalTable: "BookInstances",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reservations_EReaderInstances_ERedeaderID",
-                        column: x => x.ERedeaderID,
+                        name: "FK_Reservations_EReaderInstances_EReaderID",
+                        column: x => x.EReaderID,
                         principalTable: "EReaderInstances",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reservations_Users_UserID",
                         column: x => x.UserID,
@@ -306,6 +306,189 @@ namespace DAL.Migrations
                         principalTable: "BookTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Authors",
+                columns: new[] { "Id", "Description", "Name", "Surname" },
+                values: new object[,]
+                {
+                    { 1, "William Shakespeare was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language and the world's greatest dramatist.", "William", "Shakespeare" },
+                    { 2, "Mary Wollstonecraft Shelley (30 August 1797 – 1 February 1851) was an English novelist who wrote the Gothic novel Frankenstein; or, The Modern Prometheus (1818), which is considered an early example of science fiction.", "Mary", "Shelley" },
+                    { 3, "Charlotte Brontë (21 April 1816 – 31 March 1855) was an English novelist and poet, the eldest of the three Brontë sisters who survived into adulthood and whose novels became classics of English literature.", "Charlotte", "Brontë" },
+                    { 4, "Emily Jane Brontë (30 July 1818 – 19 December 1848) was an English novelist and poet who is best known for her only novel, Wuthering Heights, now considered a classic of English literature.", "Emily", "Brontë" },
+                    { 5, "Jules Gabriel Verne (8 February 1828 – 24 March 1905) was a French novelist, poet, and playwright. His collaboration with the publisher Pierre-Jules Hetzel led to the creation of the Voyages extraordinaires, a series of bestselling adventure novels.", "Jules", "Verne" },
+                    { 6, "Jane Austen (16 December 1775 – 18 July 1817) was an English novelist known primarily for her six major novels, which interpret, critique and comment upon the British landed gentry at the end of the 18th century.", "Jane", "Austen" },
+                    { 7, "Charles John Huffam Dickens (7 February 1812 – 9 June 1870) was an English writer and social critic. He created some of the world's best-known fictional characters and is regarded by many as the greatest novelist of the Victorian era.", "Charles", "Dickens" },
+                    { 8, "Edgar Allan Poe (born Edgar Poe; January 19, 1809 – October 7, 1849) was an American writer, poet, editor, and literary critic. Poe is best known for his poetry and short stories, particularly his tales of mystery and the macabre. ", "Edgar Allan", "Poe" },
+                    { 9, "Douglas Noël Adams was an English author, comic radio dramatist, and musician. He is best known as the author of the Hitchhiker's Guide to the Galaxy series. Hitchhiker's began on radio, and developed into a trilogy of five books (which sold more than fifteen million copies during his lifetime) as well as a television series, a comic book series, a computer game, and a feature film that was completed after Adams' death. The series has also been adapted for live theatre using various scripts; the earliest such productions used material newly written by Adams. He was known to some fans as Bop Ad (after his illegible signature), or by his initials \"DNA\".", "Douglas", "Adams" },
+                    { 10, "Eric Arthur Blair, better known by his pen name George Orwell, was an English author and journalist. His work is marked by keen intelligence and wit, a profound awareness of social injustice, an intense opposition to totalitarianism, a passion for clarity in language, and a belief in democratic socialism.", "George", "Orwell" },
+                    { 11, "Dan Brown is the author of numerous #1 bestselling novels, including The Da Vinci Code, which has become one of the best selling novels of all time as well as the subject of intellectual debate among readers and scholars. Brown’s novels are published in 52 languages around the world with 200 million copies in print.", "Dan", "Brown" },
+                    { 12, "Antoine de Saint-Exupéry was born in Lyons on June 29, 1900. He flew for the first time at the age of twelve, at the Ambérieu airfield, and it was then that he became determined to be a pilot. He kept that ambition even after moving to a school in Switzerland and while spending summer vacations at the family's château at Saint-Maurice-de-Rémens, in eastern France. (The house at Saint-Maurice appears again and again in Saint-Exupéry's writing.)", "Antoine", "de Saint-Exupéry" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BookTemplates",
+                columns: new[] { "Id", "DateOfRelease", "Description", "Discriminator", "Format", "ISBN", "Language", "MemorySize", "PageCount", "Title" },
+                values: new object[] { 9, new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "EBookTemplate", 0, "9780141920252", 0, 1024, 320, "Romeo and Juliet" });
+
+            migrationBuilder.InsertData(
+                table: "BookTemplates",
+                columns: new[] { "Id", "DateOfRelease", "Description", "Discriminator", "ISBN", "Language", "PageCount", "Title" },
+                values: new object[,]
+                {
+                    { 8, new DateTime(1813, 1, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), "Since its immediate success in 1813, Pride and Prejudice has remained one of the most popular novels in the English language. Jane Austen called this brilliant work \"her own darling child\" and its vivacious heroine, Elizabeth Bennet, \" as delightful a creature as ever appeared in print.\" The romantic clash between the opinionated Elizabeth and her proud beau, Mr. Darcy, is a splendid performance of civilized sparring. And Jane Austen's radiant wit sparkles as her characters dance a delicate quadrille of flirtation and intrigue, making this book the most superb comedy of manners of Regency England.", "BookTemplate", "9780679783268", 0, 279, "Pride and Prejudice" },
+                    { 7, new DateTime(1945, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), "A farm is taken over by its overworked, mistreated animals. With flaming idealism and stirring slogans, they set out to create a paradise of progress, justice, and equality. Thus the stage is set for one of the most telling satiric fables ever penned –a razor-edged fairy tale for grown-ups that records the evolution from revolution against tyranny to a totalitarianism just as terrible. When Animal Farm was first published, Stalinist Russia was seen as its target. Today it is devastatingly clear that wherever and whenever freedom is attacked,under whatever banner,the cutting clarity and savage comedy of George Orwell’s masterpiece have a meaning and message still ferociously fresh.", "BookTemplate", "9780451526342", 0, 141, "Animal Farm" },
+                    { 5, new DateTime(1943, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), "A pilot stranded in the desert awakes one morning to see, standing before him, the most extraordinary little fellow. \"Please,\" asks the stranger, \"draw me a sheep.\" And the pilot realizes that when life's events are too difficult to understand, there is no choice but to succumb to their mysteries. He pulls out pencil and paper... And thus begins this wise and enchanting fable that, in teaching the secret of what is really important in life, has changed forever the world for its readers.", "BookTemplate", "9783140464079", 0, 96, "The Little Prince" },
+                    { 6, new DateTime(2006, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), "While in Paris, Harvard symbologist Robert Langdon is awakened by a phone call in the dead of the night. The elderly curator of the Louvre has been murdered inside the museum, his body covered in baffling symbols. As Langdon and gifted French cryptologist Sophie Neveu sort through the bizarre riddles, they are stunned to discover a trail of clues hidden in the works of Leonardo da Vinci—clues visible for all to see and yet ingeniously disguised by the painter.", "BookTemplate", "9780307277671 ", 0, 489, "The Da Vinci Code" },
+                    { 3, new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "BookTemplate", "9780007902361", 0, 160, "Romeo and Juliet" },
+                    { 2, new DateTime(1600, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Considered one of Shakespeare′s most rich and enduring plays, the depiction of its hero Hamlet as he vows to avenge the murder of his father by his brother Claudius is both powerful and complex. As Hamlet tries to find out the truth of the situation, his troubled relationship with his mother comes to the fore, as do the paradoxes in his personality. A play of carefully crafted conflict and tragedy, Shakespeare′s intricate dialogue continues to fascinate audiences to this day.", "BookTemplate", "9780007902347", 0, 192, "Hamlet" },
+                    { 1, new DateTime(1818, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Victor Frankenstein, a brilliant but wayward scientist, builds a human from dead flesh. Horrified at what he has done, he abandons his creation. The hideous creature learns language and becomes civilized but society rejects him. Spurned, he seeks vengeance on his creator. So begins a cycle of destruction, with Frankenstein and his 'monster' pursuing each other to the extremes of nature until all vestiges of their humanity are lost.", "BookTemplate", "9781509827756", 0, 280, "Frankenstein" },
+                    { 4, new DateTime(2007, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "BookTemplate", "9780671461492", 0, 193, "The Hitchhiker's Guide to the Galaxy" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EReaderTemplates",
+                columns: new[] { "Id", "CompanyMake", "MemoryInMB", "Model" },
+                values: new object[,]
+                {
+                    { 1, "PocketBook", 16000, "632 Touch HD 3" },
+                    { 2, "ONYX BOOX", 32000, "Nova 3" },
+                    { 3, "PocketBook", 32000, "1040 InkPad X" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Genres",
+                column: "GenreID",
+                values: new object[]
+                {
+                    4,
+                    2,
+                    6,
+                    1,
+                    3,
+                    0
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "HashedPassword", "IsAdmin", "Name", "Surname" },
+                values: new object[,]
+                {
+                    { 3, "evee@gmail.com", "", false, "Eve", "Third" },
+                    { 4, "jack@gmail.com", "", false, "Jack", "Fourth" },
+                    { 1, "alice@gmail.com", "", true, "Alice", "First" },
+                    { 2, "bob@gmail.com", "", false, "Bob", "Second" },
+                    { 5, "malory@gmail.com", "", false, "Malory", "Fifth" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AuthorBookTemplate",
+                columns: new[] { "AuthorsBooksId", "AuthorsId" },
+                values: new object[,]
+                {
+                    { 1, 2 },
+                    { 8, 6 },
+                    { 7, 10 },
+                    { 6, 11 },
+                    { 5, 12 },
+                    { 4, 9 },
+                    { 9, 1 },
+                    { 3, 1 },
+                    { 2, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BookCollections",
+                columns: new[] { "Id", "CreationDate", "Description", "Title", "UserId" },
+                values: new object[] { 1, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), "Just classics.", "Classics", 2 });
+
+            migrationBuilder.InsertData(
+                table: "BookInstances",
+                columns: new[] { "Id", "BookTemplateID" },
+                values: new object[,]
+                {
+                    { 4, 4 },
+                    { 5, 5 },
+                    { 2, 2 },
+                    { 6, 6 },
+                    { 7, 7 },
+                    { 1, 1 },
+                    { 8, 8 },
+                    { 3, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BookTemplateGenre",
+                columns: new[] { "BooksId", "GenresGenreID" },
+                values: new object[,]
+                {
+                    { 4, 0 },
+                    { 7, 1 },
+                    { 5, 1 },
+                    { 9, 6 },
+                    { 3, 6 },
+                    { 6, 2 },
+                    { 1, 6 },
+                    { 8, 4 },
+                    { 2, 6 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EReaderInstances",
+                columns: new[] { "Id", "EReaderTemplateID" },
+                values: new object[,]
+                {
+                    { 3, 2 },
+                    { 2, 1 },
+                    { 1, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Reviews",
+                columns: new[] { "Id", "BookTemplateID", "Content", "CreationDate", "StarsAmmount", "UserID" },
+                values: new object[,]
+                {
+                    { 1, 1, "Best", new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 1 },
+                    { 3, 1, "huh", new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 3 },
+                    { 2, 1, "Great!!", new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 2 },
+                    { 4, 8, "Changed my life", new DateTime(2021, 7, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BookCollectionBookTemplate",
+                columns: new[] { "BookCollectionId", "BooksId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 2 },
+                    { 1, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EBookInstances",
+                columns: new[] { "Id", "EBookTemplateID", "EReaderID" },
+                values: new object[,]
+                {
+                    { 1, 9, 1 },
+                    { 2, 9, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Reservations",
+                columns: new[] { "Id", "BookInstanceID", "DateFrom", "DateTill", "EReaderID", "UserID" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
+                    { 4, 1, new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
+                    { 2, 2, new DateTime(2021, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
+                    { 5, 2, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
+                    { 3, 3, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
+                    { 7, 3, new DateTime(2021, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3 },
+                    { 6, 5, new DateTime(2021, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4 },
+                    { 8, 7, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
+                    { 9, 8, new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
+                    { 10, null, new DateTime(2021, 7, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -354,9 +537,9 @@ namespace DAL.Migrations
                 column: "BookInstanceID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_ERedeaderID",
+                name: "IX_Reservations_EReaderID",
                 table: "Reservations",
-                column: "ERedeaderID");
+                column: "EReaderID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_UserID",

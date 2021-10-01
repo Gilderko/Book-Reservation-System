@@ -21,6 +21,6 @@ namespace DAL.Entities
     /// </summary>
     public enum GenreType
     {
-        Scifi, Fantasy, Detective, Medieval, Lovestory, Gonesexual
+        Scifi, Fantasy, Detective, Medieval, Lovestory, Historical, Classic
     }
 }
