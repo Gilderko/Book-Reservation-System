@@ -16,7 +16,7 @@ namespace DAL.Entities
         [MaxLength(32)]
         public string Surname { get; set; }
 
-        [MaxLength(256)]
+        [MaxLength(512)]
         public string Description { get; set; }
 
         public ICollection<BookTemplate> AuthorsBooks { get; set; }

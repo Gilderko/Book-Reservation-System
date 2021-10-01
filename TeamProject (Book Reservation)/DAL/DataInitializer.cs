@@ -50,10 +50,7 @@ namespace DAL
                     Surname = "Verne", 
                     Description = "Jules Gabriel Verne (8 February 1828 – 24 March 1905) was a French novelist, poet, " +
                     "and playwright. His collaboration with the publisher Pierre-Jules Hetzel led to the creation of " +
-                    "the Voyages extraordinaires,[3] a series of bestselling adventure novels including Journey to " +
-                    "the Center of the Earth (1864), Twenty Thousand Leagues Under the Seas (1870), and Around the World " +
-                    "in Eighty Days (1872). His novels, always very well documented, are generally set in the second half " +
-                    "of the 19th century, taking into account the technological advances of the time." 
+                    "the Voyages extraordinaires, a series of bestselling adventure novels." 
                 },
                 new Author
                 { 
@@ -101,6 +98,15 @@ namespace DAL
                     Surname = "Second", 
                     Email = "bob@gmail.com", 
                     HashedPassword = "", 
+                    IsAdmin = false
+                },
+                new User
+                {
+                    Id = 3,
+                    Name = "Eve",
+                    Surname = "Third",
+                    Email = "evee@gmail.com",
+                    HashedPassword = "",
                     IsAdmin = false
                 }
             );
@@ -161,7 +167,7 @@ namespace DAL
                 },
                 new BookInstance
                 {
-                    Id = 1,
+                    Id = 3,
                     BookTemplateID = 1
                 }
             );
@@ -181,19 +187,40 @@ namespace DAL
                 new Review 
                 { 
                     Id = 1, 
-                    CreationDate = new DateTime(2021, 9, 30),
+                    CreationDate = new DateTime(2021, 2, 28),
                     Content = "Best",
                     StarsAmmount = 5,
                     BookTemplateID = 1,
-                    UserID = 2
+                    UserID = 1
+                },
+                new Review
+                {
+                    Id = 2,
+                    CreationDate = new DateTime(2021, 3, 8),
+                    Content = "Great!!",
+                    StarsAmmount = 5,
+                    BookTemplateID = 1,
+                    UserID = 1
+                },
+                new Review
+                {
+                    Id = 3,
+                    CreationDate = new DateTime(2021, 10, 30),
+                    Content = "huh",
+                    StarsAmmount = 1,
+                    BookTemplateID = 1,
+                    UserID = 1
                 }
             );
 
             modelBuilder.Entity<Genre>().HasData(
                 new Genre 
                 { 
-                    GenreID = GenreType.Detective, 
-                    Books = new List<BookTemplate>() { } 
+                    GenreID = GenreType.Detective
+                },
+                new Genre
+                {
+                    GenreID = GenreType.Lovestory
                 }
             );
 
@@ -213,34 +240,106 @@ namespace DAL
                     Format = EBookFormat.EPUB
                 }
             );
-
-            modelBuilder.Entity<EBookInstance>().HasData(
-                new EBookInstance 
-                { 
-                    Id = 1, 
-                    EBookTemplateID = 4
+            
+            modelBuilder.Entity<Reservation>().HasData(
+                new Reservation
+                {
+                    Id = 1,
+                    DateFrom = new DateTime(2021, 1, 30),
+                    DateTill = new DateTime(2021, 2, 28),
+                    BookInstanceID = 1,
+                    UserID = 1
                 },
-                new EBookInstance
+                new Reservation
                 {
                     Id = 2,
-                    EBookTemplateID = 4
-                }
-            );
-
-            modelBuilder.Entity<Reservation>().HasData(
+                    DateFrom = new DateTime(2021, 3, 1),
+                    DateTill = new DateTime(2021, 3, 8),
+                    BookInstanceID = 2,
+                    UserID = 1
+                },
                 new Reservation 
                 { 
-                    Id = 1, 
+                    Id = 3, 
                     DateFrom = new DateTime(2021, 9, 30), 
                     DateTill = new DateTime(2021, 10, 30),
+                    BookInstanceID = 3,
+                    UserID = 1
+                },
+                new Reservation
+                {
+                    Id = 4,
+                    DateFrom = new DateTime(2021, 10, 30),
+                    DateTill = new DateTime(2021, 11, 30),
                     BookInstanceID = 1,
+                    UserID = 2
+                },
+                new Reservation
+                {
+                    Id = 5,
+                    DateFrom = new DateTime(2021, 9, 30),
+                    DateTill = new DateTime(2021, 10, 30),
+                    BookInstanceID = 2,
                     UserID = 2
                 }
             );
 
-            // modelBuilder.Entity<EReaderTemplate>().HasData(new EReaderTemplate { });
+            modelBuilder.Entity<EReaderTemplate>().HasData(
+                new EReaderTemplate 
+                { 
+                    Id = 1, 
+                    Model = "632 Touch HD 3", 
+                    CompanyMake = "PocketBook", 
+                    MemoryInMB = 16000 
+                },
+                new EReaderTemplate
+                {
+                    Id = 2,
+                    Model = "Nova 3",
+                    CompanyMake = "ONYX BOOX",
+                    MemoryInMB = 32000
+                },
+                new EReaderTemplate
+                {
+                    Id = 3,
+                    Model = "1040 InkPad X",
+                    CompanyMake = "PocketBook",
+                    MemoryInMB = 32000
+                }
+            );
 
-            // modelBuilder.Entity<EReaderInstance>().HasData(new EReaderInstance { });
+            modelBuilder.Entity<EReaderInstance>().HasData(
+                new EReaderInstance 
+                { 
+                    Id = 1, 
+                    EReaderTemplateID = 1
+                },
+                new EReaderInstance
+                {
+                    Id = 2,
+                    EReaderTemplateID = 1
+                },
+                new EReaderInstance
+                {
+                    Id = 3,
+                    EReaderTemplateID = 2
+                }
+            );
+
+            modelBuilder.Entity<EBookInstance>().HasData(
+                new EBookInstance
+                {
+                    Id = 1,
+                    EBookTemplateID = 4,
+                    EReaderID = 1
+                },
+                new EBookInstance
+                {
+                    Id = 2,
+                    EBookTemplateID = 4,
+                    EReaderID = 1
+                }
+            );
         }
     }
 }

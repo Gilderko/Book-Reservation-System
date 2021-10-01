@@ -15,7 +15,7 @@ namespace DAL.Entities
         [Column(TypeName = "Date")]
         public DateTime DateTill { get; set; }
 
-        public int BookInstanceID { get; set; }
+        public int? BookInstanceID { get; set; }
 
         [ForeignKey(nameof(BookInstanceID))]
         public BookInstance ReserveredBook { get; set; }
@@ -25,9 +25,9 @@ namespace DAL.Entities
         [ForeignKey(nameof(UserID))]
         public User User { get; set; }
 
-        public int ERedeaderID { get; set; }
+        public int? EReaderID { get; set; }
 
-        [ForeignKey(nameof(ERedeaderID))]
+        [ForeignKey(nameof(EReaderID))]
         public EReaderInstance EReader { get; set; }
     }
 }
