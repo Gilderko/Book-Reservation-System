@@ -1,5 +1,7 @@
 # Readme
 
+## Autoři: Vladimír Bouček, Katarína Platková, Martin Šepeľa
+
 ## Week 1
 
 ### User stories
