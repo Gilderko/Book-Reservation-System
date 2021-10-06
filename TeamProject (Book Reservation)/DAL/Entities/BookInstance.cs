@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DAL.Entities.ConnectionTables;
 
 namespace DAL.Entities
 {
@@ -12,8 +9,8 @@ namespace DAL.Entities
         public int BookTemplateID { get; set; }
 
         [ForeignKey(nameof(BookTemplateID))]
-        public BookTemplate FromBookTemplate { get; set; }
+        public Book FromBookTemplate { get; set; }
 
-        public ICollection<Reservation> AllReservations { get; set; }
+        public ICollection<Reservation_BookInstance> AllReservations { get; set; }
     }
 }

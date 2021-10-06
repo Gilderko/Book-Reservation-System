@@ -1,14 +1,14 @@
-﻿using System;
+﻿using DAL.Entities;
+using DAL.Enums;
+using DAL.Entities.ConnectionTables;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
-    public class BookTemplate : BaseEntity
+    public class Book : BaseEntity
     {
         [MaxLength(64)]
         public string Title { get; set; }
@@ -18,7 +18,7 @@ namespace DAL.Entities
 
         [MaxLength(255)]
         public string ISBN { get; set; }
-        
+
         [Range(1, 10000)]
         public int PageCount { get; set; }
 
@@ -27,14 +27,16 @@ namespace DAL.Entities
 
         public Language Language { get; set; }    
 
-        public ICollection<Author> Authors { get; set; }
-
-        public ICollection<Genre> Genres { get; set; }
-
-        public ICollection<BookInstance> BookInstances { get; set; }
-
-        public ICollection<BookCollection> BookCollection { get; set; }
+        public ICollection<BookInstance> BookInstances { get; set; }        
 
         public ICollection<Review> Reviews { get; set; }
+
+        // Many to many Relationships
+
+        public ICollection<BookCollection_Book> BookCollections { get; set; }
+
+        public ICollection<Author_Book> Authors { get; set; }
+
+        public ICollection<Book_Genre> Genres { get; set; }
     }
 }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
@@ -13,7 +8,7 @@ namespace DAL.Entities
         public int EReaderTemplateID { get; set; }
 
         [ForeignKey(nameof(EReaderTemplateID))]
-        public EReaderTemplate EReaderTemplate { get; set; }
+        public EReader EReaderTemplate { get; set; }
 
         public ICollection<EBookInstance> BooksIncluded { get; set; }
     }

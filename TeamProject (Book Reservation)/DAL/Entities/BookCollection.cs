@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DAL.Entities.ConnectionTables;
 
 namespace DAL.Entities
 {
@@ -24,6 +22,8 @@ namespace DAL.Entities
         [ForeignKey(nameof(UserId))]
         public User OwnerUser;
 
-        public ICollection<BookTemplate> Books { get; set; }
+        // Many to many relationships
+
+        public ICollection<BookCollection_Book> Books { get; set; }
     }
 }

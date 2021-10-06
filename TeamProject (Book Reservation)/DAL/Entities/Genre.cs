@@ -1,9 +1,7 @@
-﻿using System;
+﻿using DAL.Enums;
+using DAL.Entities.ConnectionTables;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
@@ -13,14 +11,8 @@ namespace DAL.Entities
         [Key]
         public GenreType GenreID { get; set; }
 
-        public ICollection<BookTemplate> Books { get; set; }
-    }
+        // Many to many relationships
 
-    /// <summary>
-    /// Used as keys into the database for the class Genre
-    /// </summary>
-    public enum GenreType
-    {
-        Scifi, Fantasy, Detective, Medieval, Lovestory, Historical, Classic
+        public ICollection<Book_Genre> Books { get; set; }
     }
 }

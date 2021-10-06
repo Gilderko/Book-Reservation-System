@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using DAL.Enums;
+using DAL.Entities.ConnectionTables;
 
 namespace DAL
 {
@@ -10,74 +12,74 @@ namespace DAL
         public static void Seed(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>().HasData(
-                new Author 
-                { 
-                    Id = 1, 
-                    Name = "William", 
-                    Surname = "Shakespeare", 
+                new Author
+                {
+                    Id = 1,
+                    Name = "William",
+                    Surname = "Shakespeare",
                     Description = "William Shakespeare was an English playwright, poet, and actor, " +
                     "widely regarded as the greatest writer in the English language and the world's greatest dramatist."
                 },
-                new Author 
-                { 
-                    Id = 2, 
-                    Name = "Mary", 
-                    Surname = "Shelley", 
+                new Author
+                {
+                    Id = 2,
+                    Name = "Mary",
+                    Surname = "Shelley",
                     Description = "Mary Wollstonecraft Shelley (30 August 1797 – 1 February 1851) " +
                     "was an English novelist who wrote the Gothic novel Frankenstein; or, " +
-                    "The Modern Prometheus (1818), which is considered an early example of science fiction." 
+                    "The Modern Prometheus (1818), which is considered an early example of science fiction."
                 },
                 new Author
-                { 
-                    Id = 3, 
-                    Name = "Charlotte", 
-                    Surname = "Brontë", 
+                {
+                    Id = 3,
+                    Name = "Charlotte",
+                    Surname = "Brontë",
                     Description = "Charlotte Brontë (21 April 1816 – 31 March 1855) was an English novelist and poet, the eldest " +
-                    "of the three Brontë sisters who survived into adulthood and whose novels became classics of English literature." 
+                    "of the three Brontë sisters who survived into adulthood and whose novels became classics of English literature."
                 },
                 new Author
-                { 
-                    Id = 4, 
-                    Name = "Emily", 
-                    Surname = "Brontë", 
+                {
+                    Id = 4,
+                    Name = "Emily",
+                    Surname = "Brontë",
                     Description = "Emily Jane Brontë (30 July 1818 – 19 December 1848) was an English novelist and poet " +
-                    "who is best known for her only novel, Wuthering Heights, now considered a classic of English literature." 
+                    "who is best known for her only novel, Wuthering Heights, now considered a classic of English literature."
                 },
                 new Author
-                { 
-                    Id = 5, 
-                    Name = "Jules", 
-                    Surname = "Verne", 
+                {
+                    Id = 5,
+                    Name = "Jules",
+                    Surname = "Verne",
                     Description = "Jules Gabriel Verne (8 February 1828 – 24 March 1905) was a French novelist, poet, " +
                     "and playwright. His collaboration with the publisher Pierre-Jules Hetzel led to the creation of " +
-                    "the Voyages extraordinaires, a series of bestselling adventure novels." 
+                    "the Voyages extraordinaires, a series of bestselling adventure novels."
                 },
                 new Author
-                { 
-                    Id = 6, 
-                    Name = "Jane", 
-                    Surname = "Austen", 
+                {
+                    Id = 6,
+                    Name = "Jane",
+                    Surname = "Austen",
                     Description = "Jane Austen (16 December 1775 – 18 July 1817) was an English novelist known primarily " +
                     "for her six major novels, which interpret, critique and comment upon the British landed gentry at the end " +
-                    "of the 18th century." 
+                    "of the 18th century."
                 },
                 new Author
-                { 
-                    Id = 7, 
-                    Name = "Charles", 
-                    Surname = "Dickens", 
+                {
+                    Id = 7,
+                    Name = "Charles",
+                    Surname = "Dickens",
                     Description = "Charles John Huffam Dickens (7 February 1812 – 9 June 1870) was an English writer and social " +
                     "critic. He created some of the world's best-known fictional characters and is regarded by many as the greatest " +
-                    "novelist of the Victorian era." 
+                    "novelist of the Victorian era."
                 },
                 new Author
-                { 
-                    Id = 8, 
-                    Name = "Edgar Allan", 
-                    Surname = "Poe", 
+                {
+                    Id = 8,
+                    Name = "Edgar Allan",
+                    Surname = "Poe",
                     Description = "Edgar Allan Poe (born Edgar Poe; January 19, 1809 – October 7, 1849) was an American writer, poet, " +
                     "editor, and literary critic. Poe is best known for his poetry and short stories, particularly his tales of mystery " +
-                    "and the macabre. " 
+                    "and the macabre. "
                 },
                 new Author
                 {
@@ -122,22 +124,22 @@ namespace DAL
             );
 
             modelBuilder.Entity<User>().HasData(
-                new User 
-                { 
+                new User
+                {
                     Id = 1,
-                    Name = "Alice", 
-                    Surname = "First", 
-                    Email = "alice@gmail.com", 
-                    HashedPassword = "", 
+                    Name = "Alice",
+                    Surname = "First",
+                    Email = "alice@gmail.com",
+                    HashedPassword = "",
                     IsAdmin = true
                 },
                 new User
                 {
                     Id = 2,
-                    Name = "Bob", 
-                    Surname = "Second", 
-                    Email = "bob@gmail.com", 
-                    HashedPassword = "", 
+                    Name = "Bob",
+                    Surname = "Second",
+                    Email = "bob@gmail.com",
+                    HashedPassword = "",
                     IsAdmin = false
                 },
                 new User
@@ -169,10 +171,10 @@ namespace DAL
                 }
             );
 
-            modelBuilder.Entity<BookTemplate>().HasData(
-                new BookTemplate 
-                { 
-                    Id = 1, 
+            modelBuilder.Entity<Book>().HasData(
+                new Book
+                {
+                    Id = 1,
                     Title = "Frankenstein",
                     Description = "Victor Frankenstein, a brilliant but wayward scientist, builds a human from dead flesh. " +
                     "Horrified at what he has done, he abandons his creation. The hideous creature learns language and becomes " +
@@ -184,7 +186,7 @@ namespace DAL
                     DateOfRelease = new DateTime(1818, 1, 1),
                     Language = Language.English
                 },
-                new BookTemplate
+                new Book
                 {
                     Id = 2,
                     Title = "Hamlet",
@@ -198,7 +200,7 @@ namespace DAL
                     DateOfRelease = new DateTime(1600, 1, 1),
                     Language = Language.English
                 },
-                new BookTemplate
+                new Book
                 {
                     Id = 3,
                     Title = "Romeo and Juliet",
@@ -210,7 +212,7 @@ namespace DAL
                     DateOfRelease = new DateTime(1591, 1, 1),
                     Language = Language.English
                 },
-                new BookTemplate
+                new Book
                 {
                     Id = 4,
                     Title = "The Hitchhiker's Guide to the Galaxy",
@@ -222,7 +224,7 @@ namespace DAL
                     DateOfRelease = new DateTime(2007, 6, 23),
                     Language = Language.English
                 },
-                new BookTemplate
+                new Book
                 {
                     Id = 5,
                     Title = "The Little Prince",
@@ -236,7 +238,7 @@ namespace DAL
                     DateOfRelease = new DateTime(1943, 4, 6),
                     Language = Language.English
                 },
-                new BookTemplate
+                new Book
                 {
                     Id = 6,
                     Title = "The Da Vinci Code",
@@ -250,7 +252,7 @@ namespace DAL
                     DateOfRelease = new DateTime(2006, 3, 28),
                     Language = Language.English
                 },
-                new BookTemplate
+                new Book
                 {
                     Id = 7,
                     Title = "Animal Farm",
@@ -265,7 +267,7 @@ namespace DAL
                     DateOfRelease = new DateTime(1945, 8, 17),
                     Language = Language.English
                 },
-                new BookTemplate
+                new Book
                 {
                     Id = 8,
                     Title = "Pride and Prejudice",
@@ -282,34 +284,34 @@ namespace DAL
                 }
             );
 
-            modelBuilder.Entity("AuthorBookTemplate").HasData(
-                new { AuthorsBooksId = 1, AuthorsId = 2 },
-                new { AuthorsBooksId = 2, AuthorsId = 1 },
-                new { AuthorsBooksId = 3, AuthorsId = 1 },
-                new { AuthorsBooksId = 4, AuthorsId = 9 },
-                new { AuthorsBooksId = 5, AuthorsId = 12 },
-                new { AuthorsBooksId = 6, AuthorsId = 11 },
-                new { AuthorsBooksId = 7, AuthorsId = 10 },
-                new { AuthorsBooksId = 8, AuthorsId = 6 },
-                new { AuthorsBooksId = 9, AuthorsId = 1 }
+            modelBuilder.Entity<Author_Book>().HasData(
+                new { BookID = 1, AuthorID = 2 },
+                new { BookID = 2, AuthorID = 1 },
+                new { BookID = 3, AuthorID = 1 },
+                new { BookID = 4, AuthorID = 9 },
+                new { BookID = 5, AuthorID = 12 },
+                new { BookID = 6, AuthorID = 11 },
+                new { BookID = 7, AuthorID = 10 },
+                new { BookID = 8, AuthorID = 6 },
+                new { BookID = 9, AuthorID = 1 }
             );
 
-            modelBuilder.Entity("BookTemplateGenre").HasData(
-                new { BooksId = 1, GenresGenreID = GenreType.Classic },
-                new { BooksId = 2, GenresGenreID = GenreType.Classic },
-                new { BooksId = 3, GenresGenreID = GenreType.Classic },
-                new { BooksId = 4, GenresGenreID = GenreType.Scifi },
-                new { BooksId = 5, GenresGenreID = GenreType.Fantasy },
-                new { BooksId = 6, GenresGenreID = GenreType.Detective },
-                new { BooksId = 7, GenresGenreID = GenreType.Fantasy },
-                new { BooksId = 8, GenresGenreID = GenreType.Lovestory },
-                new { BooksId = 9, GenresGenreID = GenreType.Classic }
+            modelBuilder.Entity<Book_Genre>().HasData(
+                new { BookID = 1, GenreID = (int) GenreType.Classic },
+                new { BookID = 2, GenreID = (int) GenreType.Classic },
+                new { BookID = 3, GenreID = (int) GenreType.Classic },
+                new { BookID = 4, GenreID = (int) GenreType.Scifi },
+                new { BookID = 5, GenreID = (int) GenreType.Fantasy },
+                new { BookID = 6, GenreID = (int) GenreType.Detective },
+                new { BookID = 7, GenreID = (int) GenreType.Fantasy },
+                new { BookID = 8, GenreID = (int) GenreType.Lovestory },
+                new { BookID = 9, GenreID = (int) GenreType.Classic }
             );
 
             modelBuilder.Entity<BookInstance>().HasData(
                 new BookInstance
-                { 
-                    Id = 1, 
+                {
+                    Id = 1,
                     BookTemplateID = 1
                 },
                 new BookInstance
@@ -350,27 +352,27 @@ namespace DAL
             );
 
             modelBuilder.Entity<BookCollection>().HasData(
-                new BookCollection 
-                { 
+                new BookCollection
+                {
                     Id = 1,
-                    Title = "Classics", 
-                    Description = "Just classics.", 
-                    CreationDate = new DateTime(2021, 9, 30), 
+                    Title = "Classics",
+                    Description = "Just classics.",
+                    CreationDate = new DateTime(2021, 9, 30),
                     UserId = 2,
-                    Books = new List<BookTemplate> { }
+                    Books = new List<BookCollection_Book> { }
                 }
             );
 
-            modelBuilder.Entity("BookCollectionBookTemplate").HasData(
-                new { BookCollectionId = 1, BooksId = 1 },
-                new { BookCollectionId = 1, BooksId = 2 },
-                new { BookCollectionId = 1, BooksId = 3 }
+            modelBuilder.Entity<BookCollection_Book>().HasData(
+                new { BookCollectionID = 1, BookID = 1 },
+                new { BookCollectionID = 1, BookID = 2 },
+                new { BookCollectionID = 1, BookID = 3 }
             );
 
             modelBuilder.Entity<Review>().HasData(
-                new Review 
-                { 
-                    Id = 1, 
+                new Review
+                {
+                    Id = 1,
                     CreationDate = new DateTime(2021, 2, 28),
                     Content = "Best",
                     StarsAmmount = 5,
@@ -407,8 +409,8 @@ namespace DAL
             );
 
             modelBuilder.Entity<Genre>().HasData(
-                new Genre 
-                { 
+                new Genre
+                {
                     GenreID = GenreType.Detective
                 },
                 new Genre
@@ -433,8 +435,8 @@ namespace DAL
                 }
             );
 
-            modelBuilder.Entity<EBookTemplate>().HasData(
-                new EBookTemplate
+            modelBuilder.Entity<EBook>().HasData(
+                new EBook
                 {
                     Id = 9,
                     Title = "Romeo and Juliet",
@@ -456,7 +458,6 @@ namespace DAL
                     Id = 1,
                     DateFrom = new DateTime(2021, 1, 30),
                     DateTill = new DateTime(2021, 2, 28),
-                    BookInstanceID = 1,
                     UserID = 1
                 },
                 new Reservation
@@ -464,23 +465,20 @@ namespace DAL
                     Id = 2,
                     DateFrom = new DateTime(2021, 3, 1),
                     DateTill = new DateTime(2021, 3, 8),
-                    BookInstanceID = 2,
                     UserID = 1
                 },
-                new Reservation 
-                { 
-                    Id = 3, 
-                    DateFrom = new DateTime(2021, 9, 30), 
-                    DateTill = new DateTime(2021, 10, 30),
-                    BookInstanceID = 3,
+                new Reservation
+                {
+                    Id = 3,
+                    DateFrom = new DateTime(2021, 9, 30),
+                    DateTill = new DateTime(2021, 10, 30),                    
                     UserID = 1
                 },
                 new Reservation
                 {
                     Id = 4,
                     DateFrom = new DateTime(2021, 10, 30),
-                    DateTill = new DateTime(2021, 11, 30),
-                    BookInstanceID = 1,
+                    DateTill = new DateTime(2021, 11, 30),                    
                     UserID = 2
                 },
                 new Reservation
@@ -488,7 +486,6 @@ namespace DAL
                     Id = 5,
                     DateFrom = new DateTime(2021, 9, 30),
                     DateTill = new DateTime(2021, 10, 30),
-                    BookInstanceID = 2,
                     UserID = 2
                 },
                 new Reservation
@@ -496,7 +493,6 @@ namespace DAL
                     Id = 6,
                     DateFrom = new DateTime(2021, 8, 30),
                     DateTill = new DateTime(2021, 9, 1),
-                    BookInstanceID = 5,
                     UserID = 4
                 },
                 new Reservation
@@ -504,7 +500,6 @@ namespace DAL
                     Id = 7,
                     DateFrom = new DateTime(2021, 12, 1),
                     DateTill = new DateTime(2021, 12, 15),
-                    BookInstanceID = 3,
                     UserID = 3
                 },
                 new Reservation
@@ -512,7 +507,6 @@ namespace DAL
                     Id = 8,
                     DateFrom = new DateTime(2021, 1, 30),
                     DateTill = new DateTime(2021, 4, 30),
-                    BookInstanceID = 7,
                     UserID = 2
                 },
                 new Reservation
@@ -520,7 +514,6 @@ namespace DAL
                     Id = 9,
                     DateFrom = new DateTime(2021, 4, 30),
                     DateTill = new DateTime(2021, 9, 4),
-                    BookInstanceID = 8,
                     UserID = 1
                 },
                 new Reservation
@@ -533,22 +526,65 @@ namespace DAL
                 }
             );
 
-            modelBuilder.Entity<EReaderTemplate>().HasData(
-                new EReaderTemplate 
-                { 
-                    Id = 1, 
-                    Model = "632 Touch HD 3", 
-                    CompanyMake = "PocketBook", 
-                    MemoryInMB = 16000 
+            modelBuilder.Entity<Reservation_BookInstance>().HasData(
+                new Reservation_BookInstance
+                {
+                    ReservationID = 1,
+                    BookInstanceID = 1
                 },
-                new EReaderTemplate
+                new Reservation_BookInstance
+                {
+                    ReservationID = 2,
+                    BookInstanceID = 2
+                }, 
+                new Reservation_BookInstance
+                {
+                    ReservationID = 3,
+                    BookInstanceID = 3
+                },
+                new Reservation_BookInstance
+                {
+                    ReservationID = 4,
+                    BookInstanceID = 1
+                }, new Reservation_BookInstance
+                {
+                    ReservationID = 5,
+                    BookInstanceID = 2
+                }, new Reservation_BookInstance
+                {
+                    ReservationID = 6,
+                    BookInstanceID = 5
+                }, new Reservation_BookInstance
+                {
+                    ReservationID = 7,
+                    BookInstanceID = 3
+                }, new Reservation_BookInstance
+                {
+                    ReservationID = 8,
+                    BookInstanceID = 7
+                }, new Reservation_BookInstance
+                {
+                    ReservationID = 9,
+                    BookInstanceID = 8
+                }
+            );
+
+            modelBuilder.Entity<EReader>().HasData(
+                new EReader
+                {
+                    Id = 1,
+                    Model = "632 Touch HD 3",
+                    CompanyMake = "PocketBook",
+                    MemoryInMB = 16000
+                },
+                new EReader
                 {
                     Id = 2,
                     Model = "Nova 3",
                     CompanyMake = "ONYX BOOX",
                     MemoryInMB = 32000
                 },
-                new EReaderTemplate
+                new EReader
                 {
                     Id = 3,
                     Model = "1040 InkPad X",
@@ -558,9 +594,9 @@ namespace DAL
             );
 
             modelBuilder.Entity<EReaderInstance>().HasData(
-                new EReaderInstance 
-                { 
-                    Id = 1, 
+                new EReaderInstance
+                {
+                    Id = 1,
                     EReaderTemplateID = 1
                 },
                 new EReaderInstance

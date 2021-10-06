@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DAL.Entities.ConnectionTables;
 
 namespace DAL.Entities
 {
@@ -15,11 +13,6 @@ namespace DAL.Entities
         [Column(TypeName = "Date")]
         public DateTime DateTill { get; set; }
 
-        public int? BookInstanceID { get; set; }
-
-        [ForeignKey(nameof(BookInstanceID))]
-        public BookInstance ReserveredBook { get; set; }
-
         public int UserID { get; set; }
 
         [ForeignKey(nameof(UserID))]
@@ -29,5 +22,9 @@ namespace DAL.Entities
 
         [ForeignKey(nameof(EReaderID))]
         public EReaderInstance EReader { get; set; }
+
+        // Many to many relationships
+        
+        public ICollection<Reservation_BookInstance> BookInstances { get; set; }
     }
 }
