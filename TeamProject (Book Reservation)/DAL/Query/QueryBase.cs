@@ -4,6 +4,7 @@ using System.Linq;
 using DAL.Entities;
 using DAL.Query.Operators;
 using DAL.Query.Predicates;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Query
 {
@@ -17,13 +18,16 @@ namespace DAL.Query
 
         private BookRentalDbContext DbContext;
 
-        private string _querySql = $"SELECT * FROM dbo.{nameof(TEntity)} ";
+        private string _querySql;
 
         private string _where = "";
         private string _sortBy = "";
         private string _page = "";
+        private int _pageNumber;
+        private int _pageSize;
+        private bool _pagingEnabled = false;
 
-        private Dictionary<ValueComparingOperator, string> _valueOperators = new()
+        private readonly Dictionary<ValueComparingOperator, string> _valueOperators = new Dictionary<ValueComparingOperator, string>
         {
             { ValueComparingOperator.None, "IS NULL"},
             { ValueComparingOperator.GreaterThan, ">" },
@@ -59,29 +63,50 @@ namespace DAL.Query
 
         public void Where(IPredicate rootPredicate)
         {
-            _where = $"WHERE {}";
+            _where = $"WHERE {PredicateToString(rootPredicate)}";
         }
 
         public void SortBy(string sortAccordingTo, bool ascendingOrder)
         {
             string order = ascendingOrder ? "ASC" : "DES"; 
 
-            _sortBy = $"SORT BY {sortAccordingTo} {ascendingOrder}";
+            _sortBy = $"SORT BY {sortAccordingTo} {order}";
         }
 
         public void Page(int ipageToFetch, int pageSize)
         {
+            _pagingEnabled = true;
+            _pageSize = pageSize;
+            _pageNumber = ipageToFetch;
+            
             _page = $"OFFSET {ipageToFetch * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
         }
 
-        public QueryResult<TEntity> ExecuteAsync()
+        public QueryResult<TEntity> Execute()
         {
-            return null;
+            _querySql += $"{_where} {_sortBy} {_page}";
+            
+            var entities = DbContext.Set<TEntity>().FromSqlRaw(_querySql);
+
+            QueryResult<TEntity> result = new QueryResult<TEntity>
+            {
+                TotalItemsCount = entities.Count(),
+                Items = entities.ToList()
+            };
+
+            if (_pagingEnabled)
+            {
+                result.RequestedPageNumber = _pageNumber;
+                result.PageSize = _pageSize;
+            }
+
+            return result;
         }
 
         public QueryBase(BookRentalDbContext dbContext)
         {
             DbContext = dbContext;
+            _querySql = $"SELECT * FROM {DbContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
         }
     }
 }

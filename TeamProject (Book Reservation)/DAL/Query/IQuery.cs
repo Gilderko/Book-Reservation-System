@@ -7,6 +7,6 @@ namespace DAL.Query
         public void Where(IPredicate rootPredicate);
         public void SortBy(string sortAccordingTo, bool ascendingOrder);
         public void Page(int pageToFetch, int pageSize);
-        public abstract QueryResult<TEntity> ExecuteAsync();
+        public abstract QueryResult<TEntity> Execute();
     }
 }

@@ -4,11 +4,11 @@ namespace DAL.Query
 {
     public class QueryResult<TEntity> where TEntity : class
     {
-        public long TotalItemsCount { get; private set; }
-        public int RequestedPageNumber { get; private set; }
-        public int PageSize { get; private set; }
-        public IList<TEntity> Items { get; private set; }
-        public bool PagingEnabled { get; private set; }
+        public long TotalItemsCount { get; set; }
+        public int RequestedPageNumber { get; set; }
+        public int PageSize { get; set; }
+        public IList<TEntity> Items { get; set; }
+        public bool PagingEnabled { get; set; }
 
         public QueryResult()
         {

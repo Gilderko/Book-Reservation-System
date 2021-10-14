@@ -359,7 +359,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("AuthorID");
 
-                    b.ToTable("Author_Book");
+                    b.ToTable("Author_Books");
 
                     b.HasData(
                         new
@@ -421,7 +421,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("BookCollectionID");
 
-                    b.ToTable("BookCollection_Book");
+                    b.ToTable("BookCollection_Books");
 
                     b.HasData(
                         new
@@ -458,7 +458,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("GenreID1");
 
-                    b.ToTable("Book_Genre");
+                    b.ToTable("Book_Genres");
 
                     b.HasData(
                         new
@@ -520,7 +520,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("BookInstanceID");
 
-                    b.ToTable("Reservation_BookInstance");
+                    b.ToTable("Reservation_BookInstances");
 
                     b.HasData(
                         new
