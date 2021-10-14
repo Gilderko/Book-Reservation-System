@@ -5,6 +5,6 @@
     /// </summary>
     public enum GenreType
     {
-        Scifi, Fantasy, Detective, Medieval, Lovestory, Historical, Classic
+        Scifi = 1, Fantasy, Detective, Medieval, Lovestory, Historical, Classic
     }
 }

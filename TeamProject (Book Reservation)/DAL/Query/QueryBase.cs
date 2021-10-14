@@ -16,7 +16,7 @@ namespace DAL.Query
         public int PageSize { get; private set; }
         public int DesiredPage { get; private set; }
 
-        private BookRentalDbContext DbContext;
+        private BookRentalDbContext DatabaseContext;
 
         private string _querySql;
 
@@ -26,6 +26,8 @@ namespace DAL.Query
         private int _pageNumber;
         private int _pageSize;
         private bool _pagingEnabled = false;
+        private string[] _refsToLoad = new string[0];
+        private string[] _collectionsToLoad = new string[0];
 
         private readonly Dictionary<ValueComparingOperator, string> _valueOperators = new Dictionary<ValueComparingOperator, string>
         {
@@ -90,8 +92,21 @@ namespace DAL.Query
             _querySql += $"{_where} {_sortBy} {_page}";
 
             Console.WriteLine(_querySql);
-            
-            var entities = DbContext.Set<TEntity>().FromSqlRaw(_querySql);
+
+            var entities = DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).ToList();
+
+            foreach(var entry in entities)
+            {
+                foreach(string refToLoad in _refsToLoad)
+                {
+                    DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).Load();
+                }
+
+                foreach(string collectToLoad in _collectionsToLoad)
+                {
+                    DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).Load();
+                }
+            }
 
             QueryResult<TEntity> result = new QueryResult<TEntity>
             {
@@ -107,11 +122,20 @@ namespace DAL.Query
 
             return result;
         }
+        public void LoadExplicitReferences(params string[] referencesToLoad)
+        {
+            _refsToLoad = referencesToLoad;
+        }
+
+        public void LoadExplicitCollections(params string[] collectionsToLoad)
+        {
+            _collectionsToLoad = collectionsToLoad;
+        }
 
         public QueryBase(BookRentalDbContext dbContext)
         {
-            DbContext = dbContext;
-            _querySql = $"SELECT * FROM dbo.{DbContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
+            DatabaseContext = dbContext;
+            _querySql = $"SELECT * FROM dbo.{DatabaseContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
         }
     }
 }

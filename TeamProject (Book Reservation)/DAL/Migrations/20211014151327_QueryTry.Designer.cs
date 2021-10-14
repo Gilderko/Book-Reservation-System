@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(BookRentalDbContext))]
-    [Migration("20211006152126_Initial")]
-    partial class Initial
+    [Migration("20211014151327_QueryTry")]
+    partial class QueryTry
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -361,7 +361,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("AuthorID");
 
-                    b.ToTable("Author_Book");
+                    b.ToTable("Author_Books");
 
                     b.HasData(
                         new
@@ -423,7 +423,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("BookCollectionID");
 
-                    b.ToTable("BookCollection_Book");
+                    b.ToTable("BookCollection_Books");
 
                     b.HasData(
                         new
@@ -451,61 +451,56 @@ namespace DAL.Migrations
                     b.Property<int>("BookID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GenreID1")
-                        .HasColumnType("int");
-
                     b.HasKey("GenreID", "BookID");
 
                     b.HasIndex("BookID");
 
-                    b.HasIndex("GenreID1");
-
-                    b.ToTable("Book_Genre");
+                    b.ToTable("Book_Genres");
 
                     b.HasData(
                         new
                         {
-                            GenreID = 6,
+                            GenreID = 7,
                             BookID = 1
                         },
                         new
                         {
-                            GenreID = 6,
+                            GenreID = 7,
                             BookID = 2
                         },
                         new
                         {
-                            GenreID = 6,
+                            GenreID = 7,
                             BookID = 3
                         },
                         new
                         {
-                            GenreID = 0,
+                            GenreID = 1,
                             BookID = 4
                         },
                         new
                         {
-                            GenreID = 1,
+                            GenreID = 2,
                             BookID = 5
                         },
                         new
                         {
-                            GenreID = 2,
+                            GenreID = 3,
                             BookID = 6
                         },
                         new
                         {
-                            GenreID = 1,
+                            GenreID = 2,
                             BookID = 7
                         },
                         new
                         {
-                            GenreID = 4,
+                            GenreID = 5,
                             BookID = 8
                         },
                         new
                         {
-                            GenreID = 6,
+                            GenreID = 7,
                             BookID = 9
                         });
                 });
@@ -522,7 +517,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("BookInstanceID");
 
-                    b.ToTable("Reservation_BookInstance");
+                    b.ToTable("Reservation_BookInstances");
 
                     b.HasData(
                         new
@@ -690,37 +685,39 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Genre", b =>
                 {
-                    b.Property<int>("GenreID")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.HasKey("GenreID");
+                    b.HasKey("Id");
 
                     b.ToTable("Genres");
 
                     b.HasData(
                         new
                         {
-                            GenreID = 2
+                            Id = 3
                         },
                         new
                         {
-                            GenreID = 4
+                            Id = 5
                         },
                         new
                         {
-                            GenreID = 6
+                            Id = 7
                         },
                         new
                         {
-                            GenreID = 1
+                            Id = 2
                         },
                         new
                         {
-                            GenreID = 3
+                            Id = 4
                         },
                         new
                         {
-                            GenreID = 0
+                            Id = 1
                         });
                 });
 
@@ -1060,7 +1057,9 @@ namespace DAL.Migrations
 
                     b.HasOne("DAL.Entities.Genre", null)
                         .WithMany("Books")
-                        .HasForeignKey("GenreID1");
+                        .HasForeignKey("GenreID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DAL.Entities.ConnectionTables.Reservation_BookInstance", b =>

@@ -9,14 +9,14 @@ namespace DAL.Entities.ConnectionTables
 {
     public class Book_Genre
     {
-        public int GenreID { get; set; }
-
-        [ForeignKey(nameof(GenreID))]
-        public Genre BookGenre;
-
         public int BookID { get; set; }
 
         [ForeignKey(nameof(BookID))]
         public Book Book;
+
+        public int GenreID { get; set; }
+
+        [ForeignKey(nameof(GenreID))]
+        public Genre Genre;
     }
 }

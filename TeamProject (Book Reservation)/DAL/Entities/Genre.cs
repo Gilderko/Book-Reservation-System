@@ -10,7 +10,7 @@ namespace DAL.Entities
     {
         // Dont change the name of this property all properties need to have primary key "Id"
         [Key]
-        public GenreType Id { get; set; }
+        public int Id { get; set; }
 
         // Many to many relationships
 

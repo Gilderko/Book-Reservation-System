@@ -53,14 +53,6 @@ namespace DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .Entity<Genre>()
-                .Property(genre => genre.Id)
-                .HasConversion(
-                // Conversion to provider
-                genreID => (int)genreID,
-                // Conversion from provider
-                genreID => (GenreType)genreID);
 
             // Author Book
             modelBuilder.Entity<Author_Book>()
@@ -69,6 +61,7 @@ namespace DAL
             // Book Genre
             modelBuilder.Entity<Book_Genre>()
                 .HasKey(obj => new { obj.GenreID, obj.BookID });
+
 
             // BookCollection Book
             modelBuilder.Entity<BookCollection_Book>()

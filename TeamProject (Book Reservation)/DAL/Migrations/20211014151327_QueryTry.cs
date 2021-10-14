@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class Initial : Migration
+    public partial class QueryTry : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -62,11 +62,12 @@ namespace DAL.Migrations
                 name: "Genres",
                 columns: table => new
                 {
-                    GenreID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genres", x => x.GenreID);
+                    table.PrimaryKey("PK_Genres", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,7 +88,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Author_Book",
+                name: "Author_Books",
                 columns: table => new
                 {
                     AuthorID = table.Column<int>(type: "int", nullable: false),
@@ -95,15 +96,15 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Author_Book", x => new { x.BookID, x.AuthorID });
+                    table.PrimaryKey("PK_Author_Books", x => new { x.BookID, x.AuthorID });
                     table.ForeignKey(
-                        name: "FK_Author_Book_Authors_AuthorID",
+                        name: "FK_Author_Books_Authors_AuthorID",
                         column: x => x.AuthorID,
                         principalTable: "Authors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Author_Book_BookTemplates_BookID",
+                        name: "FK_Author_Books_BookTemplates_BookID",
                         column: x => x.BookID,
                         principalTable: "BookTemplates",
                         principalColumn: "Id",
@@ -149,28 +150,27 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Book_Genre",
+                name: "Book_Genres",
                 columns: table => new
                 {
-                    GenreID = table.Column<int>(type: "int", nullable: false),
                     BookID = table.Column<int>(type: "int", nullable: false),
-                    GenreID1 = table.Column<int>(type: "int", nullable: true)
+                    GenreID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Book_Genre", x => new { x.GenreID, x.BookID });
+                    table.PrimaryKey("PK_Book_Genres", x => new { x.GenreID, x.BookID });
                     table.ForeignKey(
-                        name: "FK_Book_Genre_BookTemplates_BookID",
+                        name: "FK_Book_Genres_BookTemplates_BookID",
                         column: x => x.BookID,
                         principalTable: "BookTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Book_Genre_Genres_GenreID1",
-                        column: x => x.GenreID1,
+                        name: "FK_Book_Genres_Genres_GenreID",
+                        column: x => x.GenreID,
                         principalTable: "Genres",
-                        principalColumn: "GenreID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -279,7 +279,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookCollection_Book",
+                name: "BookCollection_Books",
                 columns: table => new
                 {
                     BookCollectionID = table.Column<int>(type: "int", nullable: false),
@@ -287,15 +287,15 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookCollection_Book", x => new { x.BookID, x.BookCollectionID });
+                    table.PrimaryKey("PK_BookCollection_Books", x => new { x.BookID, x.BookCollectionID });
                     table.ForeignKey(
-                        name: "FK_BookCollection_Book_BookCollections_BookCollectionID",
+                        name: "FK_BookCollection_Books_BookCollections_BookCollectionID",
                         column: x => x.BookCollectionID,
                         principalTable: "BookCollections",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookCollection_Book_BookTemplates_BookID",
+                        name: "FK_BookCollection_Books_BookTemplates_BookID",
                         column: x => x.BookID,
                         principalTable: "BookTemplates",
                         principalColumn: "Id",
@@ -303,7 +303,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservation_BookInstance",
+                name: "Reservation_BookInstances",
                 columns: table => new
                 {
                     ReservationID = table.Column<int>(type: "int", nullable: false),
@@ -311,15 +311,15 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservation_BookInstance", x => new { x.ReservationID, x.BookInstanceID });
+                    table.PrimaryKey("PK_Reservation_BookInstances", x => new { x.ReservationID, x.BookInstanceID });
                     table.ForeignKey(
-                        name: "FK_Reservation_BookInstance_BookInstances_BookInstanceID",
+                        name: "FK_Reservation_BookInstances_BookInstances_BookInstanceID",
                         column: x => x.BookInstanceID,
                         principalTable: "BookInstances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservation_BookInstance_Reservations_ReservationID",
+                        name: "FK_Reservation_BookInstances_Reservations_ReservationID",
                         column: x => x.ReservationID,
                         principalTable: "Reservations",
                         principalColumn: "Id",
@@ -377,15 +377,15 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Genres",
-                column: "GenreID",
+                column: "Id",
                 values: new object[]
                 {
-                    4,
-                    2,
-                    6,
-                    1,
+                    5,
                     3,
-                    0
+                    7,
+                    2,
+                    4,
+                    1
                 });
 
             migrationBuilder.InsertData(
@@ -401,19 +401,19 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Author_Book",
+                table: "Author_Books",
                 columns: new[] { "AuthorID", "BookID" },
                 values: new object[,]
                 {
-                    { 2, 1 },
-                    { 1, 9 },
-                    { 1, 2 },
-                    { 6, 8 },
-                    { 10, 7 },
-                    { 1, 3 },
                     { 11, 6 },
+                    { 2, 1 },
+                    { 1, 2 },
+                    { 1, 9 },
+                    { 1, 3 },
+                    { 6, 8 },
                     { 9, 4 },
-                    { 12, 5 }
+                    { 12, 5 },
+                    { 10, 7 }
                 });
 
             migrationBuilder.InsertData(
@@ -426,30 +426,30 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "BookTemplateID" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 7, 7 },
-                    { 6, 6 },
                     { 8, 8 },
+                    { 7, 7 },
+                    { 1, 1 },
+                    { 6, 6 },
+                    { 5, 5 },
                     { 4, 4 },
                     { 3, 3 },
-                    { 2, 2 },
-                    { 5, 5 }
+                    { 2, 2 }
                 });
 
             migrationBuilder.InsertData(
-                table: "Book_Genre",
-                columns: new[] { "BookID", "GenreID", "GenreID1" },
+                table: "Book_Genres",
+                columns: new[] { "BookID", "GenreID" },
                 values: new object[,]
                 {
-                    { 5, 1, null },
-                    { 4, 0, null },
-                    { 6, 2, null },
-                    { 3, 6, null },
-                    { 7, 1, null },
-                    { 1, 6, null },
-                    { 2, 6, null },
-                    { 8, 4, null },
-                    { 9, 6, null }
+                    { 4, 1 },
+                    { 7, 2 },
+                    { 5, 2 },
+                    { 9, 7 },
+                    { 3, 7 },
+                    { 8, 5 },
+                    { 1, 7 },
+                    { 6, 3 },
+                    { 2, 7 }
                 });
 
             migrationBuilder.InsertData(
@@ -458,8 +458,8 @@ namespace DAL.Migrations
                 values: new object[,]
                 {
                     { 3, 2 },
-                    { 1, 1 },
-                    { 2, 1 }
+                    { 2, 1 },
+                    { 1, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -467,11 +467,11 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "DateFrom", "DateTill", "EReaderID", "UserID" },
                 values: new object[,]
                 {
+                    { 6, new DateTime(2021, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4 },
                     { 1, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
                     { 2, new DateTime(2021, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
                     { 3, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
                     { 9, new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 6, new DateTime(2021, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4 },
                     { 4, new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
                     { 5, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
                     { 8, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
@@ -483,9 +483,9 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "BookTemplateID", "Content", "CreationDate", "StarsAmmount", "UserID" },
                 values: new object[,]
                 {
+                    { 3, 1, "huh", new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 3 },
                     { 1, 1, "Best", new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 1 },
-                    { 2, 1, "Great!!", new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 2 },
-                    { 3, 1, "huh", new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 3 }
+                    { 2, 1, "Great!!", new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -494,7 +494,7 @@ namespace DAL.Migrations
                 values: new object[] { 4, 8, "Changed my life", new DateTime(2021, 7, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 4 });
 
             migrationBuilder.InsertData(
-                table: "BookCollection_Book",
+                table: "BookCollection_Books",
                 columns: new[] { "BookCollectionID", "BookID" },
                 values: new object[,]
                 {
@@ -513,7 +513,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Reservation_BookInstance",
+                table: "Reservation_BookInstances",
                 columns: new[] { "BookInstanceID", "ReservationID" },
                 values: new object[,]
                 {
@@ -534,23 +534,18 @@ namespace DAL.Migrations
                 values: new object[] { 10, new DateTime(2021, 7, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Author_Book_AuthorID",
-                table: "Author_Book",
+                name: "IX_Author_Books_AuthorID",
+                table: "Author_Books",
                 column: "AuthorID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Book_Genre_BookID",
-                table: "Book_Genre",
+                name: "IX_Book_Genres_BookID",
+                table: "Book_Genres",
                 column: "BookID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Book_Genre_GenreID1",
-                table: "Book_Genre",
-                column: "GenreID1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookCollection_Book_BookCollectionID",
-                table: "BookCollection_Book",
+                name: "IX_BookCollection_Books_BookCollectionID",
+                table: "BookCollection_Books",
                 column: "BookCollectionID");
 
             migrationBuilder.CreateIndex(
@@ -579,8 +574,8 @@ namespace DAL.Migrations
                 column: "EReaderTemplateID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservation_BookInstance_BookInstanceID",
-                table: "Reservation_BookInstance",
+                name: "IX_Reservation_BookInstances_BookInstanceID",
+                table: "Reservation_BookInstances",
                 column: "BookInstanceID");
 
             migrationBuilder.CreateIndex(
@@ -607,19 +602,19 @@ namespace DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Author_Book");
+                name: "Author_Books");
 
             migrationBuilder.DropTable(
-                name: "Book_Genre");
+                name: "Book_Genres");
 
             migrationBuilder.DropTable(
-                name: "BookCollection_Book");
+                name: "BookCollection_Books");
 
             migrationBuilder.DropTable(
                 name: "EBookInstances");
 
             migrationBuilder.DropTable(
-                name: "Reservation_BookInstance");
+                name: "Reservation_BookInstances");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
