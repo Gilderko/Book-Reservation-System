@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamProject (Book Reservati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{389047D0-57C5-465A-92AD-C5065654681A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingConsole", "TestingConsole\TestingConsole.csproj", "{F697DD4F-870F-4EDA-B574-B2AA46431EC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{389047D0-57C5-465A-92AD-C5065654681A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{389047D0-57C5-465A-92AD-C5065654681A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{389047D0-57C5-465A-92AD-C5065654681A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F697DD4F-870F-4EDA-B574-B2AA46431EC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F697DD4F-870F-4EDA-B574-B2AA46431EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F697DD4F-870F-4EDA-B574-B2AA46431EC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F697DD4F-870F-4EDA-B574-B2AA46431EC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -412,27 +412,27 @@ namespace DAL
             modelBuilder.Entity<Genre>().HasData(
                 new Genre
                 {
-                    GenreID = GenreType.Detective
+                    Id = GenreType.Detective
                 },
                 new Genre
                 {
-                    GenreID = GenreType.Lovestory
+                    Id = GenreType.Lovestory
                 },
                 new Genre
                 {
-                    GenreID = GenreType.Classic
+                    Id = GenreType.Classic
                 },
                 new Genre
                 {
-                    GenreID = GenreType.Fantasy
+                    Id = GenreType.Fantasy
                 },
                 new Genre
                 {
-                    GenreID = GenreType.Medieval
+                    Id = GenreType.Medieval
                 },
                 new Genre
                 {
-                    GenreID = GenreType.Scifi
+                    Id = GenreType.Scifi
                 }
             );
 

@@ -42,9 +42,10 @@ namespace DAL.Query
         {
             if (predicate is SimplePredicate)
             {
-                var simplePred = (SimplePredicate)predicate;
+                var simplePred = (SimplePredicate)predicate;               
+                string cmpValFormat = simplePred.ComparedValue is string ? $"'{simplePred.ComparedValue}'" : $"{simplePred.ComparedValue}";
 
-                return $"{simplePred.TargetPropertyName} {_valueOperators[simplePred.ValueComparingOperator]} {simplePred.ComparedValue}";
+                return $"{simplePred.TargetPropertyName} {_valueOperators[simplePred.ValueComparingOperator]} {cmpValFormat}";
             }
 
             var compositePredicate = (CompositePredicate)predicate;
@@ -68,9 +69,10 @@ namespace DAL.Query
 
         public void SortBy(string sortAccordingTo, bool ascendingOrder)
         {
-            string order = ascendingOrder ? "ASC" : "DES"; 
+            string order = ascendingOrder ? "ASC" : "DESC"; 
 
-            _sortBy = $"SORT BY {sortAccordingTo} {order}";
+            _sortBy = $"ORDER BY {sortAccordingTo} {order}";
+            _page = "OFFSET 0 ROWS";
         }
 
         public void Page(int ipageToFetch, int pageSize)
@@ -78,13 +80,16 @@ namespace DAL.Query
             _pagingEnabled = true;
             _pageSize = pageSize;
             _pageNumber = ipageToFetch;
-            
-            _page = $"OFFSET {ipageToFetch * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
+
+            SortBy("Id", true);
+            _page = $"OFFSET {(ipageToFetch - 1) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
         }
 
         public QueryResult<TEntity> Execute()
         {
             _querySql += $"{_where} {_sortBy} {_page}";
+
+            Console.WriteLine(_querySql);
             
             var entities = DbContext.Set<TEntity>().FromSqlRaw(_querySql);
 
@@ -106,7 +111,7 @@ namespace DAL.Query
         public QueryBase(BookRentalDbContext dbContext)
         {
             DbContext = dbContext;
-            _querySql = $"SELECT * FROM {DbContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
+            _querySql = $"SELECT * FROM dbo.{DbContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
         }
     }
 }

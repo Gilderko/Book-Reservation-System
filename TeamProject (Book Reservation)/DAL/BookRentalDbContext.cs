@@ -55,7 +55,7 @@ namespace DAL
         {
             modelBuilder
                 .Entity<Genre>()
-                .Property(genre => genre.GenreID)
+                .Property(genre => genre.Id)
                 .HasConversion(
                 // Conversion to provider
                 genreID => (int)genreID,
