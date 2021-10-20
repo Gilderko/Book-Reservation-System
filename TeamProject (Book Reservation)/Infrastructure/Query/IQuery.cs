@@ -1,8 +1,9 @@
-﻿using DAL.Query.Predicates;
+﻿using DAL.Entities;
+using Infrastructure.Query.Predicates;
 
-namespace DAL.Query
+namespace Infrastructure.Query
 {
-    public interface IQuery<TEntity> where TEntity : class
+    public interface IQuery<TEntity> where TEntity : class, IEntity
     {
         public void Where(IPredicate rootPredicate);
         public void SortBy(string sortAccordingTo, bool ascendingOrder);

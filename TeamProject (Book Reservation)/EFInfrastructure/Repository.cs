@@ -1,23 +1,16 @@
-﻿using DAL.UnitOfWork;
+﻿using DAL.Entities;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DAL.Repository
+namespace EFInfrastructure
 {
-    public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly DbContext dbContext;
         private readonly DbSet<TEntity> dbSet;
 
-        public BaseRepository(IUnitOfWork unitOfWork)
+        public Repository(UnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
             dbContext = unitOfWork.Context;
             dbSet = dbContext.Set<TEntity>();
         }

@@ -1,4 +1,4 @@
-﻿namespace DAL.Query.Operators
+﻿namespace Infrastructure.Query.Operators
 {
     public enum LogicalOperator
     {

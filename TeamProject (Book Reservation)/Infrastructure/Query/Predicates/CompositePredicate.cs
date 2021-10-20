@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DAL.Query.Operators;
+using Infrastructure.Query.Operators;
 
-namespace DAL.Query.Predicates
+namespace Infrastructure.Query.Predicates
 {
     public class CompositePredicate : IPredicate
     {

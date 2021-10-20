@@ -4,8 +4,9 @@ using DAL;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using DAL.Enums;
-using DAL.Query;
-using DAL.Query.Predicates;
+using EFInfrastructure;
+using Infrastructure.Query.Operators;
+using Infrastructure.Query.Predicates;
 using Microsoft.EntityFrameworkCore;
 
 namespace TestingConsole
@@ -15,10 +16,11 @@ namespace TestingConsole
         static void Main(string[] args)
         {
             var context = new BookRentalDbContext();
+            var unitOfWork = new UnitOfWork(context);
 
-            var pred = new SimplePredicate("Id", 1, DAL.Query.Operators.ValueComparingOperator.Equal);
+            var pred = new SimplePredicate("Id", 1, ValueComparingOperator.Equal);
 
-            var quer = new QueryBase<BookInstance>(context);
+            var quer = new Query<BookInstance>(unitOfWork);
             quer.Where(pred);
             quer.LoadExplicitReferences("FromBookTemplate");
 

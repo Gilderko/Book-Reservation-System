@@ -1,19 +1,14 @@
-﻿using DAL.Entities;
-using DAL.Repository;
+﻿using DAL;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DAL.UnitOfWork
+namespace EFInfrastructure
 {
-    public class BaseUnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         public DbContext Context  { get; private set; }
 
-        public BaseUnitOfWork(BookRentalDbContext dbContextInit)
+        public UnitOfWork(BookRentalDbContext dbContextInit)
         {
             Context = dbContextInit;
         }

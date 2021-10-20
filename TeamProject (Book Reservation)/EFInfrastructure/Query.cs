@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DAL;
 using DAL.Entities;
-using DAL.Query.Operators;
-using DAL.Query.Predicates;
+using Infrastructure.Query;
+using Infrastructure.Query.Operators;
+using Infrastructure.Query.Predicates;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Query
+namespace EFInfrastructure
 {
-    public class QueryBase<TEntity> : IQuery<TEntity> where TEntity : class
+    public class Query<TEntity> : IQuery<TEntity> where TEntity : class, IEntity
     {
         public string SortAccordingTo { get; private set; }
         public bool UseAscendingOrder { get; private set; }
@@ -132,9 +134,9 @@ namespace DAL.Query
             _collectionsToLoad = collectionsToLoad;
         }
 
-        public QueryBase(BookRentalDbContext dbContext)
+        public Query(UnitOfWork unitOfWork)
         {
-            DatabaseContext = dbContext;
+            DatabaseContext = (BookRentalDbContext)unitOfWork.Context;
             _querySql = $"SELECT * FROM dbo.{DatabaseContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
         }
     }

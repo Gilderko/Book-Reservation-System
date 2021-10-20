@@ -18,9 +18,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Query\Operators" />
-    <Folder Include="Query\Predicates\" />
-  </ItemGroup>
-
 </Project>
