@@ -18,7 +18,7 @@ namespace TestingConsole
             var context = new BookRentalDbContext();
             var unitOfWork = new UnitOfWork(context);
 
-            var pred = new SimplePredicate("Id", 1, ValueComparingOperator.Equal);
+            var pred = new SimplePredicate("Id", 3, ValueComparingOperator.Equal);
 
             var quer = new Query<BookInstance>(unitOfWork);
             quer.Where(pred);
