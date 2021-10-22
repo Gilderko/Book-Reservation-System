@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Entities.ConnectionTables
 {
-    public class Reservation_BookInstance
+    public class Reservation_BookInstance : IEntity
     {
         public int ReservationID { get; set; }
 

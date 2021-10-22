@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
+using System.Threading.Tasks;
 
 namespace TeamProject__Book_Reservation_.Pages.AuthorPage
 {

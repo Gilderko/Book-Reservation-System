@@ -6,7 +6,7 @@ namespace EFInfrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public DbContext Context  { get; private set; }
+        public BookRentalDbContext Context { get; private set; }
 
         public UnitOfWork(BookRentalDbContext dbContextInit)
         {

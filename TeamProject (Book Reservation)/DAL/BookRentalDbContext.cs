@@ -1,7 +1,6 @@
 ﻿using DAL.Entities;
-using DAL.Enums;
-using Microsoft.EntityFrameworkCore;
 using DAL.Entities.ConnectionTables;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL
 {
@@ -34,7 +33,7 @@ namespace DAL
 
         // Connection Tables
 
-        public DbSet<Author_Book> Author_Books { get; set;}
+        public DbSet<Author_Book> Author_Books { get; set; }
 
         public DbSet<Book_Genre> Book_Genres { get; set; }
 
@@ -66,7 +65,7 @@ namespace DAL
             // BookCollection Book
             modelBuilder.Entity<BookCollection_Book>()
                 .HasKey(obj => new { obj.BookID, obj.BookCollectionID });
- 
+
 
             // Reservation BookInstance
             modelBuilder.Entity<Reservation_BookInstance>()

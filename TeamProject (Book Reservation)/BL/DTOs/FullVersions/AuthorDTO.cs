@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DAL.Entities
+namespace BL.DTOs.FullVersions
 {
-    public class Author : BaseEntity
+    public class AuthorDTO : BaseEntityDTO
     {
-        [MaxLength(32)]
+        [StringLength(32)]
         public string Name { get; set; }
 
-        [MaxLength(32)]
+        [StringLength(32)]
         public string Surname { get; set; }
 
-        [MaxLength(1024)]
+        [StringLength(1024)]
         public string Description { get; set; }
 
         // Many to many relationships
 
-        public ICollection<Author_Book> AuthorsBooks { get; set; }
+        public ICollection<Author_BookDTO> AuthorsBooks { get; set; }
     }
 }

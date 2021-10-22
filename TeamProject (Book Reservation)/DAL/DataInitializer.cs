@@ -1,9 +1,9 @@
 ﻿using DAL.Entities;
+using DAL.Entities.ConnectionTables;
+using DAL.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using DAL.Enums;
-using DAL.Entities.ConnectionTables;
 
 namespace DAL
 {
@@ -297,15 +297,15 @@ namespace DAL
             );
 
             modelBuilder.Entity<Book_Genre>().HasData(
-                new { BookID = 1, GenreID = (int) GenreType.Classic },
-                new { BookID = 2, GenreID = (int) GenreType.Classic },
-                new { BookID = 3, GenreID = (int) GenreType.Classic },
-                new { BookID = 4, GenreID = (int) GenreType.Scifi },
-                new { BookID = 5, GenreID = (int) GenreType.Fantasy },
-                new { BookID = 6, GenreID = (int) GenreType.Detective },
-                new { BookID = 7, GenreID = (int) GenreType.Fantasy },
-                new { BookID = 8, GenreID = (int) GenreType.Lovestory },
-                new { BookID = 9, GenreID = (int) GenreType.Classic }
+                new { BookID = 1, GenreID = (int)GenreType.Classic },
+                new { BookID = 2, GenreID = (int)GenreType.Classic },
+                new { BookID = 3, GenreID = (int)GenreType.Classic },
+                new { BookID = 4, GenreID = (int)GenreType.Scifi },
+                new { BookID = 5, GenreID = (int)GenreType.Fantasy },
+                new { BookID = 6, GenreID = (int)GenreType.Detective },
+                new { BookID = 7, GenreID = (int)GenreType.Fantasy },
+                new { BookID = 8, GenreID = (int)GenreType.Lovestory },
+                new { BookID = 9, GenreID = (int)GenreType.Classic }
             );
 
             modelBuilder.Entity<BookInstance>().HasData(
@@ -411,27 +411,27 @@ namespace DAL
             modelBuilder.Entity<Genre>().HasData(
                 new Genre
                 {
-                    Id = (int) GenreType.Detective
+                    Id = (int)GenreType.Detective
                 },
                 new Genre
                 {
-                    Id = (int) GenreType.Lovestory
+                    Id = (int)GenreType.Lovestory
                 },
                 new Genre
                 {
-                    Id = (int) GenreType.Classic
+                    Id = (int)GenreType.Classic
                 },
                 new Genre
                 {
-                    Id = (int) GenreType.Fantasy
+                    Id = (int)GenreType.Fantasy
                 },
                 new Genre
                 {
-                    Id = (int) GenreType.Medieval
+                    Id = (int)GenreType.Medieval
                 },
                 new Genre
                 {
-                    Id = (int) GenreType.Scifi
+                    Id = (int)GenreType.Scifi
                 }
             );
 
@@ -471,14 +471,14 @@ namespace DAL
                 {
                     Id = 3,
                     DateFrom = new DateTime(2021, 9, 30),
-                    DateTill = new DateTime(2021, 10, 30),                    
+                    DateTill = new DateTime(2021, 10, 30),
                     UserID = 1
                 },
                 new Reservation
                 {
                     Id = 4,
                     DateFrom = new DateTime(2021, 10, 30),
-                    DateTill = new DateTime(2021, 11, 30),                    
+                    DateTill = new DateTime(2021, 11, 30),
                     UserID = 2
                 },
                 new Reservation
@@ -536,7 +536,7 @@ namespace DAL
                 {
                     ReservationID = 2,
                     BookInstanceID = 2
-                }, 
+                },
                 new Reservation_BookInstance
                 {
                     ReservationID = 3,

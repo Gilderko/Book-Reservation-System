@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Infrastructure.Query.Operators;
+using System.Collections.Generic;
 using System.Linq;
-using Infrastructure.Query.Operators;
 
 namespace Infrastructure.Query.Predicates
 {

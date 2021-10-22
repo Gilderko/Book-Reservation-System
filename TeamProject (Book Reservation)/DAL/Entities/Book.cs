@@ -1,6 +1,5 @@
-﻿using DAL.Entities;
+﻿using DAL.Entities.ConnectionTables;
 using DAL.Enums;
-using DAL.Entities.ConnectionTables;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,9 +24,9 @@ namespace DAL.Entities
         [Column(TypeName = "Date")]
         public DateTime DateOfRelease { get; set; }
 
-        public Language Language { get; set; }    
+        public Language Language { get; set; }
 
-        public ICollection<BookInstance> BookInstances { get; set; }        
+        public ICollection<BookInstance> BookInstances { get; set; }
 
         public ICollection<Review> Reviews { get; set; }
 

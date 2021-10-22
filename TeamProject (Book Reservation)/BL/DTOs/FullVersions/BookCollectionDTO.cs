@@ -2,28 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DAL.Entities
+namespace BL.DTOs.FullVersions
 {
-    public class BookCollection : BaseEntity
+    public class BookCollectionDTO : BaseEntityDTO
     {
-        [MaxLength(128)]
+        [StringLength(128)]
         public string Title { get; set; }
 
-        [MaxLength(256)]
+        [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(TypeName = "Date")]
         public DateTime CreationDate { get; set; }
 
         public int UserId { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public User OwnerUser;
+        public UserDTO OwnerUser;
 
         // Many to many relationships
 
-        public ICollection<BookCollection_Book> Books { get; set; }
+        public ICollection<BookCollection_BookDTO> Books { get; set; }
     }
 }

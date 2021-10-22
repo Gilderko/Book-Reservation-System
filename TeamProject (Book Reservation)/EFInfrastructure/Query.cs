@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DAL;
+﻿using DAL;
 using DAL.Entities;
+using Infrastructure;
 using Infrastructure.Query;
 using Infrastructure.Query.Operators;
 using Infrastructure.Query.Predicates;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EFInfrastructure
 {
@@ -46,7 +47,7 @@ namespace EFInfrastructure
         {
             if (predicate is SimplePredicate)
             {
-                var simplePred = (SimplePredicate)predicate;               
+                var simplePred = (SimplePredicate)predicate;
                 string cmpValFormat = simplePred.ComparedValue is string ? $"'{simplePred.ComparedValue}'" : $"{simplePred.ComparedValue}";
 
                 return $"{simplePred.TargetPropertyName} {_valueOperators[simplePred.ValueComparingOperator]} {cmpValFormat}";
@@ -73,7 +74,7 @@ namespace EFInfrastructure
 
         public void SortBy(string sortAccordingTo, bool ascendingOrder)
         {
-            string order = ascendingOrder ? "ASC" : "DESC"; 
+            string order = ascendingOrder ? "ASC" : "DESC";
 
             _sortBy = $"ORDER BY {sortAccordingTo} {order}";
             _page = "OFFSET 0 ROWS";
@@ -97,14 +98,14 @@ namespace EFInfrastructure
 
             var entities = DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).ToList();
 
-            foreach(var entry in entities)
+            foreach (var entry in entities)
             {
-                foreach(string refToLoad in _refsToLoad)
+                foreach (string refToLoad in _refsToLoad)
                 {
                     DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).Load();
                 }
 
-                foreach(string collectToLoad in _collectionsToLoad)
+                foreach (string collectToLoad in _collectionsToLoad)
                 {
                     DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).Load();
                 }
@@ -134,9 +135,9 @@ namespace EFInfrastructure
             _collectionsToLoad = collectionsToLoad;
         }
 
-        public Query(UnitOfWork unitOfWork)
+        public Query(IUnitOfWork unitOfWork)
         {
-            DatabaseContext = (BookRentalDbContext)unitOfWork.Context;
+            DatabaseContext = ((UnitOfWork)unitOfWork).Context;
             _querySql = $"SELECT * FROM dbo.{DatabaseContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
         }
     }
