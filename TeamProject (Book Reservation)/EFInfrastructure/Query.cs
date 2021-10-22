@@ -1,14 +1,17 @@
-﻿using System;
+﻿using DAL;
+using DAL.Entities;
+using Infrastructure;
+using Infrastructure.Query;
+using Infrastructure.Query.Operators;
+using Infrastructure.Query.Predicates;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DAL.Entities;
-using DAL.Query.Operators;
-using DAL.Query.Predicates;
-using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Query
+namespace EFInfrastructure
 {
-    public class QueryBase<TEntity> : IQuery<TEntity> where TEntity : class
+    public class Query<TEntity> : IQuery<TEntity> where TEntity : class, IEntity
     {
         public string SortAccordingTo { get; private set; }
         public bool UseAscendingOrder { get; private set; }
@@ -44,7 +47,7 @@ namespace DAL.Query
         {
             if (predicate is SimplePredicate)
             {
-                var simplePred = (SimplePredicate)predicate;               
+                var simplePred = (SimplePredicate)predicate;
                 string cmpValFormat = simplePred.ComparedValue is string ? $"'{simplePred.ComparedValue}'" : $"{simplePred.ComparedValue}";
 
                 return $"{simplePred.TargetPropertyName} {_valueOperators[simplePred.ValueComparingOperator]} {cmpValFormat}";
@@ -71,7 +74,7 @@ namespace DAL.Query
 
         public void SortBy(string sortAccordingTo, bool ascendingOrder)
         {
-            string order = ascendingOrder ? "ASC" : "DESC"; 
+            string order = ascendingOrder ? "ASC" : "DESC";
 
             _sortBy = $"ORDER BY {sortAccordingTo} {order}";
             _page = "OFFSET 0 ROWS";
@@ -95,14 +98,14 @@ namespace DAL.Query
 
             var entities = DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).ToList();
 
-            foreach(var entry in entities)
+            foreach (var entry in entities)
             {
-                foreach(string refToLoad in _refsToLoad)
+                foreach (string refToLoad in _refsToLoad)
                 {
                     DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).Load();
                 }
 
-                foreach(string collectToLoad in _collectionsToLoad)
+                foreach (string collectToLoad in _collectionsToLoad)
                 {
                     DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).Load();
                 }
@@ -132,9 +135,9 @@ namespace DAL.Query
             _collectionsToLoad = collectionsToLoad;
         }
 
-        public QueryBase(BookRentalDbContext dbContext)
+        public Query(IUnitOfWork unitOfWork)
         {
-            DatabaseContext = dbContext;
+            DatabaseContext = ((UnitOfWork)unitOfWork).Context;
             _querySql = $"SELECT * FROM dbo.{DatabaseContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
         }
     }

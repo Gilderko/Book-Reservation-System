@@ -1,5 +1,4 @@
-﻿using DAL.Entities;
-using DAL.Enums;
+﻿using DAL.Enums;
 using System.Collections.Generic;
 
 namespace DAL.Entities

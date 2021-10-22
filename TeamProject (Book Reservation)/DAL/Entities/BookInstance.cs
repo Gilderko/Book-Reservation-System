@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DAL.Entities.ConnectionTables;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using DAL.Entities.ConnectionTables;
 
 namespace DAL.Entities
 {

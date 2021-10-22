@@ -1,5 +1,4 @@
-﻿using System;
-namespace DAL.Query.Predicates
+﻿namespace Infrastructure.Query.Predicates
 {
     public interface IPredicate
     {

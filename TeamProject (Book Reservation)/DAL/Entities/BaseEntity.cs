@@ -2,7 +2,7 @@
 
 namespace DAL.Entities
 {
-    public class BaseEntity 
+    public abstract class BaseEntity : IEntity
     {
         // The name of property Id is hardcoded into QueryBase
         [Key]

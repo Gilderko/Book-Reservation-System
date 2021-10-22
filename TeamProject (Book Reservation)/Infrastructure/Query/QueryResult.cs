@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using DAL.Entities;
+using System.Collections.Generic;
 
-namespace DAL.Query
+namespace Infrastructure.Query
 {
-    public class QueryResult<TEntity> where TEntity : class
+    public class QueryResult<TEntity> where TEntity : IEntity
     {
         public long TotalItemsCount { get; set; }
         public int RequestedPageNumber { get; set; }

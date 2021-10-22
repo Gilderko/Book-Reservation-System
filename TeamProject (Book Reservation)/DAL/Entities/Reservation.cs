@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DAL.Entities.ConnectionTables;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using DAL.Entities.ConnectionTables;
 
 namespace DAL.Entities
 {
@@ -24,7 +24,7 @@ namespace DAL.Entities
         public EReaderInstance EReader { get; set; }
 
         // Many to many relationships
-        
+
         public ICollection<Reservation_BookInstance> BookInstances { get; set; }
     }
 }

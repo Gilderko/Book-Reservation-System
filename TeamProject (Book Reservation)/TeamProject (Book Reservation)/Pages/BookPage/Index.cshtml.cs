@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using DAL.Entities;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TeamProject__Book_Reservation_.Pages.BookPage
 {
@@ -19,7 +15,7 @@ namespace TeamProject__Book_Reservation_.Pages.BookPage
             _context = context;
         }
 
-        public IList<Book> Book { get;set; }
+        public IList<Book> Book { get; set; }
 
         public async Task OnGetAsync()
         {
