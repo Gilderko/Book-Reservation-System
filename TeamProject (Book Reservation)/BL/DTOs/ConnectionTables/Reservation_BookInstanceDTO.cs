@@ -1,4 +1,7 @@
-﻿namespace DAL.Entities.ConnectionTables
+﻿using BL.DTOs;
+using BL.DTOs.FullVersions;
+
+namespace DAL.Entities.ConnectionTables
 {
     public class Reservation_BookInstanceDTO : IEntityDTO
     {
