@@ -2,6 +2,12 @@
 {
     public enum ValueComparingOperator
     {
-        None, GreaterThan, GreaterThanOrEqual, Equal, NotEqual, LessThan, LessThanOrEqual
+        None, 
+        GreaterThan, 
+        GreaterThanOrEqual, 
+        Equal, 
+        NotEqual, 
+        LessThan, 
+        LessThanOrEqual
     }
 }

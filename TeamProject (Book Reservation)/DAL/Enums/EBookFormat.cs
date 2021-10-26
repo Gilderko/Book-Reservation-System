@@ -2,6 +2,8 @@
 {
     public enum EBookFormat
     {
-        EPUB, PDF, MOBI
+        EPUB, 
+        PDF, 
+        MOBI
     }
 }
