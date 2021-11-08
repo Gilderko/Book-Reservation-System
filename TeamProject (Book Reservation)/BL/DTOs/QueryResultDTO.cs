@@ -7,6 +7,12 @@ namespace BL.DTOs
         public long TotalItemsCount { get; set; }
         public int? RequestedPageNumber { get; set; }
         public int PageSize { get; set; }
-        public IEnumerable<IEntityDTO> Items { get; set; }
+        public IEnumerable<TEntityDTO> Items { get; set; }
+        public bool PagingEnabled { get; set; }
+
+        public QueryResultDTO()
+        {
+
+        }            
     }
 }

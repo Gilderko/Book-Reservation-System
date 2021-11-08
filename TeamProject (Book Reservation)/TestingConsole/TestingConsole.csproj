@@ -6,8 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BL\BL.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
     <ProjectReference Include="..\EFInfrastructure\EFInfrastructure.csproj" />
+    <ProjectReference Include="..\TeamProject (Book Reservation)\TeamProject (Book Reservation).csproj" />
   </ItemGroup>
 
 </Project>

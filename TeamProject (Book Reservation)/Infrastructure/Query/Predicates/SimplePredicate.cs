@@ -8,6 +8,11 @@ namespace Infrastructure.Query.Predicates
         public object ComparedValue { get; private set; }
         public ValueComparingOperator ValueComparingOperator { get; private set; }
 
+        public SimplePredicate()
+        {
+
+        }
+
         public SimplePredicate(string property, object value, ValueComparingOperator oper)
         {
             TargetPropertyName = property;

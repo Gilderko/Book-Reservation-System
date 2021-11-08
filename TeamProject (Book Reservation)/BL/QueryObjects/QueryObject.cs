@@ -8,19 +8,20 @@ using Infrastructure.Query.Predicates;
 
 namespace BL.QueryObjects
 {
-    public class QueryObject<TEntity> where TEntity : class, IEntity
+    public class QueryObject<TEntityDTO,TEntity> where TEntity : class, IEntity
+                                                 where TEntityDTO : class, IEntityDTO
     {
         private IMapper _mapper;
 
-        private Query<IEntity> _myQuery;
+        private Query<TEntity> _myQuery;
 
         public QueryObject(IMapper mapper, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
-            _myQuery = new Query<IEntity>(unitOfWork);
+            _myQuery = new Query<TEntity>(unitOfWork);
         }
 
-        public QueryResultDTO<IEntityDTO> ExecuteQuery(FilterDto filter)
+        public QueryResultDTO<TEntityDTO> ExecuteQuery(FilterDto filter)
         {
             if (filter.Predicate is PredicateDto)
             {
@@ -41,7 +42,7 @@ namespace BL.QueryObjects
             }
             var queryResult = _myQuery.Execute();
 
-            var queryResultDto = _mapper.Map<QueryResultDTO<IEntityDTO>>(queryResult);
+            var queryResultDto = _mapper.Map<QueryResultDTO<TEntityDTO>>(queryResult);
             return queryResultDto;
         }
     }

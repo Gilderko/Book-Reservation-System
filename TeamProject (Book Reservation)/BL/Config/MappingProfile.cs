@@ -1,10 +1,12 @@
 ﻿using System;
 using AutoMapper;
+using BL.DTOs;
 using BL.DTOs.Filters;
 using BL.DTOs.FullVersions;
 using BL.DTOs.Previews;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
+using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
 
 namespace BL.Config
@@ -31,6 +33,8 @@ namespace BL.Config
             config.CreateMap<CompositePredicate, CompositePredicateDto>().ReverseMap();
             config.CreateMap<IPredicate, IPredicateDto>().ReverseMap();
             config.CreateMap<SimplePredicate, PredicateDto>().ReverseMap();
+            config.CreateMap(typeof(QueryResult<>), typeof(QueryResultDTO<>)).ReverseMap();
+
 
             config.CreateMap<Author, AuthorPrevDTO>().ReverseMap();
             config.CreateMap<BookCollection, BookCollectionPrevDTO>().ReverseMap();
