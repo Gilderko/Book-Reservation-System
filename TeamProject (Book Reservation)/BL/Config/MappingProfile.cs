@@ -1,8 +1,11 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
+using BL.DTOs.Filters;
 using BL.DTOs.FullVersions;
 using BL.DTOs.Previews;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
+using Infrastructure.Query.Predicates;
 
 namespace BL.Config
 {
@@ -24,6 +27,10 @@ namespace BL.Config
             config.CreateMap<Reservation, ReservationDTO>().ReverseMap();
             config.CreateMap<Review, ReviewDTO>().ReverseMap();
             config.CreateMap<User, UserDTO>().ReverseMap();
+
+            config.CreateMap<CompositePredicate, CompositeFilter>().ReverseMap();
+            config.CreateMap<IPredicate, IFilter>().ReverseMap();
+            config.CreateMap<SimplePredicate, Filter>().ReverseMap();
 
             config.CreateMap<Author, AuthorPrevDTO>().ReverseMap();
             config.CreateMap<BookCollection, BookCollectionPrevDTO>().ReverseMap();
