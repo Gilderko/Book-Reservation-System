@@ -1,6 +1,6 @@
 namespace BL.DTOs.Filters
 {
-    public interface IFilter
+    public interface IPredicateDto
     {
         
     }

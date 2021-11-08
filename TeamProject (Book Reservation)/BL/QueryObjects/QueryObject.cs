@@ -20,10 +20,17 @@ namespace BL.QueryObjects
             _myQuery = new Query<IEntity>(unitOfWork);
         }
 
-        public QueryResultDTO<IEntityDTO> ExecuteQuery(Filter filter)
+        public QueryResultDTO<IEntityDTO> ExecuteQuery(FilterDto filter)
         {
-            _myQuery.Where(_mapper.Map<CompositePredicate>(filter));
-            
+            if (filter.Predicate is PredicateDto)
+            {
+                _myQuery.Where(_mapper.Map<SimplePredicate>(filter.Predicate));   
+            }
+            else
+            {
+                _myQuery.Where(_mapper.Map<CompositePredicate>(filter.Predicate));
+            }
+
             if (!string.IsNullOrWhiteSpace(filter.SortCriteria))
             {
                 _myQuery.SortBy(filter.SortCriteria, filter.SortAscending);

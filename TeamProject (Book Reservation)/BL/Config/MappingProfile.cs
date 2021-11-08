@@ -28,9 +28,9 @@ namespace BL.Config
             config.CreateMap<Review, ReviewDTO>().ReverseMap();
             config.CreateMap<User, UserDTO>().ReverseMap();
 
-            config.CreateMap<CompositePredicate, CompositeFilter>().ReverseMap();
-            config.CreateMap<IPredicate, IFilter>().ReverseMap();
-            config.CreateMap<SimplePredicate, Filter>().ReverseMap();
+            config.CreateMap<CompositePredicate, CompositePredicateDto>().ReverseMap();
+            config.CreateMap<IPredicate, IPredicateDto>().ReverseMap();
+            config.CreateMap<SimplePredicate, PredicateDto>().ReverseMap();
 
             config.CreateMap<Author, AuthorPrevDTO>().ReverseMap();
             config.CreateMap<BookCollection, BookCollectionPrevDTO>().ReverseMap();
