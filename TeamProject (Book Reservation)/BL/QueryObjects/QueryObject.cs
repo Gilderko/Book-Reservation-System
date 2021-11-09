@@ -40,6 +40,10 @@ namespace BL.QueryObjects
             {
                 _myQuery.Page(filter.RequestedPageNumber.Value, filter.PageSize);
             }
+
+            _myQuery.LoadExplicitCollections(filter._collectionsToLoad);
+            _myQuery.LoadExplicitReferences(filter._refsToLoad);
+
             var queryResult = _myQuery.Execute();
 
             var queryResultDto = _mapper.Map<QueryResultDTO<TEntityDTO>>(queryResult);

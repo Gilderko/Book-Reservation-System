@@ -35,7 +35,6 @@ namespace BL.Config
             config.CreateMap<SimplePredicate, PredicateDto>().ReverseMap();
             config.CreateMap(typeof(QueryResult<>), typeof(QueryResultDTO<>)).ReverseMap();
 
-
             config.CreateMap<Author, AuthorPrevDTO>().ReverseMap();
             config.CreateMap<BookCollection, BookCollectionPrevDTO>().ReverseMap();
             config.CreateMap<Book, BookPrevDTO>().ReverseMap();
