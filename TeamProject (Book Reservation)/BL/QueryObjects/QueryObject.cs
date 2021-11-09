@@ -41,8 +41,8 @@ namespace BL.QueryObjects
                 _myQuery.Page(filter.RequestedPageNumber.Value, filter.PageSize);
             }
 
-            _myQuery.LoadExplicitCollections(filter._collectionsToLoad);
-            _myQuery.LoadExplicitReferences(filter._refsToLoad);
+            _myQuery.LoadExplicitCollections(filter.CollectionsToLoad);
+            _myQuery.LoadExplicitReferences(filter.RefsToLoad);
 
             var queryResult = _myQuery.Execute();
 

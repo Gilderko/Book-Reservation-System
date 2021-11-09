@@ -8,18 +8,18 @@ namespace BL.DTOs.Filters
         public string SortCriteria { get; set; }
         public bool SortAscending { get; set; }
 
-        public string[] _refsToLoad { get; private set; }
+        public string[] RefsToLoad { get; private set; }
 
-        public string[] _collectionsToLoad { get; private set; } 
+        public string[] CollectionsToLoad { get; private set; } 
 
         public void LoadExplicitReferences(params string[] referencesToLoad)
         {
-            _refsToLoad = referencesToLoad;
+            RefsToLoad = referencesToLoad;
         }
 
         public void LoadExplicitCollections(params string[] collectionsToLoad)
         {
-            _collectionsToLoad = collectionsToLoad;
+            CollectionsToLoad = collectionsToLoad;
         }
     }
 }
