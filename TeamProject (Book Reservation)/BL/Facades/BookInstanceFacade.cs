@@ -14,33 +14,33 @@ namespace BL.Facades
 {
     public class BookInstanceFacade
     {
-        private IUnitOfWork unitOfWork;
-        private CRUDService<BookInstanceDTO, BookInstance> service;
+        private IUnitOfWork _unitOfWork;
+        private CRUDService<BookInstanceDTO, BookInstance> _service;
 
-        public BookInstanceFacade()
+        public BookInstanceFacade(IUnitOfWork unitOfWork, CRUDService<BookInstanceDTO, BookInstance> service)
         {
-            unitOfWork = new UnitOfWork(new BookRentalDbContext());
-            service = new CRUDService<BookInstanceDTO, BookInstance>(unitOfWork);
+            _unitOfWork = unitOfWork;
+            _service = service;
         }
 
         public void Create(BookInstanceDTO bookInstance)
         {
-            service.Insert(bookInstance);
+            _service.Insert(bookInstance);
         }
 
         public BookInstanceDTO Get(int id)
         {
-            return service.GetByID(id);
+            return _service.GetByID(id);
         }
 
         public void Update(BookInstanceDTO bookInstance)
         {
-            service.Update(bookInstance);
+            _service.Update(bookInstance);
         }
 
         public void Delete(int id)
         {
-            service.Delete(id);
+            _service.Delete(id);
         }
     }
 }
