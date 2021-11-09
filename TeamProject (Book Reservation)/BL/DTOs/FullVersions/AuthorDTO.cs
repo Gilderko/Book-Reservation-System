@@ -6,6 +6,7 @@ namespace BL.DTOs.FullVersions
 {
     public class AuthorDTO : BaseEntityDTO
     {
+        [Required]
         [StringLength(32)]
         public string Name { get; set; }
 

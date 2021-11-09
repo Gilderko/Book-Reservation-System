@@ -1,15 +1,19 @@
 ﻿using DAL.Entities.ConnectionTables;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BL.DTOs.FullVersions
 {
     public class ReservationDTO : BaseEntityDTO
     {
+        [Required]
         public DateTime DateFrom { get; set; }
 
+        [Required]
         public DateTime DateTill { get; set; }
 
+        [Required]
         public int UserID { get; set; }
 
         public UserDTO User { get; set; }
