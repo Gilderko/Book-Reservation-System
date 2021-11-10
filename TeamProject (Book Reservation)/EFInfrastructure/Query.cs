@@ -40,7 +40,8 @@ namespace EFInfrastructure
             { ValueComparingOperator.Equal, "=" },
             { ValueComparingOperator.NotEqual, "<>" },
             { ValueComparingOperator.LessThan, "<" },
-            { ValueComparingOperator.LessThanOrEqual, "<=" }
+            { ValueComparingOperator.LessThanOrEqual, "<=" },
+            { ValueComparingOperator.Contains, "LIKE"}
         };
 
         private string PredicateToString(IPredicate predicate)
@@ -48,7 +49,17 @@ namespace EFInfrastructure
             if (predicate is SimplePredicate)
             {
                 var simplePred = (SimplePredicate)predicate;
-                string cmpValFormat = simplePred.ComparedValue is string ? $"'{simplePred.ComparedValue}'" : $"{simplePred.ComparedValue}";
+
+                string cmpValFormat = string.Empty;
+                if (simplePred.ComparedValue is string)
+                {
+                    cmpValFormat = simplePred.ValueComparingOperator == ValueComparingOperator.Contains ?
+                        $"'%{simplePred.ComparedValue}%'" : $"'{simplePred.ComparedValue}'";
+                }
+                else
+                {
+                    cmpValFormat = $"{simplePred.ComparedValue}";
+                }                    
 
                 return $"{simplePred.TargetPropertyName} {_valueOperators[simplePred.ValueComparingOperator]} {cmpValFormat}";
             }

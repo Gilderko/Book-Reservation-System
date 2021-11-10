@@ -8,6 +8,7 @@
         Equal, 
         NotEqual, 
         LessThan, 
-        LessThanOrEqual
+        LessThanOrEqual,
+        Contains
     }
 }

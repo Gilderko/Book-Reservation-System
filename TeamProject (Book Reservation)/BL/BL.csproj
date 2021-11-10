@@ -5,12 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Facades\ReviewFacades\**" />
+    <EmbeddedResource Remove="Facades\ReviewFacades\**" />
+    <None Remove="Facades\ReviewFacades\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Facades\ReviewFacades\" />
     <Folder Include="QueryObjects\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
   </ItemGroup>
 

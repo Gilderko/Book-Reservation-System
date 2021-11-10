@@ -14,6 +14,4 @@ namespace BL.DTOs.FullVersions
 
         public ICollection<EBookInstanceDTO> EBookInstances { get; set; }
     }
-
-
 }

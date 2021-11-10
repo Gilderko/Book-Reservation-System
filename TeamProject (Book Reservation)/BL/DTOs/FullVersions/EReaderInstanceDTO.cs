@@ -8,6 +8,11 @@ namespace BL.DTOs.FullVersions
         [Required]
         public int EReaderTemplateID { get; set; }
 
+        public int EreaderOwnerId { get; set; }
+
+        [Required]
+        public UserDTO Owner { get; set; }
+
         public EReaderDTO EReaderTemplate { get; set; }
 
         public ICollection<EBookInstanceDTO> BooksIncluded { get; set; }

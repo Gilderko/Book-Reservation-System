@@ -30,5 +30,9 @@ namespace BL.DTOs.FullVersions
         public ICollection<ReservationDTO> Reservations { get; set; }
 
         public ICollection<ReviewDTO> Reviews { get; set; }
+
+        public ICollection<EBookInstanceDTO> MyBooks { get; set; }
+
+        public ICollection<EReaderInstanceDTO> MyEReaders { get; set; }
     }
 }

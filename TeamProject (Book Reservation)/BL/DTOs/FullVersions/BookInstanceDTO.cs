@@ -7,6 +7,11 @@ namespace BL.DTOs.FullVersions
     public class BookInstanceDTO : BaseEntityDTO
     {
         [Required]
+        public int BookOwnerId { get; set; }
+
+        public UserDTO Owner { get; set; }
+
+        [Required]
         public int BookTemplateID { get; set; }
 
         public BookDTO FromBookTemplate { get; set; }

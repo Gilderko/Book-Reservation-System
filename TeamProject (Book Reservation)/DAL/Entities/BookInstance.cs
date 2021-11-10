@@ -6,6 +6,12 @@ namespace DAL.Entities
 {
     public class BookInstance : BaseEntity
     {
+
+        public int BookOwnerId { get; set; }
+
+        [ForeignKey(nameof(BookTemplateID))]
+        public User Owner { get; set; }
+
         public int BookTemplateID { get; set; }
 
         [ForeignKey(nameof(BookTemplateID))]
