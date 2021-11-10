@@ -11,7 +11,7 @@ namespace DAL
 
         public DbSet<Author> Authors { get; set; }
 
-        public DbSet<Book> BookTemplates { get; set; }
+        public DbSet<Book> Books { get; set; }
 
         public DbSet<BookInstance> BookInstances { get; set; }
 
@@ -68,8 +68,14 @@ namespace DAL
 
 
             // Reservation BookInstance
-            modelBuilder.Entity<Reservation_BookInstance>()
+            modelBuilder.Entity<Reservation_BookInstance>()                    
                 .HasKey(obj => new { obj.ReservationID, obj.BookInstanceID });
+
+            modelBuilder.Entity<Reservation_BookInstance>()
+                .HasOne(obj => obj.Reservation)
+                .WithMany(obj => obj.BookInstances)
+                .HasForeignKey( obj => obj.ReservationID)
+                .OnDelete(DeleteBehavior.Restrict);  
 
             modelBuilder.Seed();
 

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(BookRentalDbContext))]
-    [Migration("20211110150156_Initial")]
+    [Migration("20211110153850_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,7 +165,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BookTemplates");
+                    b.ToTable("Books");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Book");
 
@@ -307,6 +307,8 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookOwnerId");
 
                     b.HasIndex("BookTemplateID");
 
@@ -1047,6 +1049,12 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.BookInstance", b =>
                 {
+                    b.HasOne("DAL.Entities.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("BookOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DAL.Entities.Book", "FromBookTemplate")
                         .WithMany("BookInstances")
                         .HasForeignKey("BookTemplateID")
@@ -1054,6 +1062,8 @@ namespace DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("FromBookTemplate");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("DAL.Entities.ConnectionTables.Author_Book", b =>
@@ -1109,11 +1119,13 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Reservation", null)
+                    b.HasOne("DAL.Entities.Reservation", "Reservation")
                         .WithMany("BookInstances")
                         .HasForeignKey("ReservationID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("DAL.Entities.EBookInstance", b =>

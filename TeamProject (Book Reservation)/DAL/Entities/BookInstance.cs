@@ -11,6 +11,8 @@ namespace DAL.Entities
 
         public int BookOwnerId { get; set; }
 
+        [ForeignKey(nameof(BookOwnerId))]
+        public User Owner { get; set; }
 
         public int BookTemplateID { get; set; }
 

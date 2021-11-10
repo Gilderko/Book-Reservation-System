@@ -15,26 +15,13 @@ namespace TestingConsole
     {
         private static void Main(string[] args)
         {
-
             var uof = new UnitOfWork(new BookRentalDbContext());
-            var mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
 
-            var qObj = new QueryObject<BookDTO, Book>(mapper, uof);
+            var repo = new Repository<BookInstance>(uof);
 
-            var pred = new PredicateDto("PageCount", 100, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThanOrEqual);
+            var books = repo.GetByID(1, null, new string[] { "AllReservations" });
 
-            var filter = new FilterDto();
-            filter.Predicate = pred;
-
-            qObj.LoadExplicitCollections(book => new string[] { nameof(book.BookInstances)});
-            
-            var result = qObj.ExecuteQuery(filter);
-
-            foreach(var value in result.Items)
-            {
-                Console.WriteLine(value.BookInstances.Count);
-            }
-
+            Console.WriteLine(books.AllReservations.Count);
         }
     }
 }

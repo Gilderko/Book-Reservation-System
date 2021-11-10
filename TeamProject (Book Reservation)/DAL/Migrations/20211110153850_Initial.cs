@@ -23,7 +23,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookTemplates",
+                name: "Books",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -40,7 +40,7 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookTemplates", x => x.Id);
+                    table.PrimaryKey("PK_Books", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,30 +104,9 @@ namespace DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Author_Books_BookTemplates_BookID",
+                        name: "FK_Author_Books_Books_BookID",
                         column: x => x.BookID,
-                        principalTable: "BookTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookInstances",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Conditon = table.Column<int>(type: "int", nullable: false),
-                    BookOwnerId = table.Column<int>(type: "int", nullable: false),
-                    BookTemplateID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookInstances", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BookInstances_BookTemplates_BookTemplateID",
-                        column: x => x.BookTemplateID,
-                        principalTable: "BookTemplates",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -143,9 +122,9 @@ namespace DAL.Migrations
                 {
                     table.PrimaryKey("PK_Book_Genres", x => new { x.GenreID, x.BookID });
                     table.ForeignKey(
-                        name: "FK_Book_Genres_BookTemplates_BookID",
+                        name: "FK_Book_Genres_Books_BookID",
                         column: x => x.BookID,
-                        principalTable: "BookTemplates",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -173,6 +152,33 @@ namespace DAL.Migrations
                     table.ForeignKey(
                         name: "FK_BookCollections_Users_UserId",
                         column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookInstances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Conditon = table.Column<int>(type: "int", nullable: false),
+                    BookOwnerId = table.Column<int>(type: "int", nullable: false),
+                    BookTemplateID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookInstances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookInstances_Books_BookTemplateID",
+                        column: x => x.BookTemplateID,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookInstances_Users_BookOwnerId",
+                        column: x => x.BookOwnerId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -221,9 +227,9 @@ namespace DAL.Migrations
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_BookTemplates_BookTemplateID",
+                        name: "FK_Reviews_Books_BookTemplateID",
                         column: x => x.BookTemplateID,
-                        principalTable: "BookTemplates",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -251,9 +257,9 @@ namespace DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookCollection_Books_BookTemplates_BookID",
+                        name: "FK_BookCollection_Books_Books_BookID",
                         column: x => x.BookID,
-                        principalTable: "BookTemplates",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -272,9 +278,9 @@ namespace DAL.Migrations
                 {
                     table.PrimaryKey("PK_EBookInstances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EBookInstances_BookTemplates_EBookTemplateID",
+                        name: "FK_EBookInstances_Books_EBookTemplateID",
                         column: x => x.EBookTemplateID,
-                        principalTable: "BookTemplates",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -340,7 +346,7 @@ namespace DAL.Migrations
                         column: x => x.ReservationID,
                         principalTable: "Reservations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -363,12 +369,12 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "BookTemplates",
+                table: "Books",
                 columns: new[] { "Id", "DateOfRelease", "Description", "Discriminator", "Format", "ISBN", "Language", "MemorySize", "PageCount", "Title" },
                 values: new object[] { 9, new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "EBook", 0, "9780141920252", 0, 1024, 320, "Romeo and Juliet" });
 
             migrationBuilder.InsertData(
-                table: "BookTemplates",
+                table: "Books",
                 columns: new[] { "Id", "DateOfRelease", "Description", "Discriminator", "ISBN", "Language", "PageCount", "Title" },
                 values: new object[,]
                 {
@@ -423,14 +429,14 @@ namespace DAL.Migrations
                 values: new object[,]
                 {
                     { 2, 1 },
-                    { 1, 2 },
-                    { 1, 9 },
-                    { 1, 3 },
                     { 6, 8 },
-                    { 9, 4 },
-                    { 12, 5 },
                     { 10, 7 },
-                    { 11, 6 }
+                    { 11, 6 },
+                    { 1, 9 },
+                    { 9, 4 },
+                    { 1, 3 },
+                    { 1, 2 },
+                    { 12, 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -443,13 +449,13 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "BookOwnerId", "BookTemplateID", "Conditon" },
                 values: new object[,]
                 {
-                    { 1, 1, 1, 4 },
-                    { 8, 3, 8, 5 },
-                    { 6, 5, 6, 2 },
+                    { 2, 1, 2, 4 },
                     { 5, 4, 5, 3 },
+                    { 8, 3, 8, 5 },
                     { 4, 3, 4, 0 },
                     { 3, 2, 3, 0 },
-                    { 2, 1, 2, 4 },
+                    { 6, 5, 6, 2 },
+                    { 1, 1, 1, 4 },
                     { 7, 5, 7, 3 }
                 });
 
@@ -458,14 +464,14 @@ namespace DAL.Migrations
                 columns: new[] { "BookID", "GenreID" },
                 values: new object[,]
                 {
-                    { 5, 2 },
-                    { 4, 1 },
                     { 7, 2 },
+                    { 5, 2 },
                     { 9, 7 },
+                    { 6, 3 },
                     { 3, 7 },
                     { 2, 7 },
                     { 8, 5 },
-                    { 6, 3 },
+                    { 4, 1 },
                     { 1, 7 }
                 });
 
@@ -484,15 +490,15 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "DateFrom", "DateTill", "EReaderID", "UserID" },
                 values: new object[,]
                 {
+                    { 6, new DateTime(2021, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4 },
                     { 7, new DateTime(2021, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3 },
-                    { 8, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
                     { 5, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
+                    { 8, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
                     { 4, new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
                     { 9, new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
                     { 3, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
                     { 2, new DateTime(2021, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 1, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 6, new DateTime(2021, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4 }
+                    { 1, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -501,14 +507,14 @@ namespace DAL.Migrations
                 values: new object[,]
                 {
                     { 1, 1, "Best", new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 1 },
-                    { 2, 1, "Great!!", new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 2 },
-                    { 3, 1, "huh", new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 3 }
+                    { 3, 1, "huh", new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 3 },
+                    { 4, 8, "Changed my life", new DateTime(2021, 7, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 4 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Reviews",
                 columns: new[] { "Id", "BookTemplateID", "Content", "CreationDate", "StarsAmmount", "UserID" },
-                values: new object[] { 4, 8, "Changed my life", new DateTime(2021, 7, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 4 });
+                values: new object[] { 2, 1, "Great!!", new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 2 });
 
             migrationBuilder.InsertData(
                 table: "BookCollection_Books",
@@ -537,12 +543,12 @@ namespace DAL.Migrations
                     { 1, 1 },
                     { 2, 2 },
                     { 3, 3 },
-                    { 8, 9 },
                     { 1, 4 },
                     { 2, 5 },
-                    { 7, 8 },
+                    { 8, 9 },
                     { 3, 7 },
-                    { 5, 6 }
+                    { 5, 6 },
+                    { 7, 8 }
                 });
 
             migrationBuilder.InsertData(
@@ -569,6 +575,11 @@ namespace DAL.Migrations
                 name: "IX_BookCollections_UserId",
                 table: "BookCollections",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookInstances_BookOwnerId",
+                table: "BookInstances",
+                column: "BookOwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookInstances_BookTemplateID",
@@ -662,7 +673,7 @@ namespace DAL.Migrations
                 name: "Reservations");
 
             migrationBuilder.DropTable(
-                name: "BookTemplates");
+                name: "Books");
 
             migrationBuilder.DropTable(
                 name: "EReaderInstances");
