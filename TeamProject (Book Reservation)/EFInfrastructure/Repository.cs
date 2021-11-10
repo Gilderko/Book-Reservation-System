@@ -2,6 +2,7 @@
 using DAL.Entities;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace EFInfrastructure
 {
@@ -16,8 +17,35 @@ namespace EFInfrastructure
             dbSet = dbContext.Set<TEntity>();
         }
 
-        public TEntity GetByID(int id)
+        public TEntity GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null)
         {
+            Func<EBook, string[]> square = x => new string[] { nameof(x.Authors), nameof(x.Genres) };
+
+
+            string[] localRefsToLoad = refsToLoad;
+            string[] localCollectionsToLoad = collectionsToLoad;
+
+            if (localRefsToLoad == null)
+            {
+                localRefsToLoad = Array.Empty<string>();
+            }
+            if (localCollectionsToLoad == null)
+            {
+                localCollectionsToLoad = Array.Empty<string>();
+            }
+
+            TEntity loadedEntity = dbSet.Find(id);
+
+            foreach (string refToLoad in localRefsToLoad)
+            {
+                dbContext.Entry<TEntity>(loadedEntity).Reference(refToLoad).Load();
+            }
+
+            foreach (string collectToLoad in localCollectionsToLoad)
+            {
+                dbContext.Entry<TEntity>(loadedEntity).Collection(collectToLoad).Load();
+            }           
+
             return dbSet.Find(id);
         }
 

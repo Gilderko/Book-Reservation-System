@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class QueryTry : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -117,6 +117,8 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Conditon = table.Column<int>(type: "int", nullable: false),
+                    BookOwnerId = table.Column<int>(type: "int", nullable: false),
                     BookTemplateID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -126,25 +128,6 @@ namespace DAL.Migrations
                         name: "FK_BookInstances_BookTemplates_BookTemplateID",
                         column: x => x.BookTemplateID,
                         principalTable: "BookTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EReaderInstances",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EReaderTemplateID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EReaderInstances", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EReaderInstances_EReaderTemplates_EReaderTemplateID",
-                        column: x => x.EReaderTemplateID,
-                        principalTable: "EReaderTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -196,6 +179,33 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EReaderInstances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true),
+                    EreaderOwnerId = table.Column<int>(type: "int", nullable: false),
+                    EReaderTemplateID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EReaderInstances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EReaderInstances_EReaderTemplates_EReaderTemplateID",
+                        column: x => x.EReaderTemplateID,
+                        principalTable: "EReaderTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EReaderInstances_Users_EreaderOwnerId",
+                        column: x => x.EreaderOwnerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -225,13 +235,38 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BookCollection_Books",
+                columns: table => new
+                {
+                    BookCollectionID = table.Column<int>(type: "int", nullable: false),
+                    BookID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookCollection_Books", x => new { x.BookID, x.BookCollectionID });
+                    table.ForeignKey(
+                        name: "FK_BookCollection_Books_BookCollections_BookCollectionID",
+                        column: x => x.BookCollectionID,
+                        principalTable: "BookCollections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookCollection_Books_BookTemplates_BookID",
+                        column: x => x.BookID,
+                        principalTable: "BookTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EBookInstances",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EBookTemplateID = table.Column<int>(type: "int", nullable: false),
-                    EReaderID = table.Column<int>(type: "int", nullable: false)
+                    EReaderID = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -248,6 +283,12 @@ namespace DAL.Migrations
                         principalTable: "EReaderInstances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EBookInstances_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -274,30 +315,6 @@ namespace DAL.Migrations
                         name: "FK_Reservations_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookCollection_Books",
-                columns: table => new
-                {
-                    BookCollectionID = table.Column<int>(type: "int", nullable: false),
-                    BookID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookCollection_Books", x => new { x.BookID, x.BookCollectionID });
-                    table.ForeignKey(
-                        name: "FK_BookCollection_Books_BookCollections_BookCollectionID",
-                        column: x => x.BookCollectionID,
-                        principalTable: "BookCollections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookCollection_Books_BookTemplates_BookID",
-                        column: x => x.BookID,
-                        principalTable: "BookTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -405,7 +422,6 @@ namespace DAL.Migrations
                 columns: new[] { "AuthorID", "BookID" },
                 values: new object[,]
                 {
-                    { 11, 6 },
                     { 2, 1 },
                     { 1, 2 },
                     { 1, 9 },
@@ -413,7 +429,8 @@ namespace DAL.Migrations
                     { 6, 8 },
                     { 9, 4 },
                     { 12, 5 },
-                    { 10, 7 }
+                    { 10, 7 },
+                    { 11, 6 }
                 });
 
             migrationBuilder.InsertData(
@@ -423,17 +440,17 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "BookInstances",
-                columns: new[] { "Id", "BookTemplateID" },
+                columns: new[] { "Id", "BookOwnerId", "BookTemplateID", "Conditon" },
                 values: new object[,]
                 {
-                    { 8, 8 },
-                    { 7, 7 },
-                    { 1, 1 },
-                    { 6, 6 },
-                    { 5, 5 },
-                    { 4, 4 },
-                    { 3, 3 },
-                    { 2, 2 }
+                    { 1, 1, 1, 4 },
+                    { 8, 3, 8, 5 },
+                    { 6, 5, 6, 2 },
+                    { 5, 4, 5, 3 },
+                    { 4, 3, 4, 0 },
+                    { 3, 2, 3, 0 },
+                    { 2, 1, 2, 4 },
+                    { 7, 5, 7, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -441,25 +458,25 @@ namespace DAL.Migrations
                 columns: new[] { "BookID", "GenreID" },
                 values: new object[,]
                 {
+                    { 5, 2 },
                     { 4, 1 },
                     { 7, 2 },
-                    { 5, 2 },
                     { 9, 7 },
                     { 3, 7 },
+                    { 2, 7 },
                     { 8, 5 },
-                    { 1, 7 },
                     { 6, 3 },
-                    { 2, 7 }
+                    { 1, 7 }
                 });
 
             migrationBuilder.InsertData(
                 table: "EReaderInstances",
-                columns: new[] { "Id", "EReaderTemplateID" },
+                columns: new[] { "Id", "Description", "EReaderTemplateID", "EreaderOwnerId" },
                 values: new object[,]
                 {
-                    { 3, 2 },
-                    { 2, 1 },
-                    { 1, 1 }
+                    { 1, null, 1, 1 },
+                    { 3, null, 2, 3 },
+                    { 2, null, 1, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -467,15 +484,15 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "DateFrom", "DateTill", "EReaderID", "UserID" },
                 values: new object[,]
                 {
-                    { 6, new DateTime(2021, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4 },
-                    { 1, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 2, new DateTime(2021, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 3, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 9, new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 4, new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
-                    { 5, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
+                    { 7, new DateTime(2021, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3 },
                     { 8, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
-                    { 7, new DateTime(2021, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3 }
+                    { 5, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
+                    { 4, new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 },
+                    { 9, new DateTime(2021, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
+                    { 3, new DateTime(2021, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
+                    { 2, new DateTime(2021, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
+                    { 1, new DateTime(2021, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
+                    { 6, new DateTime(2021, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -483,9 +500,9 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "BookTemplateID", "Content", "CreationDate", "StarsAmmount", "UserID" },
                 values: new object[,]
                 {
-                    { 3, 1, "huh", new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 3 },
                     { 1, 1, "Best", new DateTime(2021, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 1 },
-                    { 2, 1, "Great!!", new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 2 }
+                    { 2, 1, "Great!!", new DateTime(2021, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 2 },
+                    { 3, 1, "huh", new DateTime(2021, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -505,11 +522,11 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "EBookInstances",
-                columns: new[] { "Id", "EBookTemplateID", "EReaderID" },
+                columns: new[] { "Id", "EBookTemplateID", "EReaderID", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 9, 1 },
-                    { 2, 9, 1 }
+                    { 1, 9, 1, null },
+                    { 2, 9, 1, null }
                 });
 
             migrationBuilder.InsertData(
@@ -567,6 +584,16 @@ namespace DAL.Migrations
                 name: "IX_EBookInstances_EReaderID",
                 table: "EBookInstances",
                 column: "EReaderID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EBookInstances_UserId",
+                table: "EBookInstances",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EReaderInstances_EreaderOwnerId",
+                table: "EReaderInstances",
+                column: "EreaderOwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EReaderInstances_EReaderTemplateID",
@@ -641,10 +668,10 @@ namespace DAL.Migrations
                 name: "EReaderInstances");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "EReaderTemplates");
 
             migrationBuilder.DropTable(
-                name: "EReaderTemplates");
+                name: "Users");
         }
     }
 }

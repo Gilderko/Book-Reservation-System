@@ -295,7 +295,13 @@ namespace DAL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("BookOwnerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("BookTemplateID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Conditon")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -308,42 +314,58 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            BookTemplateID = 1
+                            BookOwnerId = 1,
+                            BookTemplateID = 1,
+                            Conditon = 4
                         },
                         new
                         {
                             Id = 2,
-                            BookTemplateID = 2
+                            BookOwnerId = 1,
+                            BookTemplateID = 2,
+                            Conditon = 4
                         },
                         new
                         {
                             Id = 3,
-                            BookTemplateID = 3
+                            BookOwnerId = 2,
+                            BookTemplateID = 3,
+                            Conditon = 0
                         },
                         new
                         {
                             Id = 4,
-                            BookTemplateID = 4
+                            BookOwnerId = 3,
+                            BookTemplateID = 4,
+                            Conditon = 0
                         },
                         new
                         {
                             Id = 5,
-                            BookTemplateID = 5
+                            BookOwnerId = 4,
+                            BookTemplateID = 5,
+                            Conditon = 3
                         },
                         new
                         {
                             Id = 6,
-                            BookTemplateID = 6
+                            BookOwnerId = 5,
+                            BookTemplateID = 6,
+                            Conditon = 2
                         },
                         new
                         {
                             Id = 7,
-                            BookTemplateID = 7
+                            BookOwnerId = 5,
+                            BookTemplateID = 7,
+                            Conditon = 3
                         },
                         new
                         {
                             Id = 8,
-                            BookTemplateID = 8
+                            BookOwnerId = 3,
+                            BookTemplateID = 8,
+                            Conditon = 5
                         });
                 });
 
@@ -578,11 +600,16 @@ namespace DAL.Migrations
                     b.Property<int>("EReaderID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EBookTemplateID");
 
                     b.HasIndex("EReaderID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("EBookInstances");
 
@@ -654,12 +681,21 @@ namespace DAL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
                     b.Property<int>("EReaderTemplateID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EreaderOwnerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EReaderTemplateID");
+
+                    b.HasIndex("EreaderOwnerId");
 
                     b.ToTable("EReaderInstances");
 
@@ -667,17 +703,20 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            EReaderTemplateID = 1
+                            EReaderTemplateID = 1,
+                            EreaderOwnerId = 1
                         },
                         new
                         {
                             Id = 2,
-                            EReaderTemplateID = 1
+                            EReaderTemplateID = 1,
+                            EreaderOwnerId = 2
                         },
                         new
                         {
                             Id = 3,
-                            EReaderTemplateID = 2
+                            EReaderTemplateID = 2,
+                            EreaderOwnerId = 3
                         });
                 });
 
@@ -1089,6 +1128,10 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DAL.Entities.User", null)
+                        .WithMany("MyBooks")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("EReaderPlace");
 
                     b.Navigation("FromBookTemplate");
@@ -1102,7 +1145,15 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DAL.Entities.User", "Owner")
+                        .WithMany("MyEReaders")
+                        .HasForeignKey("EreaderOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("EReaderTemplate");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("DAL.Entities.Reservation", b =>
@@ -1187,6 +1238,10 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.User", b =>
                 {
                     b.Navigation("BookCollections");
+
+                    b.Navigation("MyBooks");
+
+                    b.Navigation("MyEReaders");
 
                     b.Navigation("Reservations");
 

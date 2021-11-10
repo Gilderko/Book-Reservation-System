@@ -5,6 +5,7 @@ using DAL.Entities;
 using EFInfrastructure;
 using Infrastructure;
 using Infrastructure.Query.Predicates;
+using System;
 
 namespace BL.QueryObjects
 {
@@ -19,6 +20,16 @@ namespace BL.QueryObjects
         {
             _mapper = mapper;
             _myQuery = new Query<TEntity>(unitOfWork);
+        }
+
+        public void LoadExplicitCollections(Func<TEntity, string[]> collectionsToLoad)
+        {
+            _myQuery.LoadExplicitCollections(collectionsToLoad.Invoke(null));
+        }
+
+        public void LoadExplicitReferences(Func<TEntity, string[]> referencesToLoad)
+        {
+            _myQuery.LoadExplicitReferences(referencesToLoad.Invoke(null));
         }
 
         public QueryResultDTO<TEntityDTO> ExecuteQuery(FilterDto filter)
@@ -40,9 +51,6 @@ namespace BL.QueryObjects
             {
                 _myQuery.Page(filter.RequestedPageNumber.Value, filter.PageSize);
             }
-
-            _myQuery.LoadExplicitCollections(filter.CollectionsToLoad);
-            _myQuery.LoadExplicitReferences(filter.RefsToLoad);
 
             var queryResult = _myQuery.Execute();
 

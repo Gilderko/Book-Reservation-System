@@ -136,6 +136,7 @@ namespace EFInfrastructure
 
             return result;
         }
+
         public void LoadExplicitReferences(params string[] referencesToLoad)
         {
             _refsToLoad = referencesToLoad;

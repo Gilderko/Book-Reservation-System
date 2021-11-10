@@ -16,21 +16,25 @@ namespace TestingConsole
         private static void Main(string[] args)
         {
 
-            IMapper map = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
-            IUnitOfWork uof = new UnitOfWork(new BookRentalDbContext());
+            var uof = new UnitOfWork(new BookRentalDbContext());
+            var mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
 
+            var qObj = new QueryObject<BookDTO, Book>(mapper, uof);
 
-            var qObj = new QueryObject<BookDTO,Book>(map, uof);
+            var pred = new PredicateDto("PageCount", 100, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThanOrEqual);
 
             var filter = new FilterDto();
+            filter.Predicate = pred;
 
-            filter.SortAscending = true;
-
-            filter.Predicate = new PredicateDto("PageCount", 100, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThan);
-
+            qObj.LoadExplicitCollections(book => new string[] { nameof(book.BookInstances)});
+            
             var result = qObj.ExecuteQuery(filter);
 
-            Console.WriteLine($"Entries {result.TotalItemsCount}");
+            foreach(var value in result.Items)
+            {
+                Console.WriteLine(value.BookInstances.Count);
+            }
+
         }
     }
 }

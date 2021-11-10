@@ -6,7 +6,7 @@ namespace Infrastructure
     {
         void Delete(TEntity entityToDelete);
         void Delete(int id);
-        TEntity GetByID(int id);
+        TEntity GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null);
         void Insert(TEntity entity);
         void Update(TEntity entityToUpdate);
     }

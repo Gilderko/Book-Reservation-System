@@ -1,4 +1,5 @@
 ﻿using DAL.Entities.ConnectionTables;
+using DAL.Enums;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,6 +7,9 @@ namespace BL.DTOs.FullVersions
 {
     public class BookInstanceDTO : BaseEntityDTO
     {
+        [Required]
+        public BookInstanceCondition Conditon { get; set; }
+
         [Required]
         public int BookOwnerId { get; set; }
 
