@@ -10,16 +10,29 @@ using System.Threading.Tasks;
 
 namespace EFInfrastructure
 {
-    public class AutofacEFInfraConfig
+    public class AutofacEFInfraConfig : Module
     {
-        public static IContainer Configure()
+        protected override void Load(ContainerBuilder builder)
         {
-            var builder = new ContainerBuilder();
+            // Lifetime scope
 
-            builder.RegisterType<UnitOfWorkProvider>().AsSelf().SingleInstance();
-            
+            builder.RegisterType<BookRentalDbContext>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
 
-            return builder.Build();
+            builder.RegisterType<UnitOfWork>()
+                .As<IUnitOfWork>()
+                .InstancePerLifetimeScope();
+
+            // Perdependencyscope
+
+            builder.RegisterGeneric(typeof(Repository<>))
+                .As(typeof(IRepository<>))
+                .InstancePerDependency();
+
+            builder.RegisterGeneric(typeof(Query<>))
+                .As(typeof(IQuery<>))
+                .InstancePerDependency();
         }
     }
 }

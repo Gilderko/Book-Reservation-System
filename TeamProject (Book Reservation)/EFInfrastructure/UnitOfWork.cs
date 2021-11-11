@@ -1,6 +1,7 @@
 ﻿using DAL;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace EFInfrastructure
 {
@@ -10,6 +11,7 @@ namespace EFInfrastructure
 
         public UnitOfWork(BookRentalDbContext dbContextInit)
         {
+            Console.WriteLine("creating Unit of work");
             Context = dbContextInit;
         }
 

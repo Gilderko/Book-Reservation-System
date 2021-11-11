@@ -1,12 +1,16 @@
-﻿using AutoMapper;
+﻿using Autofac;
+using AutoMapper;
 using BL.Config;
 using BL.DTOs.Filters;
 using BL.DTOs.FullVersions;
+using BL.Facades;
 using BL.QueryObjects;
+using BL.Services;
 using DAL;
 using DAL.Entities;
 using EFInfrastructure;
 using Infrastructure;
+using Infrastructure.Query;
 using System;
 
 namespace TestingConsole
@@ -15,22 +19,13 @@ namespace TestingConsole
     {
         private static void Main(string[] args)
         {
+            var container = AutofacBLConfig.Configure();
 
-            IMapper map = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
-            IUnitOfWork uof = new UnitOfWork(new BookRentalDbContext());
+            var serv = container.Resolve<AuthorFacade>();
 
+            var name = serv.Get(1);
 
-            var qObj = new QueryObject<BookDTO,Book>(map, uof);
-
-            var filter = new FilterDto();
-
-            filter.SortAscending = true;
-
-            filter.Predicate = new PredicateDto("PageCount", 100, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThan);
-
-            var result = qObj.ExecuteQuery(filter);
-
-            Console.WriteLine($"Entries {result.TotalItemsCount}");
+            Console.WriteLine(name.Name);
         }
     }
 }
