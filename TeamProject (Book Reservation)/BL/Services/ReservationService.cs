@@ -14,19 +14,17 @@ namespace BL.Services
 {
     public class ReservationService
     {
-        private IMapper mapper;
-        private QueryObject<ReservationPrevDto, Reservation> resQueryObject;
-        private IUnitOfWork _unitOfWork;
+        private IMapper _mapper;
+        private QueryObject<ReservationPrevDto, Reservation> _resQueryObject;
         
-        public ReservationService(IUnitOfWork unitOfWork)
+        public ReservationService(IMapper mapper, QueryObject<ReservationPrevDto,Reservation> resQueryObject)
         {
-            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _resQueryObject = resQueryObject;
         }
 
         public IEnumerable<ReservationPrevDto> GetReservationsPreviewByUser(int userId, DateTime from, DateTime to)
         {
-            mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
-            resQueryObject = new QueryObject<ReservationPrevDto, Reservation>(mapper, _unitOfWork);
             
             List<PredicateDto> predicates = new List<PredicateDto>
             {
@@ -44,7 +42,7 @@ namespace BL.Services
                 SortAscending = false
             };
 
-            return resQueryObject.ExecuteQuery(filter).Items;
+            return _resQueryObject.ExecuteQuery(filter).Items;
         }
     }
 

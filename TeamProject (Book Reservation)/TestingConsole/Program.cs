@@ -1,12 +1,16 @@
-﻿using AutoMapper;
+﻿using Autofac;
+using AutoMapper;
 using BL.Config;
 using BL.DTOs.Filters;
 using BL.DTOs.FullVersions;
+using BL.Facades;
 using BL.QueryObjects;
+using BL.Services;
 using DAL;
 using DAL.Entities;
 using EFInfrastructure;
 using Infrastructure;
+using Infrastructure.Query;
 using System;
 
 namespace TestingConsole
@@ -15,13 +19,13 @@ namespace TestingConsole
     {
         private static void Main(string[] args)
         {
-            var uof = new UnitOfWork(new BookRentalDbContext());
+            var container = AutofacBLConfig.Configure();
 
-            var repo = new Repository<BookInstance>(uof);
+            var serv = container.Resolve<AuthorFacade>();
 
-            var books = repo.GetByID(1, null, new string[] { "AllReservations" });
+            var name = serv.Get(1);
 
-            Console.WriteLine(books.AllReservations.Count);
+            Console.WriteLine(name.Name);
         }
     }
 }

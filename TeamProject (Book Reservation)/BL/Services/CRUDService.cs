@@ -10,20 +10,20 @@ namespace BL.Services
 {
     public class CRUDService<TEntityDTO, TEntity> where TEntity : class, IEntity
                                                   where TEntityDTO : class, IEntityDTO
-    {
-        private IRepository<TEntity> repository;
-        private IMapper mapper;
+    {       
+        private IRepository<TEntity> _repository;
+        private IMapper _mapper;
 
-        public CRUDService(IUnitOfWork unitOfWork)
+        public CRUDService(IRepository<TEntity> repo, IMapper mapper)
         {
-            repository = new Repository<TEntity>(unitOfWork);
-            mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
+            _repository = repo;
+            _mapper = mapper;
         }
 
         public TEntityDTO GetByID(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            TEntity resultEntity = repository.GetByID(id, refsToLoad, collectToLoad);
-            TEntityDTO resultDTO = mapper.Map<TEntityDTO>(resultEntity);
+            TEntity resultEntity = _repository.GetByID(id, refsToLoad, collectToLoad);
+            TEntityDTO resultDTO = _mapper.Map<TEntityDTO>(resultEntity);
             return resultDTO;
         }
 
@@ -35,25 +35,25 @@ namespace BL.Services
 
         public void Insert(TEntityDTO DTOToAdd)
         {
-            TEntity entityToAdd = mapper.Map<TEntity>(DTOToAdd);
-            repository.Insert(entityToAdd);
+            TEntity entityToAdd = _mapper.Map<TEntity>(DTOToAdd);
+            _repository.Insert(entityToAdd);
         }
 
         public void Delete(int id)
         {
-            repository.Delete(id);
+            _repository.Delete(id);
         }
 
         public void Delete(TEntityDTO DTOToDelete)
         {
-            TEntity entityToDelete = mapper.Map<TEntity>(DTOToDelete);
-            repository.Delete(entityToDelete);
+            TEntity entityToDelete = _mapper.Map<TEntity>(DTOToDelete);
+            _repository.Delete(entityToDelete);
         }
 
         public void Update(TEntityDTO DTOToUpdate)
         {
-            TEntity entityToUpdate = mapper.Map<TEntity>(DTOToUpdate);
-            repository.Update(entityToUpdate);
+            TEntity entityToUpdate = _mapper.Map<TEntity>(DTOToUpdate);
+            _repository.Update(entityToUpdate);
         }
     }
 }

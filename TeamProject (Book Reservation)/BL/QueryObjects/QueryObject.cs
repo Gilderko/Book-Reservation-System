@@ -4,6 +4,7 @@ using BL.DTOs.Filters;
 using DAL.Entities;
 using EFInfrastructure;
 using Infrastructure;
+using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
 using System;
 
@@ -14,12 +15,12 @@ namespace BL.QueryObjects
     {
         private IMapper _mapper;
 
-        private Query<TEntity> _myQuery;
+        private IQuery<TEntity> _myQuery;
 
-        public QueryObject(IMapper mapper, IUnitOfWork unitOfWork)
+        public QueryObject(IMapper mapper, IQuery<TEntity> query)
         {
             _mapper = mapper;
-            _myQuery = new Query<TEntity>(unitOfWork);
+            _myQuery = query;
         }
 
         public void LoadExplicitCollections(Func<TEntity, string[]> collectionsToLoad)
