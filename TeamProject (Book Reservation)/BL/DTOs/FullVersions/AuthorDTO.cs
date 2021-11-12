@@ -1,4 +1,4 @@
-﻿using DAL.Entities.ConnectionTables;
+﻿using BL.DTOs.ConnectionTables;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

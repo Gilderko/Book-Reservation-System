@@ -365,7 +365,7 @@ namespace DAL
                     BookTemplateID = 8,
                     Conditon = BookInstanceCondition.Poor,
                 }
-            ) ;
+            );
 
             modelBuilder.Entity<BookCollection>().HasData(
                 new BookCollection
@@ -461,6 +461,18 @@ namespace DAL
                         "violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.",
                     ISBN = "9780141920252",
                     PageCount = 320,
+                    DateOfRelease = new DateTime(1591, 1, 1),
+                    Language = Language.English,
+                    MemorySize = 1024,
+                    Format = EBookFormat.EPUB
+                },
+                new EBook
+                {
+                    Id = 10,
+                    Title = "Jacky and Katka against Speed",
+                    Description = "They dont like me at all :sadCatto: :(",
+                    ISBN = "9780141920282",
+                    PageCount = 420,
                     DateOfRelease = new DateTime(1591, 1, 1),
                     Language = Language.English,
                     MemorySize = 1024,
@@ -628,20 +640,23 @@ namespace DAL
                     EreaderOwnerId = 3,
                     EReaderTemplateID = 2
                 }
-            ) ;
+            );
 
-            modelBuilder.Entity<EBookInstance>().HasData(
-                new EBookInstance
+            modelBuilder.Entity<EBook_EReaderInstance>().HasData(
+                new EBook_EReaderInstance
                 {
-                    Id = 1,
-                    EBookTemplateID = 9,
-                    EReaderID = 1
+                    EBookID = 10,
+                    EReaderInstanceID = 1
                 },
-                new EBookInstance
+                new EBook_EReaderInstance
                 {
-                    Id = 2,
-                    EBookTemplateID = 9,
-                    EReaderID = 1
+                    EBookID = 10,
+                    EReaderInstanceID = 2
+                },
+                new EBook_EReaderInstance
+                {
+                    EBookID = 9,
+                    EReaderInstanceID = 1
                 }
             );
         }

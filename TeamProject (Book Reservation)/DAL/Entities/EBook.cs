@@ -1,4 +1,5 @@
-﻿using DAL.Enums;
+﻿using DAL.Entities.ConnectionTables;
+using DAL.Enums;
 using System.Collections.Generic;
 
 namespace DAL.Entities
@@ -9,8 +10,6 @@ namespace DAL.Entities
 
         public EBookFormat Format { get; set; }
 
-        public ICollection<EBookInstance> EBookInstances { get; set; }
+        public ICollection<EBook_EReaderInstance> EReaders { get; set; }
     }
-
-
 }

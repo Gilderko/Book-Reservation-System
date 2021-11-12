@@ -23,9 +23,9 @@ namespace DAL.Entities
 
         public ICollection<Reservation> Reservations { get; set; }
 
-        public ICollection<Review> Reviews { get; set; }
+        public ICollection<BookInstance> MyBooks { get; set; }
 
-        public ICollection<EBookInstance> MyBooks { get; set; }
+        public ICollection<Review> Reviews { get; set; }
 
         public ICollection<EReaderInstance> MyEReaders { get; set; }
     }

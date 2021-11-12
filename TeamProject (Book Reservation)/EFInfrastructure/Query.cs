@@ -59,7 +59,7 @@ namespace EFInfrastructure
                 else
                 {
                     cmpValFormat = $"{simplePred.ComparedValue}";
-                }                    
+                }
 
                 return $"{simplePred.TargetPropertyName} {_valueOperators[simplePred.ValueComparingOperator]} {cmpValFormat}";
             }

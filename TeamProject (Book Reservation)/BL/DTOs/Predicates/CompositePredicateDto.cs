@@ -1,7 +1,6 @@
+using Infrastructure.Query.Operators;
 using System.Collections.Generic;
 using System.Linq;
-using Infrastructure.Query.Operators;
-using Infrastructure.Query.Predicates;
 
 namespace BL.DTOs.Filters
 {

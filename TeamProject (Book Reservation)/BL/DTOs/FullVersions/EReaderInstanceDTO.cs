@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BL.DTOs.ConnectionTables;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BL.DTOs.FullVersions
@@ -19,6 +20,6 @@ namespace BL.DTOs.FullVersions
 
         public EReaderDTO EReaderTemplate { get; set; }
 
-        public ICollection<EBookInstanceDTO> BooksIncluded { get; set; }
+        public ICollection<EBook_EReaderInstanceDTO> BooksIncluded { get; set; }
     }
 }

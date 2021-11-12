@@ -265,36 +265,27 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EBookInstances",
+                name: "EBook_EReaderInstance",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EBookTemplateID = table.Column<int>(type: "int", nullable: false),
-                    EReaderID = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    EBookID = table.Column<int>(type: "int", nullable: false),
+                    EReaderInstanceID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EBookInstances", x => x.Id);
+                    table.PrimaryKey("PK_EBook_EReaderInstance", x => new { x.EBookID, x.EReaderInstanceID });
                     table.ForeignKey(
-                        name: "FK_EBookInstances_Books_EBookTemplateID",
-                        column: x => x.EBookTemplateID,
+                        name: "FK_EBook_EReaderInstance_Books_EBookID",
+                        column: x => x.EBookID,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EBookInstances_EReaderInstances_EReaderID",
-                        column: x => x.EReaderID,
+                        name: "FK_EBook_EReaderInstance_EReaderInstances_EReaderInstanceID",
+                        column: x => x.EReaderInstanceID,
                         principalTable: "EReaderInstances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EBookInstances_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -371,7 +362,11 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "Books",
                 columns: new[] { "Id", "DateOfRelease", "Description", "Discriminator", "Format", "ISBN", "Language", "MemorySize", "PageCount", "Title" },
-                values: new object[] { 9, new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "EBook", 0, "9780141920252", 0, 1024, 320, "Romeo and Juliet" });
+                values: new object[,]
+                {
+                    { 10, new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "They dont like me at all :sadCatto: :(", "EBook", 0, "9780141920282", 0, 1024, 420, "Jacky and Katka against Speed" },
+                    { 9, new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "EBook", 0, "9780141920252", 0, 1024, 320, "Romeo and Juliet" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Books",
@@ -380,12 +375,12 @@ namespace DAL.Migrations
                 {
                     { 8, new DateTime(1813, 1, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), "Since its immediate success in 1813, Pride and Prejudice has remained one of the most popular novels in the English language. Jane Austen called this brilliant work \"her own darling child\" and its vivacious heroine, Elizabeth Bennet, \" as delightful a creature as ever appeared in print.\" The romantic clash between the opinionated Elizabeth and her proud beau, Mr. Darcy, is a splendid performance of civilized sparring. And Jane Austen's radiant wit sparkles as her characters dance a delicate quadrille of flirtation and intrigue, making this book the most superb comedy of manners of Regency England.", "Book", "9780679783268", 0, 279, "Pride and Prejudice" },
                     { 7, new DateTime(1945, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), "A farm is taken over by its overworked, mistreated animals. With flaming idealism and stirring slogans, they set out to create a paradise of progress, justice, and equality. Thus the stage is set for one of the most telling satiric fables ever penned –a razor-edged fairy tale for grown-ups that records the evolution from revolution against tyranny to a totalitarianism just as terrible. When Animal Farm was first published, Stalinist Russia was seen as its target. Today it is devastatingly clear that wherever and whenever freedom is attacked,under whatever banner,the cutting clarity and savage comedy of George Orwell’s masterpiece have a meaning and message still ferociously fresh.", "Book", "9780451526342", 0, 141, "Animal Farm" },
-                    { 5, new DateTime(1943, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), "A pilot stranded in the desert awakes one morning to see, standing before him, the most extraordinary little fellow. \"Please,\" asks the stranger, \"draw me a sheep.\" And the pilot realizes that when life's events are too difficult to understand, there is no choice but to succumb to their mysteries. He pulls out pencil and paper... And thus begins this wise and enchanting fable that, in teaching the secret of what is really important in life, has changed forever the world for its readers.", "Book", "9783140464079", 0, 96, "The Little Prince" },
                     { 6, new DateTime(2006, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), "While in Paris, Harvard symbologist Robert Langdon is awakened by a phone call in the dead of the night. The elderly curator of the Louvre has been murdered inside the museum, his body covered in baffling symbols. As Langdon and gifted French cryptologist Sophie Neveu sort through the bizarre riddles, they are stunned to discover a trail of clues hidden in the works of Leonardo da Vinci—clues visible for all to see and yet ingeniously disguised by the painter.", "Book", "9780307277671 ", 0, 489, "The Da Vinci Code" },
+                    { 4, new DateTime(2007, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "Book", "9780671461492", 0, 193, "The Hitchhiker's Guide to the Galaxy" },
                     { 3, new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "Book", "9780007902361", 0, 160, "Romeo and Juliet" },
                     { 2, new DateTime(1600, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Considered one of Shakespeare′s most rich and enduring plays, the depiction of its hero Hamlet as he vows to avenge the murder of his father by his brother Claudius is both powerful and complex. As Hamlet tries to find out the truth of the situation, his troubled relationship with his mother comes to the fore, as do the paradoxes in his personality. A play of carefully crafted conflict and tragedy, Shakespeare′s intricate dialogue continues to fascinate audiences to this day.", "Book", "9780007902347", 0, 192, "Hamlet" },
                     { 1, new DateTime(1818, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Victor Frankenstein, a brilliant but wayward scientist, builds a human from dead flesh. Horrified at what he has done, he abandons his creation. The hideous creature learns language and becomes civilized but society rejects him. Spurned, he seeks vengeance on his creator. So begins a cycle of destruction, with Frankenstein and his 'monster' pursuing each other to the extremes of nature until all vestiges of their humanity are lost.", "Book", "9781509827756", 0, 280, "Frankenstein" },
-                    { 4, new DateTime(2007, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shakespeare's immortal drama tells the story of star-crossed lovers, rival dynasties and bloody revenge. Romeo and Juliet is a hymn to youth and the thrill of forbidden love, charged with sexual passion and violence, but also a warning of death: a dazzling combination of bawdy comedy and high tragedy.", "Book", "9780671461492", 0, 193, "The Hitchhiker's Guide to the Galaxy" }
+                    { 5, new DateTime(1943, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), "A pilot stranded in the desert awakes one morning to see, standing before him, the most extraordinary little fellow. \"Please,\" asks the stranger, \"draw me a sheep.\" And the pilot realizes that when life's events are too difficult to understand, there is no choice but to succumb to their mysteries. He pulls out pencil and paper... And thus begins this wise and enchanting fable that, in teaching the secret of what is really important in life, has changed forever the world for its readers.", "Book", "9783140464079", 0, 96, "The Little Prince" }
                 });
 
             migrationBuilder.InsertData(
@@ -527,12 +522,13 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "EBookInstances",
-                columns: new[] { "Id", "EBookTemplateID", "EReaderID", "UserId" },
+                table: "EBook_EReaderInstance",
+                columns: new[] { "EBookID", "EReaderInstanceID" },
                 values: new object[,]
                 {
-                    { 1, 9, 1, null },
-                    { 2, 9, 1, null }
+                    { 10, 1 },
+                    { 9, 1 },
+                    { 10, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -587,19 +583,9 @@ namespace DAL.Migrations
                 column: "BookTemplateID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EBookInstances_EBookTemplateID",
-                table: "EBookInstances",
-                column: "EBookTemplateID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EBookInstances_EReaderID",
-                table: "EBookInstances",
-                column: "EReaderID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EBookInstances_UserId",
-                table: "EBookInstances",
-                column: "UserId");
+                name: "IX_EBook_EReaderInstance_EReaderInstanceID",
+                table: "EBook_EReaderInstance",
+                column: "EReaderInstanceID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EReaderInstances_EreaderOwnerId",
@@ -649,7 +635,7 @@ namespace DAL.Migrations
                 name: "BookCollection_Books");
 
             migrationBuilder.DropTable(
-                name: "EBookInstances");
+                name: "EBook_EReaderInstance");
 
             migrationBuilder.DropTable(
                 name: "Reservation_BookInstances");

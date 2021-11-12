@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAL.Enums
+﻿namespace DAL.Enums
 {
     public enum BookInstanceCondition
     {
-        New, 
-        Fine, 
-        VeryGood, 
-        Good, 
-        Fair, 
+        New,
+        Fine,
+        VeryGood,
+        Good,
+        Fair,
         Poor
     }
 }

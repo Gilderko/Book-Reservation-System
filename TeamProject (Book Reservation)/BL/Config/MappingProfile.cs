@@ -1,6 +1,6 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using BL.DTOs;
+using BL.DTOs.ConnectionTables;
 using BL.DTOs.Filters;
 using BL.DTOs.FullVersions;
 using BL.DTOs.Previews;
@@ -22,7 +22,6 @@ namespace BL.Config
             config.CreateMap<Book, BookDTO>().ReverseMap();
             config.CreateMap<BookInstance, BookInstanceDTO>().ReverseMap();
             config.CreateMap<EBook, EBookDTO>().ReverseMap();
-            config.CreateMap<EBookInstance, EBookInstanceDTO>().ReverseMap();
             config.CreateMap<EReader, EReaderDTO>().ReverseMap();
             config.CreateMap<EReaderInstance, EReaderInstanceDTO>().ReverseMap();
             config.CreateMap<Genre, GenreDTO>().ReverseMap();
@@ -48,6 +47,7 @@ namespace BL.Config
             config.CreateMap<Book_Genre, Book_GenreDTO>().ReverseMap();
             config.CreateMap<BookCollection_Book, BookCollection_BookDTO>().ReverseMap();
             config.CreateMap<Reservation_BookInstance, Reservation_BookInstanceDTO>().ReverseMap();
+            config.CreateMap<EBook_EReaderInstance, EBook_EReaderInstanceDTO>().ReverseMap();
         }
     }
 }

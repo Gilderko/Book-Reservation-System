@@ -13,6 +13,6 @@ namespace BL.DTOs
         public QueryResultDTO()
         {
 
-        }            
+        }
     }
 }

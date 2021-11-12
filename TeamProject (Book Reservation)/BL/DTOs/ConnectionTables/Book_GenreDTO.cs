@@ -1,7 +1,6 @@
-﻿using BL.DTOs;
-using BL.DTOs.FullVersions;
+﻿using BL.DTOs.FullVersions;
 
-namespace DAL.Entities.ConnectionTables
+namespace BL.DTOs.ConnectionTables
 {
     public class Book_GenreDTO : IEntityDTO
     {

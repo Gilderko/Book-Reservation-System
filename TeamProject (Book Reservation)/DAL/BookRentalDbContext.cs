@@ -23,8 +23,6 @@ namespace DAL
 
         public DbSet<EBook> EBookTemplates { get; set; }
 
-        public DbSet<EBookInstance> EBookInstances { get; set; }
-
         public DbSet<Reservation> Reservations { get; set; }
 
         public DbSet<EReader> EReaderTemplates { get; set; }
@@ -68,14 +66,18 @@ namespace DAL
 
 
             // Reservation BookInstance
-            modelBuilder.Entity<Reservation_BookInstance>()                    
+            modelBuilder.Entity<Reservation_BookInstance>()
                 .HasKey(obj => new { obj.ReservationID, obj.BookInstanceID });
+
+            // EReader EBook
+            modelBuilder.Entity<EBook_EReaderInstance>()
+                .HasKey(obj => new { obj.EBookID, obj.EReaderInstanceID });
 
             modelBuilder.Entity<Reservation_BookInstance>()
                 .HasOne(obj => obj.Reservation)
                 .WithMany(obj => obj.BookInstances)
-                .HasForeignKey( obj => obj.ReservationID)
-                .OnDelete(DeleteBehavior.Restrict);  
+                .HasForeignKey(obj => obj.ReservationID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Seed();
 

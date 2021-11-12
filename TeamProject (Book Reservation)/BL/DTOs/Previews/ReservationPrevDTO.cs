@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using DAL.Entities;
 
 namespace BL.DTOs.Previews
 {

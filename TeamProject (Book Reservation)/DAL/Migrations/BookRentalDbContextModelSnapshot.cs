@@ -527,6 +527,38 @@ namespace DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.EBook_EReaderInstance", b =>
+                {
+                    b.Property<int>("EBookID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EReaderInstanceID")
+                        .HasColumnType("int");
+
+                    b.HasKey("EBookID", "EReaderInstanceID");
+
+                    b.HasIndex("EReaderInstanceID");
+
+                    b.ToTable("EBook_EReaderInstance");
+
+                    b.HasData(
+                        new
+                        {
+                            EBookID = 10,
+                            EReaderInstanceID = 1
+                        },
+                        new
+                        {
+                            EBookID = 10,
+                            EReaderInstanceID = 2
+                        },
+                        new
+                        {
+                            EBookID = 9,
+                            EReaderInstanceID = 1
+                        });
+                });
+
             modelBuilder.Entity("DAL.Entities.ConnectionTables.Reservation_BookInstance", b =>
                 {
                     b.Property<int>("ReservationID")
@@ -586,47 +618,6 @@ namespace DAL.Migrations
                         {
                             ReservationID = 9,
                             BookInstanceID = 8
-                        });
-                });
-
-            modelBuilder.Entity("DAL.Entities.EBookInstance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("EBookTemplateID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EReaderID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EBookTemplateID");
-
-                    b.HasIndex("EReaderID");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EBookInstances");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            EBookTemplateID = 9,
-                            EReaderID = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            EBookTemplateID = 9,
-                            EReaderID = 1
                         });
                 });
 
@@ -1033,22 +1024,36 @@ namespace DAL.Migrations
                             Title = "Romeo and Juliet",
                             Format = 0,
                             MemorySize = 1024
+                        },
+                        new
+                        {
+                            Id = 10,
+                            DateOfRelease = new DateTime(1591, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "They dont like me at all :sadCatto: :(",
+                            ISBN = "9780141920282",
+                            Language = 0,
+                            PageCount = 420,
+                            Title = "Jacky and Katka against Speed",
+                            Format = 0,
+                            MemorySize = 1024
                         });
                 });
 
             modelBuilder.Entity("DAL.Entities.BookCollection", b =>
                 {
-                    b.HasOne("DAL.Entities.User", null)
+                    b.HasOne("DAL.Entities.User", "OwnerUser")
                         .WithMany("BookCollections")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("OwnerUser");
                 });
 
             modelBuilder.Entity("DAL.Entities.BookInstance", b =>
                 {
                     b.HasOne("DAL.Entities.User", "Owner")
-                        .WithMany()
+                        .WithMany("MyBooks")
                         .HasForeignKey("BookOwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1066,52 +1071,83 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.ConnectionTables.Author_Book", b =>
                 {
-                    b.HasOne("DAL.Entities.Author", null)
+                    b.HasOne("DAL.Entities.Author", "Author")
                         .WithMany("AuthorsBooks")
                         .HasForeignKey("AuthorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Book", null)
+                    b.HasOne("DAL.Entities.Book", "Book")
                         .WithMany("Authors")
                         .HasForeignKey("BookID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("DAL.Entities.ConnectionTables.BookCollection_Book", b =>
                 {
-                    b.HasOne("DAL.Entities.BookCollection", null)
+                    b.HasOne("DAL.Entities.BookCollection", "BookCollect")
                         .WithMany("Books")
                         .HasForeignKey("BookCollectionID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Book", null)
+                    b.HasOne("DAL.Entities.Book", "Book")
                         .WithMany("BookCollections")
                         .HasForeignKey("BookID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("BookCollect");
                 });
 
             modelBuilder.Entity("DAL.Entities.ConnectionTables.Book_Genre", b =>
                 {
-                    b.HasOne("DAL.Entities.Book", null)
+                    b.HasOne("DAL.Entities.Book", "Book")
                         .WithMany("Genres")
                         .HasForeignKey("BookID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Genre", null)
+                    b.HasOne("DAL.Entities.Genre", "Genre")
                         .WithMany("Books")
                         .HasForeignKey("GenreID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.EBook_EReaderInstance", b =>
+                {
+                    b.HasOne("DAL.Entities.EBook", "EBook")
+                        .WithMany("EReaders")
+                        .HasForeignKey("EBookID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.EReaderInstance", "EReader")
+                        .WithMany("BooksIncluded")
+                        .HasForeignKey("EReaderInstanceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EBook");
+
+                    b.Navigation("EReader");
                 });
 
             modelBuilder.Entity("DAL.Entities.ConnectionTables.Reservation_BookInstance", b =>
                 {
-                    b.HasOne("DAL.Entities.BookInstance", null)
+                    b.HasOne("DAL.Entities.BookInstance", "BookInstance")
                         .WithMany("AllReservations")
                         .HasForeignKey("BookInstanceID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1123,30 +1159,9 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("BookInstance");
+
                     b.Navigation("Reservation");
-                });
-
-            modelBuilder.Entity("DAL.Entities.EBookInstance", b =>
-                {
-                    b.HasOne("DAL.Entities.EBook", "FromBookTemplate")
-                        .WithMany("EBookInstances")
-                        .HasForeignKey("EBookTemplateID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.Entities.EReaderInstance", "EReaderPlace")
-                        .WithMany("BooksIncluded")
-                        .HasForeignKey("EReaderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.Entities.User", null)
-                        .WithMany("MyBooks")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("EReaderPlace");
-
-                    b.Navigation("FromBookTemplate");
                 });
 
             modelBuilder.Entity("DAL.Entities.EReaderInstance", b =>
@@ -1262,7 +1277,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.EBook", b =>
                 {
-                    b.Navigation("EBookInstances");
+                    b.Navigation("EReaders");
                 });
 #pragma warning restore 612, 618
         }

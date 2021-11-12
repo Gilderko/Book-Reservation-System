@@ -2,15 +2,13 @@ using AutoMapper;
 using BL.DTOs;
 using BL.DTOs.Filters;
 using DAL.Entities;
-using EFInfrastructure;
-using Infrastructure;
 using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
 using System;
 
 namespace BL.QueryObjects
 {
-    public class QueryObject<TEntityDTO,TEntity> where TEntity : class, IEntity
+    public class QueryObject<TEntityDTO, TEntity> where TEntity : class, IEntity
                                                  where TEntityDTO : class, IEntityDTO
     {
         private IMapper _mapper;
@@ -37,7 +35,7 @@ namespace BL.QueryObjects
         {
             if (filter.Predicate is PredicateDto)
             {
-                _myQuery.Where(_mapper.Map<SimplePredicate>(filter.Predicate));   
+                _myQuery.Where(_mapper.Map<SimplePredicate>(filter.Predicate));
             }
             else
             {

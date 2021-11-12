@@ -44,7 +44,7 @@ namespace EFInfrastructure
             foreach (string collectToLoad in localCollectionsToLoad)
             {
                 dbContext.Entry<TEntity>(loadedEntity).Collection(collectToLoad).Load();
-            }           
+            }
 
             return dbSet.Find(id);
         }

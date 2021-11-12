@@ -2,10 +2,10 @@
 {
     public enum Language
     {
-        English, 
-        German, 
-        French, 
-        Czech, 
+        English,
+        German,
+        French,
+        Czech,
         Slovak
     }
 }

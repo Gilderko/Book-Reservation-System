@@ -1,12 +1,11 @@
 ﻿using Autofac;
-using Module = Autofac.Module;
-using System.Linq;
-using System.Reflection;
-using Infrastructure;
 using AutoMapper;
-using EFInfrastructure;
 using BL.QueryObjects;
 using BL.Services;
+using EFInfrastructure;
+using System.Linq;
+using System.Reflection;
+using Module = Autofac.Module;
 
 namespace BL.Config
 {
@@ -22,7 +21,7 @@ namespace BL.Config
                 .InstancePerDependency();
 
             builder.RegisterGeneric(typeof(QueryObject<,>))
-                .InstancePerDependency();            
+                .InstancePerDependency();
 
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .Where(t => t.Namespace == "BL.Services")

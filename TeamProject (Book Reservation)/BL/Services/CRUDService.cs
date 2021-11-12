@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using BL.Config;
 using BL.DTOs;
 using DAL.Entities;
-using EFInfrastructure;
 using Infrastructure;
 using System;
 
@@ -10,7 +8,7 @@ namespace BL.Services
 {
     public class CRUDService<TEntityDTO, TEntity> where TEntity : class, IEntity
                                                   where TEntityDTO : class, IEntityDTO
-    {       
+    {
         private IRepository<TEntity> _repository;
         private IMapper _mapper;
 

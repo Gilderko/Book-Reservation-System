@@ -7,7 +7,7 @@ namespace BL.DTOs.FullVersions
     {
         [Required]
         public DateTime CreationDate { get; set; }
-        
+
         [StringLength(255)]
         public string Content { get; set; }
 
