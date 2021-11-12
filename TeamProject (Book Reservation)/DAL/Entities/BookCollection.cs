@@ -20,7 +20,7 @@ namespace DAL.Entities
         public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User OwnerUser;
+        public User OwnerUser { get; set; }
 
         // Many to many relationships
 

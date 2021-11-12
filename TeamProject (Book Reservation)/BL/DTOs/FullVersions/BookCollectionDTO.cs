@@ -20,7 +20,7 @@ namespace BL.DTOs.FullVersions
         [Required]
         public int UserId { get; set; }
 
-        public UserDTO OwnerUser;
+        public UserDTO OwnerUser { get; set; }
 
         // Many to many relationships
 

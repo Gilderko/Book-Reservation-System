@@ -8,11 +8,11 @@ namespace DAL.Entities.ConnectionTables
         public int BookCollectionID { get; set; }
 
 
-        public BookCollectionDTO BookCollect;
+        public BookCollectionDTO BookCollect { get; set; }
 
         public int BookID { get; set; }
 
 
-        public BookDTO Book;
+        public BookDTO Book { get; set; }
     }
 }

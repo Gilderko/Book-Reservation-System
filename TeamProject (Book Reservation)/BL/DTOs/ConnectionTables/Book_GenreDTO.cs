@@ -7,10 +7,10 @@ namespace DAL.Entities.ConnectionTables
     {
         public int BookID { get; set; }
 
-        public BookDTO Book;
+        public BookDTO Book { get; set; }
 
         public int GenreID { get; set; }
 
-        public GenreDTO Genre;
+        public GenreDTO Genre { get; set; }
     }
 }

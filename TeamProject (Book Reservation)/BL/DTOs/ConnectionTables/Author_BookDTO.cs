@@ -7,10 +7,10 @@ namespace DAL.Entities.ConnectionTables
     {
         public int AuthorID { get; set; }
 
-        public AuthorDTO Author;
+        public AuthorDTO Author { get; set; }
 
         public int BookID { get; set; }
 
-        public BookDTO Book;
+        public BookDTO Book { get; set; }
     }
 }

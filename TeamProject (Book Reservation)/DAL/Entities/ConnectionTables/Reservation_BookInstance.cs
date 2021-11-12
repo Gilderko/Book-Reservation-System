@@ -7,11 +7,11 @@ namespace DAL.Entities.ConnectionTables
         // Set up in Model creator
         public int ReservationID { get; set; }
 
-        public Reservation Reservation;
+        public Reservation Reservation { get; set; }
 
         public int BookInstanceID { get; set; }
 
         [ForeignKey(nameof(BookInstanceID))]
-        public BookInstance BookInstance;
+        public BookInstance BookInstance { get; set; }
     }
 }

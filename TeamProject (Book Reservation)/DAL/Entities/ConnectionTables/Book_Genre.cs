@@ -7,11 +7,11 @@ namespace DAL.Entities.ConnectionTables
         public int BookID { get; set; }
 
         [ForeignKey(nameof(BookID))]
-        public Book Book;
+        public Book Book { get; set; }
 
         public int GenreID { get; set; }
 
         [ForeignKey(nameof(GenreID))]
-        public Genre Genre;
+        public Genre Genre { get; set; }
     }
 }

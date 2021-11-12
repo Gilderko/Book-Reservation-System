@@ -8,11 +8,11 @@ namespace DAL.Entities.ConnectionTables
         public int ReservationID { get; set; }
 
 
-        public ReservationDTO Reservation;
+        public ReservationDTO Reservation { get; set; }
 
         public int BookInstanceID { get; set; }
 
 
-        public BookInstanceDTO BookInstance;
+        public BookInstanceDTO BookInstance { get; set; }
     }
 }
