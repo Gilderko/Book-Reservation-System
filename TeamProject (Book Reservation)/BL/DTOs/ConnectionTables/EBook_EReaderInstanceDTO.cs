@@ -11,6 +11,6 @@ namespace BL.DTOs.ConnectionTables
 
         public int EReaderID { get; set; }
 
-        public EReaderDTO EReader { get; set; }
+        public EReaderInstanceDTO EReader { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BL.DTOs.FullVersions;
+﻿using System;
+using BL.DTOs.FullVersions;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
@@ -19,6 +20,7 @@ namespace BL.Facades
         public void Create(ReviewDTO review)
         {
             _service.Insert(review);
+            _unitOfWork.Commit();
         }
 
         public ReviewDTO Get(int id)
@@ -29,11 +31,25 @@ namespace BL.Facades
         public void Update(ReviewDTO review)
         {
             _service.Update(review);
+            _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
             _service.Delete(id);
+            _unitOfWork.Commit();
+        }
+
+        public void AddReview(int bookId, ReviewDTO review)
+        {
+            review.CreationDate = DateTime.Now;
+            review.BookTemplateID = bookId;
+            _unitOfWork.Commit();
+        }
+        
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
         }
     }
 }

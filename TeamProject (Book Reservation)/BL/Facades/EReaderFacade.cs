@@ -19,6 +19,7 @@ namespace BL.Facades
         public void Create(EReaderDTO eReader)
         {
             _service.Insert(eReader);
+            _unitOfWork.Commit();
         }
 
         public EReaderDTO Get(int id)
@@ -29,11 +30,18 @@ namespace BL.Facades
         public void Update(EReaderDTO eReader)
         {
             _service.Update(eReader);
+            _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
             _service.Delete(id);
+            _unitOfWork.Commit();
+        }
+
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
         }
     }
 }

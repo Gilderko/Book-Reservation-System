@@ -19,6 +19,7 @@ namespace BL.Facades
         public void Create(EBookDTO eBook)
         {
             _service.Insert(eBook);
+            _unitOfWork.Commit();
         }
 
         public EBookDTO Get(int id)
@@ -29,11 +30,18 @@ namespace BL.Facades
         public void Update(EBookDTO eBook)
         {
             _service.Update(eBook);
+            _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
             _service.Delete(id);
+            _unitOfWork.Commit();
+        }
+        
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
         }
     }
 }
