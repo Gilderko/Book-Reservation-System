@@ -29,6 +29,7 @@ namespace BL.Config
             config.CreateMap<Review, ReviewDTO>().ReverseMap();
             config.CreateMap<User, UserDTO>().ReverseMap();
 
+
             config.CreateMap<CompositePredicate, CompositePredicateDto>().ReverseMap();
             config.CreateMap<IPredicate, IPredicateDto>().ReverseMap();
             config.CreateMap<SimplePredicate, PredicateDto>().ReverseMap();
@@ -40,6 +41,9 @@ namespace BL.Config
             config.CreateMap<EReader, EReaderPrevDTO>().ReverseMap();
             config.CreateMap<Reservation, ReservationPrevDTO>().ReverseMap();
             config.CreateMap<User, UserPrevDTO>().ReverseMap();
+            config.CreateMap<EBook, EBookPrevDTO>().ReverseMap();
+            config.CreateMap<EReaderInstance, EReaderInstancePrevDTO>();
+            config.CreateMap<ReservationDTO, ReservationPrevDTO>();
 
             // Connection Tables maps
 
