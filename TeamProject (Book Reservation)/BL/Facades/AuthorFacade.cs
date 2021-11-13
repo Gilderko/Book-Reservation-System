@@ -1,4 +1,5 @@
-﻿using BL.DTOs.FullVersions;
+﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.FullVersions;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
@@ -19,6 +20,7 @@ namespace BL.Facades
         public void Create(AuthorDTO author)
         {
             _service.Insert(author);
+            _unitOfWork.Commit();
         }
 
         public AuthorDTO Get(int id)
@@ -29,11 +31,25 @@ namespace BL.Facades
         public void Update(AuthorDTO author)
         {
             _service.Update(author);
+            _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
             _service.Delete(id);
+            _unitOfWork.Commit();
+        }
+
+        public void AddBookToAuthor(AuthorDTO author, BookDTO book)
+        {
+            author.AuthorsBooks.Add(new Author_BookDTO { Author = author, Book = book });
+            _service.Update(author);
+            _unitOfWork.Commit();
+        }
+
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
         }
     }
 }
