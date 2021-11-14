@@ -2,6 +2,7 @@
 using BL.DTOs.FullVersions;
 using BL.Services;
 using DAL.Entities;
+using DAL.Entities.ConnectionTables;
 using Infrastructure;
 
 namespace BL.Facades
@@ -9,41 +10,44 @@ namespace BL.Facades
     public class AuthorFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<AuthorDTO, Author> _service;
+        private CRUDService<AuthorDTO, Author> _authorService;
+        private CRUDService<Author_BookDTO, Author_Book> _authorBookService;
 
-        public AuthorFacade(IUnitOfWork unitOfWork, CRUDService<AuthorDTO, Author> service)
+        public AuthorFacade(IUnitOfWork unitOfWork, 
+                            CRUDService<AuthorDTO, Author> authorService, 
+                            CRUDService<Author_BookDTO, Author_Book> authorBookService)
         {
             _unitOfWork = unitOfWork;
-            _service = service;
+            _authorService = authorService;
+            _authorBookService = authorBookService;
         }
 
         public void Create(AuthorDTO author)
         {
-            _service.Insert(author);
+            _authorService.Insert(author);
             _unitOfWork.Commit();
         }
 
         public AuthorDTO Get(int id)
         {
-            return _service.GetByID(id);
+            return _authorService.GetByID(id);
         }
 
         public void Update(AuthorDTO author)
         {
-            _service.Update(author);
+            _authorService.Update(author);
             _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
-            _service.Delete(id);
+            _authorService.Delete(id);
             _unitOfWork.Commit();
         }
 
         public void AddBookToAuthor(AuthorDTO author, BookDTO book)
         {
-            author.AuthorsBooks.Add(new Author_BookDTO { Author = author, Book = book });
-            _service.Update(author);
+            _authorBookService.Insert(new Author_BookDTO { Author = author, Book = book });
             _unitOfWork.Commit();
         }
 

@@ -31,8 +31,8 @@ namespace BL.Services
             List<IPredicateDto> predicates = new()
             {
                 new PredicateDto("BookTemplateID", book.Id, ValueComparingOperator.Equal),
-                new PredicateDto("DateFrom", from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
-                new PredicateDto("DateTill", to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
+                // new PredicateDto("DateFrom", from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
+                // new PredicateDto("DateTill", to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
             };
 
             FilterDto filter = new()
