@@ -12,23 +12,16 @@ namespace BL.Facades
 {
     public class BookCollectionPreviewsFacade
     {
-        private IUnitOfWork _unitOfWork;
         private BookCollectionPreviewService _service;
 
-        public BookCollectionPreviewsFacade(IUnitOfWork unitOfWork, BookCollectionPreviewService service)
+        public BookCollectionPreviewsFacade(BookCollectionPreviewService service)
         {
-            _unitOfWork = unitOfWork;
             _service = service;
         }
 
         public IEnumerable<BookCollectionPrevDTO> GetBookCollectionsByUser(UserDTO user, int pageNumber, int pageSize)
         {
             return _service.GetBookCollectionsByUser(user, pageNumber, pageSize);
-        }
-
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
         }
     }
 }
