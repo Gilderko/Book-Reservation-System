@@ -24,6 +24,6 @@ namespace DAL.Entities
 
         // Many to many relationships
 
-        public ICollection<BookCollection_Book> Books { get; set; }
+        public ICollection<BookCollectionBook> Books { get; set; }
     }
 }

@@ -25,6 +25,6 @@ namespace DAL.Entities
 
         // Many to many relationships
 
-        public ICollection<Reservation_BookInstance> BookInstances { get; set; }
+        public ICollection<ReservationBookInstance> BookInstances { get; set; }
     }
 }

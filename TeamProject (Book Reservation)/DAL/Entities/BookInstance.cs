@@ -19,6 +19,6 @@ namespace DAL.Entities
         [ForeignKey(nameof(BookTemplateID))]
         public Book FromBookTemplate { get; set; }
 
-        public ICollection<Reservation_BookInstance> AllReservations { get; set; }
+        public ICollection<ReservationBookInstance> AllReservations { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace DAL.Entities
     {
         // Many to many relationships
 
-        public ICollection<Book_Genre> Books { get; set; }
+        public ICollection<BookGenre> Books { get; set; }
     }
 }

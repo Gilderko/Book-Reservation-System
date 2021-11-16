@@ -31,13 +31,13 @@ namespace DAL
 
         // Connection Tables
 
-        public DbSet<Author_Book> Author_Books { get; set; }
+        public DbSet<AuthorBook> Author_Books { get; set; }
 
-        public DbSet<Book_Genre> Book_Genres { get; set; }
+        public DbSet<BookGenre> Book_Genres { get; set; }
 
-        public DbSet<BookCollection_Book> BookCollection_Books { get; set; }
+        public DbSet<BookCollectionBook> BookCollection_Books { get; set; }
 
-        public DbSet<Reservation_BookInstance> Reservation_BookInstances { get; set; }
+        public DbSet<ReservationBookInstance> Reservation_BookInstances { get; set; }
 
         private string ConnectionString = "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=BookReservation";
 
@@ -52,28 +52,28 @@ namespace DAL
         {
 
             // Author Book
-            modelBuilder.Entity<Author_Book>()
+            modelBuilder.Entity<AuthorBook>()
                 .HasKey(obj => new { obj.BookID, obj.AuthorID });
 
             // Book Genre
-            modelBuilder.Entity<Book_Genre>()
+            modelBuilder.Entity<BookGenre>()
                 .HasKey(obj => new { obj.GenreID, obj.BookID });
 
 
             // BookCollection Book
-            modelBuilder.Entity<BookCollection_Book>()
+            modelBuilder.Entity<BookCollectionBook>()
                 .HasKey(obj => new { obj.BookID, obj.BookCollectionID });
 
 
             // Reservation BookInstance
-            modelBuilder.Entity<Reservation_BookInstance>()
+            modelBuilder.Entity<ReservationBookInstance>()
                 .HasKey(obj => new { obj.ReservationID, obj.BookInstanceID });
 
             // EReader EBook
-            modelBuilder.Entity<EBook_EReaderInstance>()
+            modelBuilder.Entity<EBookEReaderInstance>()
                 .HasKey(obj => new { obj.EBookID, obj.EReaderInstanceID });
 
-            modelBuilder.Entity<Reservation_BookInstance>()
+            modelBuilder.Entity<ReservationBookInstance>()
                 .HasOne(obj => obj.Reservation)
                 .WithMany(obj => obj.BookInstances)
                 .HasForeignKey(obj => obj.ReservationID)

@@ -32,10 +32,10 @@ namespace DAL.Entities
 
         // Many to many Relationships
 
-        public ICollection<BookCollection_Book> BookCollections { get; set; }
+        public ICollection<BookCollectionBook> BookCollections { get; set; }
 
-        public ICollection<Author_Book> Authors { get; set; }
+        public ICollection<AuthorBook> Authors { get; set; }
 
-        public ICollection<Book_Genre> Genres { get; set; }
+        public ICollection<BookGenre> Genres { get; set; }
     }
 }

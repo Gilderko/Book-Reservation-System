@@ -10,6 +10,6 @@ namespace DAL.Entities
 
         public EBookFormat Format { get; set; }
 
-        public ICollection<EBook_EReaderInstance> EReaders { get; set; }
+        public ICollection<EBookEReaderInstance> EReaders { get; set; }
     }
 }

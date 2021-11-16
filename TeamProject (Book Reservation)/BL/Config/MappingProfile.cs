@@ -48,11 +48,11 @@ namespace BL.Config
 
             // Connection Tables maps
 
-            config.CreateMap<Author_Book, Author_BookDTO>().ReverseMap();
-            config.CreateMap<Book_Genre, Book_GenreDTO>().ReverseMap();
-            config.CreateMap<BookCollection_Book, BookCollection_BookDTO>().ReverseMap();
-            config.CreateMap<Reservation_BookInstance, Reservation_BookInstanceDTO>().ReverseMap();
-            config.CreateMap<EBook_EReaderInstance, EBook_EReaderInstanceDTO>().ReverseMap();
+            config.CreateMap<AuthorBook, AuthorBookDTO>().ReverseMap();
+            config.CreateMap<BookGenre, BookGenreDTO>().ReverseMap();
+            config.CreateMap<BookCollectionBook, BookCollectionBookDTO>().ReverseMap();
+            config.CreateMap<ReservationBookInstance, ReservationBookInstanceDTO>().ReverseMap();
+            config.CreateMap<EBookEReaderInstance, EBookEReaderInstanceDTO>().ReverseMap();
         }
     }
 }

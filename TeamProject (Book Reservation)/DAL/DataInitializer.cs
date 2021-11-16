@@ -284,7 +284,7 @@ namespace DAL
                 }
             );
 
-            modelBuilder.Entity<Author_Book>().HasData(
+            modelBuilder.Entity<AuthorBook>().HasData(
                 new { BookID = 1, AuthorID = 2 },
                 new { BookID = 2, AuthorID = 1 },
                 new { BookID = 3, AuthorID = 1 },
@@ -296,7 +296,7 @@ namespace DAL
                 new { BookID = 9, AuthorID = 1 }
             );
 
-            modelBuilder.Entity<Book_Genre>().HasData(
+            modelBuilder.Entity<BookGenre>().HasData(
                 new { BookID = 1, GenreID = (int)GenreType.Classic },
                 new { BookID = 2, GenreID = (int)GenreType.Classic },
                 new { BookID = 3, GenreID = (int)GenreType.Classic },
@@ -375,11 +375,11 @@ namespace DAL
                     Description = "Just classics.",
                     CreationDate = new DateTime(2021, 9, 30),
                     UserId = 2,
-                    Books = new List<BookCollection_Book> { }
+                    Books = new List<BookCollectionBook> { }
                 }
             );
 
-            modelBuilder.Entity<BookCollection_Book>().HasData(
+            modelBuilder.Entity<BookCollectionBook>().HasData(
                 new { BookCollectionID = 1, BookID = 1 },
                 new { BookCollectionID = 1, BookID = 2 },
                 new { BookCollectionID = 1, BookID = 3 }
@@ -554,43 +554,43 @@ namespace DAL
                 }
             );
 
-            modelBuilder.Entity<Reservation_BookInstance>().HasData(
-                new Reservation_BookInstance
+            modelBuilder.Entity<ReservationBookInstance>().HasData(
+                new ReservationBookInstance
                 {
                     ReservationID = 1,
                     BookInstanceID = 1
                 },
-                new Reservation_BookInstance
+                new ReservationBookInstance
                 {
                     ReservationID = 2,
                     BookInstanceID = 2
                 },
-                new Reservation_BookInstance
+                new ReservationBookInstance
                 {
                     ReservationID = 3,
                     BookInstanceID = 3
                 },
-                new Reservation_BookInstance
+                new ReservationBookInstance
                 {
                     ReservationID = 4,
                     BookInstanceID = 1
-                }, new Reservation_BookInstance
+                }, new ReservationBookInstance
                 {
                     ReservationID = 5,
                     BookInstanceID = 2
-                }, new Reservation_BookInstance
+                }, new ReservationBookInstance
                 {
                     ReservationID = 6,
                     BookInstanceID = 5
-                }, new Reservation_BookInstance
+                }, new ReservationBookInstance
                 {
                     ReservationID = 7,
                     BookInstanceID = 3
-                }, new Reservation_BookInstance
+                }, new ReservationBookInstance
                 {
                     ReservationID = 8,
                     BookInstanceID = 7
-                }, new Reservation_BookInstance
+                }, new ReservationBookInstance
                 {
                     ReservationID = 9,
                     BookInstanceID = 8
@@ -642,18 +642,18 @@ namespace DAL
                 }
             );
 
-            modelBuilder.Entity<EBook_EReaderInstance>().HasData(
-                new EBook_EReaderInstance
+            modelBuilder.Entity<EBookEReaderInstance>().HasData(
+                new EBookEReaderInstance
                 {
                     EBookID = 10,
                     EReaderInstanceID = 1
                 },
-                new EBook_EReaderInstance
+                new EBookEReaderInstance
                 {
                     EBookID = 10,
                     EReaderInstanceID = 2
                 },
-                new EBook_EReaderInstance
+                new EBookEReaderInstance
                 {
                     EBookID = 9,
                     EReaderInstanceID = 1

@@ -20,6 +20,6 @@ namespace DAL.Entities
         [ForeignKey(nameof(EReaderTemplateID))]
         public EReader EReaderTemplate { get; set; }
 
-        public ICollection<EBook_EReaderInstance> BooksIncluded { get; set; }
+        public ICollection<EBookEReaderInstance> BooksIncluded { get; set; }
     }
 }
