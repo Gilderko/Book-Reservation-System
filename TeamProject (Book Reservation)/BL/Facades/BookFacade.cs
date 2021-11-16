@@ -12,11 +12,11 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private CRUDService<BookDTO, Book> _service;
-        private BookInstanceService<BookInstanceDTO, BookInstance> _bookInstanceService;
+        private BookInstanceService _bookInstanceService;
 
         public BookFacade(IUnitOfWork unitOfWork,
                           CRUDService<BookDTO, Book> service, 
-                          BookInstanceService<BookInstanceDTO, BookInstance> bookInstanceService)
+                          BookInstanceService bookInstanceService)
         {
             _unitOfWork = unitOfWork;
             _service = service;

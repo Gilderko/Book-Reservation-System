@@ -4,8 +4,7 @@ using DAL.Entities;
 
 namespace BL.Services
 {    
-    public interface IEReaderInstancePreviewService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntity : EReaderInstance
-                                                                                                       where TEntityDTO : EReaderInstancePrevDTO
+    public interface IEReaderInstancePreviewService : ICRUDService<EReaderInstancePrevDTO, EReaderInstance>
     {
         public IEnumerable<EReaderInstancePrevDTO> GetEReaderInstancesByOwner(int ownerId);
     }

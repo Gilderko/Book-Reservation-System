@@ -10,15 +10,14 @@ using BL.DTOs.Entities.User;
 
 namespace BL.Services
 {
-    public class BookCollectionPreviewService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
-        IBookCollectionPreviewService<TEntityDTO, TEntity> where TEntityDTO : BookCollectionPrevDTO
-                                                           where TEntity : BookCollection
+    public class BookCollectionPreviewService : CRUDService<BookCollectionPrevDTO, BookCollection>, 
+        IBookCollectionPreviewService
     {
         private readonly IRepository<BookCollection> _repository;
         private readonly IMapper _mapper;
         private readonly QueryObject<BookCollectionPrevDTO, BookCollection> _queryObject;
 
-        public BookCollectionPreviewService(IRepository<TEntity> repo, 
+        public BookCollectionPreviewService(IRepository<BookCollection> repo, 
                                             IMapper mapper, 
                                             QueryObject<BookCollectionPrevDTO, BookCollection> queryObject) : base(repo, mapper)
         {

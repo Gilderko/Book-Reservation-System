@@ -7,13 +7,11 @@ using Infrastructure;
 
 namespace BL.Services
 {
-    public class BookPreviewService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
-        IBookPreviewService<TEntityDTO, TEntity> where TEntity : Book
-                                                 where TEntityDTO : BookPrevDTO
+    public class BookPreviewService : CRUDService<BookPrevDTO, Book>, IBookPreviewService
     {
         private QueryObject<BookPrevDTO, Book> _resQueryObject;
 
-        public BookPreviewService(IRepository<TEntity> repo, 
+        public BookPreviewService(IRepository<Book> repo, 
             IMapper mapper, 
             QueryObject<BookPrevDTO, Book> resQueryObject) : base(repo, mapper)
         {

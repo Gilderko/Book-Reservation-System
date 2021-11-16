@@ -6,8 +6,7 @@ using DAL.Entities;
 
 namespace BL.Services
 {
-    public interface IEBookPreviewService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntity : EBook
-                                                                                             where TEntityDTO : EBookPrevDTO
+    public interface IEBookPreviewService : ICRUDService<EBookPrevDTO, EBook>
     {
         public IEnumerable<BookPrevDTO> GetEBookPrevsByFilter(FilterDto filter);
     }

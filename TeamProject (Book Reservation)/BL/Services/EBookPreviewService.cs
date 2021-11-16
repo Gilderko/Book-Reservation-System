@@ -10,13 +10,12 @@ using Infrastructure;
 
 namespace BL.Services
 {
-    public class EBookPreviewService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
-        IEBookPreviewService<TEntityDTO, TEntity> where TEntity : EBook
-                                                  where TEntityDTO : EBookPrevDTO
+    public class EBookPreviewService : CRUDService<EBookPrevDTO, EBook>, 
+        IEBookPreviewService
     {
         private QueryObject<EBookPrevDTO, EBook> _resQueryObject;
         
-        public EBookPreviewService(IRepository<TEntity> repo, 
+        public EBookPreviewService(IRepository<EBook> repo, 
                                    IMapper mapper, 
                                    QueryObject<EBookPrevDTO, EBook> resQueryObject) : base(repo, mapper)
         {

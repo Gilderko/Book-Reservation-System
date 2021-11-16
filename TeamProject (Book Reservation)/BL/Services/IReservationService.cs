@@ -5,8 +5,7 @@ using BL.DTOs.Entities.Reservation;
 
 namespace BL.Services
 {
-    public interface IReservationService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntityDTO : ReservationDTO
-                                                                                            where TEntity : Reservation
+    public interface IReservationService : ICRUDService<ReservationDTO, Reservation>
     {
         public IEnumerable<ReservationPrevDTO> GetReservationsPreviewByUser(int userId, DateTime from, DateTime to);
 

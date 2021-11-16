@@ -11,13 +11,11 @@ using BL.DTOs.Entities.BookInstance;
 
 namespace BL.Services
 {
-    public class BookInstanceService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
-        IBookInstanceService<TEntityDTO, TEntity> where TEntity : BookInstance
-                                                  where TEntityDTO : BookInstanceDTO
+    public class BookInstanceService : CRUDService<BookInstanceDTO, BookInstance>, IBookInstanceService
     {
         private readonly QueryObject<BookInstanceDTO, BookInstance> _queryObject;
 
-        public BookInstanceService(IRepository<TEntity> repo, 
+        public BookInstanceService(IRepository<BookInstance> repo, 
                                    IMapper mapper, 
                                    QueryObject<BookInstanceDTO, BookInstance> resQueryObject) : base(repo, mapper)
         {

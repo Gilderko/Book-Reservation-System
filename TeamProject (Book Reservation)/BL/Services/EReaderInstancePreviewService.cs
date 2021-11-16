@@ -9,13 +9,12 @@ using Infrastructure.Query.Operators;
 
 namespace BL.Services
 {    
-    public class EReaderInstancePreviewService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
-        IEReaderInstancePreviewService<TEntityDTO, TEntity> where TEntity : EReaderInstance
-                                                            where TEntityDTO : EReaderInstancePrevDTO
+    public class EReaderInstancePreviewService : CRUDService<EReaderInstancePrevDTO, EReaderInstance>, 
+        IEReaderInstancePreviewService
     {
         private QueryObject<EReaderInstancePrevDTO, EReaderInstance> _resQueryObject;
         
-        public EReaderInstancePreviewService(IRepository<TEntity> repo, 
+        public EReaderInstancePreviewService(IRepository<EReaderInstance> repo, 
                                              IMapper mapper,
                                              QueryObject<EReaderInstancePrevDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
         {

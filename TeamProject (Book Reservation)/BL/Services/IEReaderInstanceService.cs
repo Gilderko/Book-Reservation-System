@@ -4,8 +4,7 @@ using DAL.Entities;
 
 namespace BL.Services
 {
-    public interface IEReaderInstanceService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntity : EReaderInstance
-                                                                                                where TEntityDTO : EReaderInstanceDTO
+    public interface IEReaderInstanceService : ICRUDService<EReaderInstanceDTO, EReaderInstance>
     {
         public void AddEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook);
 

@@ -5,8 +5,7 @@ using BL.DTOs.Entities.User;
 
 namespace BL.Services
 {
-    public interface IBookInstancePreviewService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntity : BookInstance
-                                                                                                    where TEntityDTO : BookInstanceDTO
+    public interface IBookInstancePreviewService : ICRUDService<BookInstanceDTO, BookInstance>
     {
 
         public IEnumerable<BookInstancePrevDTO> GetBookInstancesByUser(UserDTO user, int pageNumber = 1,

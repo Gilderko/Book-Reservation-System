@@ -13,13 +13,11 @@ using DAL.Enums;
 
 namespace BL.Services
 {
-    public class BookInstancePreviewService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
-        IBookInstanceService<TEntityDTO, TEntity> where TEntity : BookInstance
-                                                  where TEntityDTO : BookInstanceDTO
+    public class BookInstancePreviewService : CRUDService<BookInstanceDTO, BookInstance>, IBookInstanceService
     {                                                                                                
         private readonly QueryObject<BookInstancePrevDTO, BookInstance> _queryObject;
 
-        public BookInstancePreviewService(IRepository<TEntity> repo, 
+        public BookInstancePreviewService(IRepository<BookInstance> repo, 
                                           IMapper mapper, 
                                           QueryObject<BookInstancePrevDTO, BookInstance> queryObject) : base(repo, mapper)
         {

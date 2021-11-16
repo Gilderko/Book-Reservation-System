@@ -9,14 +9,12 @@ using Infrastructure;
 
 namespace BL.Services
 {
-    public class EReaderInstanceService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
-        IEReaderInstanceService<TEntityDTO, TEntity> where TEntity : EReaderInstance
-                                                     where TEntityDTO : EReaderInstanceDTO
+    public class EReaderInstanceService : CRUDService<EReaderInstanceDTO, EReaderInstance>, IEReaderInstanceService
     {
         private QueryObject<EReaderInstanceDTO, EReaderInstance> _resQueryObject;
         private IMapper _mapper;
 
-        public EReaderInstanceService(IRepository<TEntity> repo, 
+        public EReaderInstanceService(IRepository<EReaderInstance> repo, 
                                       Mapper mapper, 
                                       QueryObject<EReaderInstanceDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
         {

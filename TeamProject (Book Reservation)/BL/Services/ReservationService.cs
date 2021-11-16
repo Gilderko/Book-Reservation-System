@@ -13,15 +13,13 @@ using Infrastructure;
 
 namespace BL.Services
 {
-    public class ReservationService<TEntityDTO, TEntity> :
-        CRUDService<TEntityDTO, TEntity>, IReservationService<TEntityDTO, TEntity> where TEntityDTO : ReservationDTO
-                                                                                   where TEntity : Reservation
+    public class ReservationService : CRUDService<ReservationDTO, Reservation>, IReservationService
     {
         private IMapper _mapper;
         private QueryObject<ReservationPrevDTO, Reservation> _resQueryObject;
         private QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> _reservationBookInstanceQueryObject;
 
-        public ReservationService(IRepository<TEntity> repo,
+        public ReservationService(IRepository<Reservation> repo,
                                   IMapper mapper, 
                                   QueryObject<ReservationPrevDTO, Reservation> resQueryObject,
                                   QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base (repo, mapper)

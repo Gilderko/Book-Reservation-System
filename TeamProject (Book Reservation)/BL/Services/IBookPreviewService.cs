@@ -3,8 +3,7 @@ using DAL.Entities;
 
 namespace BL.Services
 {
-    public interface IBookPreviewService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntity : Book
-                                                                                                  where TEntityDTO : BookPrevDTO
+    public interface IBookPreviewService : ICRUDService<BookPrevDTO, Book>
     {
     }
 }
