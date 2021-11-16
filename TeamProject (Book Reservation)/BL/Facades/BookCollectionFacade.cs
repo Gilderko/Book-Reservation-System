@@ -1,5 +1,6 @@
 ﻿using BL.DTOs.ConnectionTables;
-using BL.DTOs.FullVersions;
+using BL.DTOs.Entities.Book;
+using BL.DTOs.Entities.BookCollection;
 using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
@@ -11,11 +12,11 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private CRUDService<BookCollectionDTO, BookCollection> _bookCollectionService;
-        private CRUDService<BookCollection_BookDTO, BookCollection_Book> _bookCollectionBookService;
+        private CRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
 
         public BookCollectionFacade(IUnitOfWork unitOfWork, 
                                     CRUDService<BookCollectionDTO, BookCollection> bookCollectionService,
-                                    CRUDService<BookCollection_BookDTO, BookCollection_Book> bookCollectionBookService)
+                                    CRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
         {
             _unitOfWork = unitOfWork;
             _bookCollectionService = bookCollectionService;
@@ -47,13 +48,13 @@ namespace BL.Facades
 
         public void AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Insert(new BookCollection_BookDTO { BookCollect = bookCollection, Book = book });
+            _bookCollectionBookService.Insert(new BookCollectionBookDTO { BookCollect = bookCollection, Book = book });
             _unitOfWork.Commit();
         }
 
         public void DeleteBookFromCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Delete(new BookCollection_BookDTO { BookCollect = bookCollection, Book = book });
+            _bookCollectionBookService.Delete(new BookCollectionBookDTO { BookCollect = bookCollection, Book = book });
             _unitOfWork.Commit();
         }
 

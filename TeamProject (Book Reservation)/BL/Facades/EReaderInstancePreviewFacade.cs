@@ -1,15 +1,16 @@
 using System.Collections.Generic;
-using BL.DTOs.Previews;
+using BL.DTOs.Entities.EReaderInstance;
 using BL.Services;
+using DAL.Entities;
 
 namespace BL.Facades
 {
     public class EReaderInstancePreviewFacade
     {
-        private EReaderInstancePreviewService _service;
+        private EReaderInstancePreviewService<EReaderInstancePrevDTO, EReaderInstance> _service;
         
 
-        public EReaderInstancePreviewFacade(EReaderInstancePreviewService service)
+        public EReaderInstancePreviewFacade(EReaderInstancePreviewService<EReaderInstancePrevDTO, EReaderInstance> service)
         {
             _service = service;
         }

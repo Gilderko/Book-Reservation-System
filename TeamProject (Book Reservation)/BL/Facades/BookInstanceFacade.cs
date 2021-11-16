@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using BL.DTOs.FullVersions;
-using BL.DTOs.Previews;
+using BL.DTOs.Entities.BookInstance;
+using BL.DTOs.Entities.Reservation;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
@@ -12,11 +12,11 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private CRUDService<BookInstanceDTO, BookInstance> _service;
-        private ReservationService _reservationService;
+        private ReservationService<ReservationDTO, Reservation> _reservationService;
 
         public BookInstanceFacade(IUnitOfWork unitOfWork, 
                                   CRUDService<BookInstanceDTO, BookInstance> service, 
-                                  ReservationService reservationService)
+                                  ReservationService<ReservationDTO, Reservation> reservationService)
         {
             _unitOfWork = unitOfWork;
             _service = service;

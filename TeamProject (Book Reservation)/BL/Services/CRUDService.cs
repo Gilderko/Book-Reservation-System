@@ -6,22 +6,22 @@ using System;
 
 namespace BL.Services
 {
-    public class CRUDService<TEntityDTO, TEntity> where TEntity : class, IEntity
-                                                  where TEntityDTO : class, IEntityDTO
+    public class CRUDService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntity : class, IEntity
+                                                                                      where TEntityDTO : class, IEntityDTO
     {
         private IRepository<TEntity> _repository;
-        private IMapper _mapper;
+        protected IMapper Mapper { get; private set; }
 
         public CRUDService(IRepository<TEntity> repo, IMapper mapper)
         {
             _repository = repo;
-            _mapper = mapper;
+            Mapper = mapper;
         }
 
         public TEntityDTO GetByID(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
             TEntity resultEntity = _repository.GetByID(id, refsToLoad, collectToLoad);
-            TEntityDTO resultDTO = _mapper.Map<TEntityDTO>(resultEntity);
+            TEntityDTO resultDTO = Mapper.Map<TEntityDTO>(resultEntity);
             return resultDTO;
         }
 
@@ -33,7 +33,7 @@ namespace BL.Services
 
         public void Insert(TEntityDTO DTOToAdd)
         {
-            TEntity entityToAdd = _mapper.Map<TEntity>(DTOToAdd);
+            TEntity entityToAdd = Mapper.Map<TEntity>(DTOToAdd);
             _repository.Insert(entityToAdd);
         }
 
@@ -44,13 +44,13 @@ namespace BL.Services
 
         public void Delete(TEntityDTO DTOToDelete)
         {
-            TEntity entityToDelete = _mapper.Map<TEntity>(DTOToDelete);
+            TEntity entityToDelete = Mapper.Map<TEntity>(DTOToDelete);
             _repository.Delete(entityToDelete);
         }
 
         public void Update(TEntityDTO DTOToUpdate)
         {
-            TEntity entityToUpdate = _mapper.Map<TEntity>(DTOToUpdate);
+            TEntity entityToUpdate = Mapper.Map<TEntity>(DTOToUpdate);
             _repository.Update(entityToUpdate);
         }
     }

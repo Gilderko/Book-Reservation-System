@@ -1,23 +1,24 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using BL.DTOs.ConnectionTables;
-using BL.DTOs.Filters;
-using BL.DTOs.FullVersions;
-using BL.DTOs.Previews;
+using BL.DTOs.Entities.EBook;
+using BL.DTOs.Entities.EReaderInstance;
 using BL.QueryObjects;
 using DAL.Entities;
-using Infrastructure.Query.Operators;
+using Infrastructure;
 
 namespace BL.Services
 {
-    public class EReaderInstanceService
+    public class EReaderInstanceService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
+        IEReaderInstanceService<TEntityDTO, TEntity> where TEntity : EReaderInstance
+                                                     where TEntityDTO : EReaderInstanceDTO
     {
         private QueryObject<EReaderInstanceDTO, EReaderInstance> _resQueryObject;
         private IMapper _mapper;
 
-        public EReaderInstanceService(IMapper mapper, QueryObject<EReaderInstanceDTO, EReaderInstance> resQueryObject)
+        public EReaderInstanceService(IRepository<TEntity> repo, 
+                                      Mapper mapper, 
+                                      QueryObject<EReaderInstanceDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
         {
             _mapper = mapper;
             _resQueryObject = resQueryObject;
@@ -25,18 +26,18 @@ namespace BL.Services
 
         public void AddEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
         {
-            EBook_EReaderInstanceDTO eBookEReaderInstanceDto = new EBook_EReaderInstanceDTO()
+            EBookEReaderInstanceDTO eBookEReaderInstanceDto = new EBookEReaderInstanceDTO()
             {
                 EBook = eBook,
                 EReader = eReaderInstance
             };
             
-            ((List<EBook_EReaderInstanceDTO>) eReaderInstance.BooksIncluded).Add(eBookEReaderInstanceDto);
+            ((List<EBookEReaderInstanceDTO>) eReaderInstance.BooksIncluded).Add(eBookEReaderInstanceDto);
         }
         
         public void DeleteEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
         {
-            var eBookList = ((List<EBook_EReaderInstanceDTO>) eReaderInstance.BooksIncluded);
+            var eBookList = ((List<EBookEReaderInstanceDTO>) eReaderInstance.BooksIncluded);
             
             eBookList.Remove(eBookList.Find(x => x.EBook.Id == eBook.Id));
         }

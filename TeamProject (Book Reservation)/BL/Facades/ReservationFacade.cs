@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using BL.DTOs.ConnectionTables;
-using BL.DTOs.FullVersions;
+using BL.DTOs.Entities.BookInstance;
+using BL.DTOs.Entities.EReaderInstance;
+using BL.DTOs.Entities.Reservation;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
@@ -42,13 +44,13 @@ namespace BL.Facades
         {
             using (_unitOfWork)
             {
-                Reservation_BookInstanceDTO resBookInstance = new Reservation_BookInstanceDTO()
+                ReservationBookInstanceDTO resBookInstance = new ReservationBookInstanceDTO()
                 {
                     BookInstance = bookInstance,
                     Reservation = reservation
                 };
                 
-                ((List<Reservation_BookInstanceDTO>) reservation.BookInstances).Add(resBookInstance);
+                ((List<ReservationBookInstanceDTO>) reservation.BookInstances).Add(resBookInstance);
                 _unitOfWork.Commit();
             }
         }

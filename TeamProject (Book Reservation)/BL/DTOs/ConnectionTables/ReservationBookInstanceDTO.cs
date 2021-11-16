@@ -1,4 +1,5 @@
-﻿using BL.DTOs.FullVersions;
+﻿using BL.DTOs.Entities.BookInstance;
+using BL.DTOs.Entities.Reservation;
 
 namespace BL.DTOs.ConnectionTables
 {

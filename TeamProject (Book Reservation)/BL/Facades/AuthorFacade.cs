@@ -1,5 +1,6 @@
 ﻿using BL.DTOs.ConnectionTables;
-using BL.DTOs.FullVersions;
+using BL.DTOs.Entities.Author;
+using BL.DTOs.Entities.Book;
 using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
@@ -11,11 +12,11 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private CRUDService<AuthorDTO, Author> _authorService;
-        private CRUDService<Author_BookDTO, Author_Book> _authorBookService;
+        private CRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
 
         public AuthorFacade(IUnitOfWork unitOfWork, 
                             CRUDService<AuthorDTO, Author> authorService, 
-                            CRUDService<Author_BookDTO, Author_Book> authorBookService)
+                            CRUDService<AuthorBookDTO, AuthorBook> authorBookService)
         {
             _unitOfWork = unitOfWork;
             _authorService = authorService;
@@ -47,7 +48,7 @@ namespace BL.Facades
 
         public void AddBookToAuthor(AuthorDTO author, BookDTO book)
         {
-            _authorBookService.Insert(new Author_BookDTO { Author = author, Book = book });
+            _authorBookService.Insert(new AuthorBookDTO { Author = author, Book = book });
             _unitOfWork.Commit();
         }
 

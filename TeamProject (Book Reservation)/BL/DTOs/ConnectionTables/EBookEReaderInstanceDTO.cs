@@ -1,5 +1,6 @@
-﻿using BL.DTOs.FullVersions;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using BL.DTOs.Entities.EBook;
+using BL.DTOs.Entities.EReaderInstance;
 
 namespace BL.DTOs.ConnectionTables
 {

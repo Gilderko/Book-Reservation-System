@@ -1,20 +1,16 @@
-﻿using BL.DTOs.FullVersions;
-using BL.DTOs.Previews;
-using BL.Services;
-using Infrastructure;
-using System;
+﻿using BL.Services;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BL.DTOs.Entities.BookInstance;
+using BL.DTOs.Entities.User;
+using DAL.Entities;
 
 namespace BL.Facades
 {
     public class BookInstancePreviewsFacade
     {
-        private BookInstancePreviewService _service;
+        private BookInstancePreviewService<BookInstanceDTO, BookInstance> _service;
 
-        public BookInstancePreviewsFacade(BookInstancePreviewService service)
+        public BookInstancePreviewsFacade(BookInstancePreviewService<BookInstanceDTO, BookInstance> service)
         {
             _service = service;
         }

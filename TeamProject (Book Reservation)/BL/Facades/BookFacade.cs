@@ -1,9 +1,10 @@
-﻿using BL.DTOs.FullVersions;
-using BL.Services;
+﻿using BL.Services;
 using DAL.Entities;
 using Infrastructure;
 using System;
 using System.Collections.Generic;
+using BL.DTOs.Entities.Book;
+using BL.DTOs.Entities.BookInstance;
 
 namespace BL.Facades
 {
@@ -11,9 +12,11 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private CRUDService<BookDTO, Book> _service;
-        private BookInstanceService _bookInstanceService;
+        private BookInstanceService<BookInstanceDTO, BookInstance> _bookInstanceService;
 
-        public BookFacade(IUnitOfWork unitOfWork, CRUDService<BookDTO, Book> service, BookInstanceService bookInstanceService)
+        public BookFacade(IUnitOfWork unitOfWork,
+                          CRUDService<BookDTO, Book> service, 
+                          BookInstanceService<BookInstanceDTO, BookInstance> bookInstanceService)
         {
             _unitOfWork = unitOfWork;
             _service = service;

@@ -1,4 +1,7 @@
-﻿using BL.DTOs.FullVersions;
+﻿using BL.DTOs.Entities.BookCollection;
+using BL.DTOs.Entities.BookInstance;
+using BL.DTOs.Entities.EReaderInstance;
+using BL.DTOs.Entities.User;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;

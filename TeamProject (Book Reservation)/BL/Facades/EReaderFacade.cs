@@ -1,4 +1,4 @@
-﻿using BL.DTOs.FullVersions;
+﻿using BL.DTOs.Entities.EReader;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;

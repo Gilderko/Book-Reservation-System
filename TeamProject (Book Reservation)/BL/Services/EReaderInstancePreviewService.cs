@@ -1,21 +1,24 @@
 using System.Collections.Generic;
 using AutoMapper;
+using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Filters;
-using BL.DTOs.Previews;
 using BL.QueryObjects;
 using DAL.Entities;
+using Infrastructure;
 using Infrastructure.Query.Operators;
 
 namespace BL.Services
-{
-    public class EReaderInstancePreviewService
+{    
+    public class EReaderInstancePreviewService<TEntityDTO, TEntity> : CRUDService<TEntityDTO, TEntity>, 
+        IEReaderInstancePreviewService<TEntityDTO, TEntity> where TEntity : EReaderInstance
+                                                            where TEntityDTO : EReaderInstancePrevDTO
     {
-        private IMapper _mapper;
         private QueryObject<EReaderInstancePrevDTO, EReaderInstance> _resQueryObject;
         
-        public EReaderInstancePreviewService(IMapper mapper, QueryObject<EReaderInstancePrevDTO, EReaderInstance> resQueryObject)
+        public EReaderInstancePreviewService(IRepository<TEntity> repo, 
+                                             IMapper mapper,
+                                             QueryObject<EReaderInstancePrevDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
         {
-            _mapper = mapper;
             _resQueryObject = resQueryObject;
         }
 
@@ -23,7 +26,7 @@ namespace BL.Services
         {
             FilterDto filter = new FilterDto()
             {
-                Predicate = new PredicateDto("EreaderOwnerId", ownerId, ValueComparingOperator.Equal),
+                Predicate = new PredicateDto(nameof(EReaderInstanceDTO.EreaderOwnerId), ownerId, ValueComparingOperator.Equal),
                 SortCriteria = "Id",
                 SortAscending = true
             };

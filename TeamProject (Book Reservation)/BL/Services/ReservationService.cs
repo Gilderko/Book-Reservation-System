@@ -1,5 +1,4 @@
 using AutoMapper;
-using BL.DTOs;
 using BL.DTOs.Filters;
 using BL.QueryObjects;
 using DAL.Entities;
@@ -8,21 +7,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BL.DTOs.ConnectionTables;
-using BL.DTOs.FullVersions;
-using BL.DTOs.Previews;
+using BL.DTOs.Entities.Reservation;
 using DAL.Entities.ConnectionTables;
+using Infrastructure;
 
 namespace BL.Services
 {
-    public class ReservationService
+    public class ReservationService<TEntityDTO, TEntity> :
+        CRUDService<TEntityDTO, TEntity>, IReservationService<TEntityDTO, TEntity> where TEntityDTO : ReservationDTO
+                                                                                   where TEntity : Reservation
     {
         private IMapper _mapper;
         private QueryObject<ReservationPrevDTO, Reservation> _resQueryObject;
-        private QueryObject<Reservation_BookInstanceDTO, Reservation_BookInstance> _reservationBookInstanceQueryObject;
+        private QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> _reservationBookInstanceQueryObject;
 
-        public ReservationService(IMapper mapper, 
+        public ReservationService(IRepository<TEntity> repo,
+                                  IMapper mapper, 
                                   QueryObject<ReservationPrevDTO, Reservation> resQueryObject,
-                                  QueryObject<Reservation_BookInstanceDTO, Reservation_BookInstance> reservationBookInstanceQueryObject)
+                                  QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base (repo, mapper)
         {
             _mapper = mapper;
             _resQueryObject = resQueryObject;
@@ -33,9 +35,9 @@ namespace BL.Services
         {
             List<PredicateDto> predicates = new List<PredicateDto>
             {
-                new PredicateDto("UserID", userId, ValueComparingOperator.Equal),
-                new PredicateDto("dateFrom", from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
-                new PredicateDto("dateTill", to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
+                new PredicateDto(nameof(Reservation.UserID), userId, ValueComparingOperator.Equal),
+                new PredicateDto(nameof(Reservation.DateFrom), from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
+                new PredicateDto(nameof(Reservation.DateTill), to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
             };
 
             CompositePredicateDto compositePredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
@@ -43,7 +45,7 @@ namespace BL.Services
             FilterDto filter = new FilterDto()
             {
                 Predicate = compositePredicate,
-                SortCriteria = "dateFrom",
+                SortCriteria = nameof(Reservation.DateFrom),
                 SortAscending = false
             };
 
@@ -54,9 +56,9 @@ namespace BL.Services
         {
             List<PredicateDto> predicates = new List<PredicateDto>
             {
-                new PredicateDto("EReaderID", eReaderId, ValueComparingOperator.Equal),
-                new PredicateDto("dateFrom", from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
-                new PredicateDto("dateTill", to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
+                new PredicateDto(nameof(Reservation.EReaderID), eReaderId, ValueComparingOperator.Equal),
+                new PredicateDto(nameof(Reservation.DateFrom), from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
+                new PredicateDto(nameof(Reservation.DateTill), to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
             };
 
             CompositePredicateDto compositePredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
@@ -64,7 +66,7 @@ namespace BL.Services
             FilterDto filter = new FilterDto()
             {
                 Predicate = compositePredicate,
-                SortCriteria = "dateFrom",
+                SortCriteria = nameof(Reservation.DateFrom),
                 SortAscending = false
             };
 
@@ -75,15 +77,15 @@ namespace BL.Services
         {
             string[] referencesToLoad = new[]
             {
-                "Reservation"
+                nameof(Reservation)
             };
                 
             _reservationBookInstanceQueryObject.LoadExplicitReferences(instance => referencesToLoad);
             
             FilterDto filter = new FilterDto()
             {
-                Predicate = new PredicateDto("BookInstanceID", bookId, ValueComparingOperator.Equal),
-                SortCriteria = "ID",
+                Predicate = new PredicateDto(nameof(ReservationBookInstanceDTO.BookInstanceID), bookId, ValueComparingOperator.Equal),
+                SortCriteria = nameof(ReservationBookInstanceDTO.ReservationID),
                 SortAscending = false,
             };
             

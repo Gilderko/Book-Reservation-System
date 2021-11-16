@@ -1,5 +1,5 @@
 ﻿using System;
-using BL.DTOs.FullVersions;
+using BL.DTOs.Entities.Review;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;

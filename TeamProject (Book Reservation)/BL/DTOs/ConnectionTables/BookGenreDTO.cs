@@ -1,4 +1,5 @@
-﻿using BL.DTOs.FullVersions;
+﻿using BL.DTOs.Entities.Book;
+using BL.DTOs.Entities.Genre;
 
 namespace BL.DTOs.ConnectionTables
 {
