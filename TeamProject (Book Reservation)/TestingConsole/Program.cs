@@ -1,7 +1,13 @@
 ﻿using Autofac;
 using BL.Config;
 using BL.Facades;
+using DAL;
+using DAL.Entities;
+using DAL.Entities.ConnectionTables;
+using EFInfrastructure;
+using Infrastructure.Query.Predicates;
 using System;
+using System.Collections.Generic;
 
 namespace TestingConsole
 {
@@ -9,13 +15,7 @@ namespace TestingConsole
     {
         private static void Main(string[] args)
         {
-            var container = AutofacBLConfig.Configure();
 
-            var serv = container.Resolve<AuthorFacade>();
-
-            var name = serv.Get(1);
-
-            Console.WriteLine(name.Name);
         }
     }
 }

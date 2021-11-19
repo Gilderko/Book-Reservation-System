@@ -9,6 +9,8 @@
         NotEqual,
         LessThan,
         LessThanOrEqual,
-        Contains
+        Contains,
+        In,
+        NotIn
     }
 }

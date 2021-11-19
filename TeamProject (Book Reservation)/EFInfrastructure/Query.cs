@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace EFInfrastructure
 {
@@ -41,7 +42,9 @@ namespace EFInfrastructure
             { ValueComparingOperator.NotEqual, "<>" },
             { ValueComparingOperator.LessThan, "<" },
             { ValueComparingOperator.LessThanOrEqual, "<=" },
-            { ValueComparingOperator.Contains, "LIKE"}
+            { ValueComparingOperator.Contains, "LIKE"},
+            { ValueComparingOperator.In, "IN"},
+            { ValueComparingOperator.NotIn, "NOT IN"}
         };
 
         private string PredicateToString(IPredicate predicate)
@@ -53,10 +56,48 @@ namespace EFInfrastructure
                 string cmpValFormat = string.Empty;
                 if (simplePred.ComparedValue is string)
                 {
-                    cmpValFormat = simplePred.ValueComparingOperator == ValueComparingOperator.Contains ?
-                        $"'%{simplePred.ComparedValue}%'" : $"'{simplePred.ComparedValue}'";
+                    if (simplePred.ValueComparingOperator == ValueComparingOperator.Contains)
+                    {
+                        cmpValFormat = $"'%{simplePred.ComparedValue}%'";
+                    }
+                    
                 }
-                else
+                else if (simplePred.ComparedValue is IEnumerable<int>)
+                {
+                    StringBuilder varCompareString = new StringBuilder();
+                    varCompareString.Append('(');
+
+                    foreach (var value in (simplePred.ComparedValue as IEnumerable<int>))
+                    {
+                        varCompareString.Append(value);
+                        varCompareString.Append(',');
+                    }
+
+                    varCompareString.Remove(varCompareString.Length - 1, 1);
+                    varCompareString.Append(')');
+
+                    cmpValFormat = varCompareString.ToString();
+                }
+                else if (simplePred.ComparedValue is IEnumerable<string>)
+                {
+                    StringBuilder varCompareString = new StringBuilder();
+                    varCompareString.Append('(');
+
+                    foreach (var value in (simplePred.ComparedValue as IEnumerable<string>))
+                    {
+                        varCompareString.Append('\'');
+                        varCompareString.Append(value);
+                        varCompareString.Append('\'');
+                        varCompareString.Append(',');
+
+                    }
+
+                    varCompareString.Remove(varCompareString.Length - 1, 1);
+                    varCompareString.Append(')');
+
+                    cmpValFormat = varCompareString.ToString();
+                }
+                else 
                 {
                     cmpValFormat = $"{simplePred.ComparedValue}";
                 }
