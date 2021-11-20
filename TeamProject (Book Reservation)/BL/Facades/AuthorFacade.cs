@@ -11,12 +11,12 @@ namespace BL.Facades
     public class AuthorFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<AuthorDTO, Author> _authorService;
-        private CRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
+        private ICRUDService<AuthorDTO, Author> _authorService;
+        private ICRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
 
-        public AuthorFacade(IUnitOfWork unitOfWork, 
-                            CRUDService<AuthorDTO, Author> authorService, 
-                            CRUDService<AuthorBookDTO, AuthorBook> authorBookService)
+        public AuthorFacade(IUnitOfWork unitOfWork,
+                            ICRUDService<AuthorDTO, Author> authorService,
+                            ICRUDService<AuthorBookDTO, AuthorBook> authorBookService)
         {
             _unitOfWork = unitOfWork;
             _authorService = authorService;

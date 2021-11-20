@@ -16,7 +16,7 @@ namespace MoqTest
             {
                 //Arrange
                 //Mock setup. Output of GetMockTickets() mocks the real connection, which would be provided by DataAccess
-                mock.Mock<IRepository<Author>>()
+                mock.Mock<IRepository<Author>>();
                    
                    
 

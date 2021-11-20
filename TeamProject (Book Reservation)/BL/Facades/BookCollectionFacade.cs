@@ -11,12 +11,12 @@ namespace BL.Facades
     public class BookCollectionFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<BookCollectionDTO, BookCollection> _bookCollectionService;
-        private CRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
+        private ICRUDService<BookCollectionDTO, BookCollection> _bookCollectionService;
+        private ICRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
 
-        public BookCollectionFacade(IUnitOfWork unitOfWork, 
-                                    CRUDService<BookCollectionDTO, BookCollection> bookCollectionService,
-                                    CRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
+        public BookCollectionFacade(IUnitOfWork unitOfWork,
+                                    ICRUDService<BookCollectionDTO, BookCollection> bookCollectionService,
+                                    ICRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
         {
             _unitOfWork = unitOfWork;
             _bookCollectionService = bookCollectionService;

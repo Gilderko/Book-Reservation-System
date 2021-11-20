@@ -8,9 +8,9 @@ namespace BL.Facades
     public class EBookFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<EBookDTO, EBook> _service;
+        private ICRUDService<EBookDTO, EBook> _service;
 
-        public EBookFacade(IUnitOfWork unitOfWork, CRUDService<EBookDTO, EBook> service)
+        public EBookFacade(IUnitOfWork unitOfWork, ICRUDService<EBookDTO, EBook> service)
         {
             _unitOfWork = unitOfWork;
             _service = service;

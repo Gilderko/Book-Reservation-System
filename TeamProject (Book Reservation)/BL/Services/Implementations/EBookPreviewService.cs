@@ -8,7 +8,7 @@ using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class EBookPreviewService : CRUDService<EBookPrevDTO, EBook>, 
         IEBookPreviewService

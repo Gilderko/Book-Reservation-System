@@ -11,7 +11,7 @@ using BL.DTOs.Entities.Reservation;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class ReservationService : CRUDService<ReservationDTO, Reservation>, IReservationService
     {

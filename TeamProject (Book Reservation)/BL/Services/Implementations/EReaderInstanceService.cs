@@ -7,7 +7,7 @@ using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class EReaderInstanceService : CRUDService<EReaderInstanceDTO, EReaderInstance>, IEReaderInstanceService
     {

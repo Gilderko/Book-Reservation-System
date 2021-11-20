@@ -11,9 +11,9 @@ namespace BL.Facades
 {
     public class BookInstancePreviewsFacade
     {
-        private BookInstancePreviewService _service;
+        private IBookInstancePreviewService _service;
 
-        public BookInstancePreviewsFacade(BookInstancePreviewService service)
+        public BookInstancePreviewsFacade(IBookInstancePreviewService service)
         {
             _service = service;
         }

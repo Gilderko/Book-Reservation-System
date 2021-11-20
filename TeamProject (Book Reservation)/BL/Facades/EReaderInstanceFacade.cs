@@ -12,13 +12,12 @@ namespace BL.Facades
     public class EReaderInstanceFacade
     {
         private IUnitOfWork _unitOfWork;
-        private EReaderInstanceService _eReaderService;
-        private ReservationService _reservationService;
+        private IEReaderInstanceService _eReaderService;
+        private IReservationService _reservationService;
 
-        public EReaderInstanceFacade(IUnitOfWork unitOfWork, CRUDService<EReaderInstanceDTO, 
-                                     EReaderInstance> crudService, 
-                                     EReaderInstanceService eReaderService,
-                                     ReservationService reservationService)
+        public EReaderInstanceFacade(IUnitOfWork unitOfWork,
+                                     IEReaderInstanceService eReaderService,
+                                     IReservationService reservationService)
         {
             _unitOfWork = unitOfWork;
             _eReaderService = eReaderService;

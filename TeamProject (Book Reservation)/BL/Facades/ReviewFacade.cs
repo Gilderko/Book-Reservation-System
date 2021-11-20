@@ -9,9 +9,9 @@ namespace BL.Facades
     public class ReviewFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<ReviewDTO, Review> _service;
+        private ICRUDService<ReviewDTO, Review> _service;
 
-        public ReviewFacade(IUnitOfWork unitOfWork, CRUDService<ReviewDTO, Review> service)
+        public ReviewFacade(IUnitOfWork unitOfWork, ICRUDService<ReviewDTO, Review> service)
         {
             _unitOfWork = unitOfWork;
             _service = service;

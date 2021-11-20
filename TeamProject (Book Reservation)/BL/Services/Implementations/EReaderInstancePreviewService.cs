@@ -7,7 +7,7 @@ using DAL.Entities;
 using Infrastructure;
 using Infrastructure.Query.Operators;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {    
     public class EReaderInstancePreviewService : CRUDService<EReaderInstancePrevDTO, EReaderInstance>, 
         IEReaderInstancePreviewService

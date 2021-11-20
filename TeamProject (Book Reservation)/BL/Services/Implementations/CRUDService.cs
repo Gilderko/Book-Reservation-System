@@ -4,7 +4,7 @@ using DAL.Entities;
 using Infrastructure;
 using System;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class CRUDService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntity : class, IEntity
                                                                                       where TEntityDTO : class, IEntityDTO

@@ -8,9 +8,9 @@ namespace BL.Facades
     public class EReaderFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<EReaderDTO, EReader> _service;
+        private ICRUDService<EReaderDTO, EReader> _service;
 
-        public EReaderFacade(IUnitOfWork unitOfWork, CRUDService<EReaderDTO, EReader> service)
+        public EReaderFacade(IUnitOfWork unitOfWork, ICRUDService<EReaderDTO, EReader> service)
         {
             _unitOfWork = unitOfWork;
             _service = service;

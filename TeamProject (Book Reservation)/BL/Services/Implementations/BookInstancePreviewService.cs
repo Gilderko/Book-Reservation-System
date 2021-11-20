@@ -13,7 +13,7 @@ using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.User;
 using DAL.Entities.ConnectionTables;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class BookInstancePreviewService : CRUDService<BookInstancePrevDTO, BookInstance>, IBookInstancePreviewService
     {                                                                                                

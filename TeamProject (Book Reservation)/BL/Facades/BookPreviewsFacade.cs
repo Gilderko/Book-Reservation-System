@@ -8,9 +8,9 @@ namespace BL.Facades
 {
     public class BookPreviewsFacade
     {
-        private BookPreviewService _service;
+        private IBookPreviewService _service;
 
-        public BookPreviewsFacade(BookPreviewService service)
+        public BookPreviewsFacade(IBookPreviewService service)
         {
             _service = service;
         }
