@@ -48,7 +48,15 @@ namespace BL.Facades
 
         public void AddBookToAuthor(AuthorDTO author, BookDTO book)
         {
-            _authorBookService.Insert(new AuthorBookDTO { Author = author, Book = book });
+            _authorBookService.Insert(new AuthorBookDTO
+            {                
+                Author = author,
+                AuthorID = author.Id,
+
+
+                Book = book,
+                BookID = book.Id
+            });
             _unitOfWork.Commit();
         }
 

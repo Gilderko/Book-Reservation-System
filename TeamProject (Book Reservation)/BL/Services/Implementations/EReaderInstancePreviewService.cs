@@ -13,12 +13,12 @@ namespace BL.Services.Implementations
         IEReaderInstancePreviewService
     {
         private QueryObject<EReaderInstancePrevDTO, EReaderInstance> _resQueryObject;
-        
+
         public EReaderInstancePreviewService(IRepository<EReaderInstance> repo, 
                                              IMapper mapper,
                                              QueryObject<EReaderInstancePrevDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
         {
-            _resQueryObject = resQueryObject;
+            _resQueryObject = resQueryObject;               
         }
 
         public IEnumerable<EReaderInstancePrevDTO> GetEReaderInstancesByOwner(int ownerId)

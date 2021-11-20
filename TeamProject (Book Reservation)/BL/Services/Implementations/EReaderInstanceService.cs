@@ -12,13 +12,11 @@ namespace BL.Services.Implementations
     public class EReaderInstanceService : CRUDService<EReaderInstanceDTO, EReaderInstance>, IEReaderInstanceService
     {
         private QueryObject<EReaderInstanceDTO, EReaderInstance> _resQueryObject;
-        private IMapper _mapper;
 
         public EReaderInstanceService(IRepository<EReaderInstance> repo, 
-                                      Mapper mapper, 
+                                      IMapper mapper, 
                                       QueryObject<EReaderInstanceDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
         {
-            _mapper = mapper;
             _resQueryObject = resQueryObject;
         }
 

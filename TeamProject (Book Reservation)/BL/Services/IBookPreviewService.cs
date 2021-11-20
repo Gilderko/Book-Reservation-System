@@ -1,4 +1,5 @@
 ﻿using BL.DTOs.Entities.Book;
+using BL.DTOs.Filters;
 using DAL.Entities;
 using System.Collections.Generic;
 

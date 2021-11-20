@@ -48,13 +48,28 @@ namespace BL.Facades
 
         public void AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Insert(new BookCollectionBookDTO { BookCollect = bookCollection, Book = book });
+            _bookCollectionBookService.Insert(new BookCollectionBookDTO
+            {
+                BookCollect = bookCollection,
+                BookCollectionID = bookCollection.Id,
+
+                Book = book,
+                BookID = book.Id
+            }) ;
             _unitOfWork.Commit();
         }
 
         public void DeleteBookFromCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Delete(new BookCollectionBookDTO { BookCollect = bookCollection, Book = book });
+            _bookCollectionBookService.Delete(new BookCollectionBookDTO
+            {
+                BookCollect = bookCollection,
+                BookCollectionID = bookCollection.Id,
+
+                Book = book,
+                BookID = book.Id
+            });
+
             _unitOfWork.Commit();
         }
 
