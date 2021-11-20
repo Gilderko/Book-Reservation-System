@@ -1,5 +1,7 @@
-﻿using BL.Services;
+﻿using System.Collections.Generic;
+using BL.Services;
 using BL.DTOs.Entities.Book;
+using BL.DTOs.Filters;
 using DAL.Entities;
 
 namespace BL.Facades
@@ -12,10 +14,10 @@ namespace BL.Facades
         {
             _service = service;
         }
-
-        //public IEnumerable<BookPrevDTO> GetBookPreviews()
-        //{
-        //
-        //}
+        
+        public IEnumerable<BookPrevDTO> GetBookPreviews(FilterDto filter)
+        {
+            return _service.GetBookPreviewsByFilter(filter);
+        }
     }
 }

@@ -12,15 +12,12 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private CRUDService<BookDTO, Book> _service;
-        private BookInstanceService _bookInstanceService;
 
         public BookFacade(IUnitOfWork unitOfWork,
-                          CRUDService<BookDTO, Book> service, 
-                          BookInstanceService bookInstanceService)
+                          CRUDService<BookDTO, Book> service)
         {
             _unitOfWork = unitOfWork;
             _service = service;
-            _bookInstanceService = bookInstanceService;
         }
 
         public void Create(BookDTO book)
@@ -45,12 +42,7 @@ namespace BL.Facades
             _service.Delete(id);
             _unitOfWork.Commit();
         }
-
-        public IEnumerable<BookInstanceDTO> GetBookInstancesByDate(BookDTO book, DateTime from, DateTime to, int pageNumber, int pageSize)
-        {
-            return _bookInstanceService.GetBookInstancesByDate(book, from, to, pageNumber, pageSize);
-        }
-
+        
         public void Dispose()
         {
             _unitOfWork.Dispose();

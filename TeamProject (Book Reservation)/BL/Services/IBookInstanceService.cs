@@ -8,7 +8,6 @@ namespace BL.Services
 {
     public interface IBookInstanceService : ICRUDService<BookInstanceDTO, BookInstance>
     {
-        public IEnumerable<BookInstanceDTO> GetBookInstancesByDate(BookDTO book, DateTime from, DateTime to,
-            int pageNumber = 1, int pageSize = 20);
+        public bool CheckBookInstanceAvailability(BookDTO book, DateTime from, DateTime to);
     }
 }

@@ -64,9 +64,12 @@ namespace BL.Facades
             }
         }
 
-        public void SubmitReservation()
+        public void SubmitReservation(ReservationDTO newReservation)
         {
+            // TODO
+            // check validity
             
+            _service.Insert(newReservation);
         }
     }
 }

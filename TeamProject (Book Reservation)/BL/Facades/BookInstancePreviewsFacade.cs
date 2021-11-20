@@ -1,5 +1,8 @@
-﻿using BL.Services;
+﻿using System;
+using System.Collections;
+using BL.Services;
 using System.Collections.Generic;
+using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.User;
 using DAL.Entities;
@@ -15,9 +18,15 @@ namespace BL.Facades
             _service = service;
         }
 
-        public IEnumerable<BookInstancePrevDTO> GetBookInstancesByUser(UserDTO user, int pageNumber, int pageSize)
+        public IEnumerable<BookInstancePrevDTO> GetBookInstancePrevsByUser(UserDTO user, int pageNumber, int pageSize)
         {
-            return _service.GetBookInstancesByUser(user, pageNumber, pageSize);
+            return _service.GetBookInstancePrevsByUser(user, pageNumber, pageSize);
+        }
+
+        public IEnumerable<BookInstancePrevDTO> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from,
+            DateTime to)
+        {
+            return _service.GetAvailableInstancePrevsByDate(book, from, to);
         }
     }
 }
