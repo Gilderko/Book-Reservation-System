@@ -4,7 +4,7 @@ using BL.DTOs.Entities.EReaderInstance;
 
 namespace BL.DTOs.ConnectionTables
 {
-    public class EBookEReaderInstanceDTO
+    public class EBookEReaderInstanceDTO : IEntityDTO
     {
         public int EBookID { get; set; }
 

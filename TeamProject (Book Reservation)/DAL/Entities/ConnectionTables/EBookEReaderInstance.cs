@@ -2,7 +2,7 @@
 
 namespace DAL.Entities.ConnectionTables
 {
-    public class EBookEReaderInstance
+    public class EBookEReaderInstance : IEntity
     {
         public int EBookID { get; set; }
 
