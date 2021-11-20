@@ -1,3 +1,6 @@
+using Autofac;
+using BL.Config;
+using BL.Facades;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +27,24 @@ namespace MVCProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddSingleton<IContainer>(services => AutofacBLConfig.Configure());
+
+            services.AddTransient<AuthorFacade>(services => services.GetService<IContainer>().Resolve<AuthorFacade>());
+            services.AddTransient<BookCollectionFacade>(services => services.GetService<IContainer>().Resolve<BookCollectionFacade>());
+            services.AddTransient<BookCollectionPreviewsFacade>(services => services.GetService<IContainer>().Resolve<BookCollectionPreviewsFacade>());
+            services.AddTransient<BookFacade>(services => services.GetService<IContainer>().Resolve<BookFacade>());
+            services.AddTransient<BookInstanceFacade>(services => services.GetService<IContainer>().Resolve<BookInstanceFacade>());
+            services.AddTransient<BookPreviewsFacade>(services => services.GetService<IContainer>().Resolve<BookPreviewsFacade>());
+            services.AddTransient<EBookFacade>(services => services.GetService<IContainer>().Resolve<EBookFacade>());
+            services.AddTransient<EBookPreviewFacade>(services => services.GetService<IContainer>().Resolve<EBookPreviewFacade>());
+            services.AddTransient<EReaderFacade>(services => services.GetService<IContainer>().Resolve<EReaderFacade>());
+            services.AddTransient<EReaderFacade>(services => services.GetService<IContainer>().Resolve<EReaderFacade>());
+            services.AddTransient<EReaderInstanceFacade>(services => services.GetService<IContainer>().Resolve<EReaderInstanceFacade>());
+            services.AddTransient<EReaderInstancePreviewFacade>(services => services.GetService<IContainer>().Resolve<EReaderInstancePreviewFacade>());
+            services.AddTransient<ReservationFacade>(services => services.GetService<IContainer>().Resolve<ReservationFacade>());
+            services.AddTransient<ReviewFacade>(services => services.GetService<IContainer>().Resolve<ReviewFacade>());
+            services.AddTransient<UserFacade>(services => services.GetService<IContainer>().Resolve<UserFacade>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
