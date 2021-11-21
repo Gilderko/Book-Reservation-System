@@ -55,7 +55,7 @@ namespace MoqTest
                     Assert.True(mock.Mock<IRepository<BookCollectionBook>>().Invocations.Count == counter);
 
                     var calledMethod = mock.Mock<IRepository<BookCollectionBook>>()
-                        .Invocations.Last((IInvocation x) => x.Method.Name == "Insert");
+                        .Invocations.Last((IInvocation x) => x.Method.Name == nameof(IRepository<BookCollectionBook>.Insert));
 
                     Assert.True(calledMethod != null);
 
@@ -84,7 +84,7 @@ namespace MoqTest
                     Assert.True(mock.Mock<IRepository<BookCollectionBook>>().Invocations.Count == counter);
 
                     var calledMethod = mock.Mock<IRepository<BookCollectionBook>>()
-                        .Invocations.Last((IInvocation x) => x.Method.Name == "Delete");
+                        .Invocations.Last((IInvocation x) => x.Method.Name == nameof(IRepository<BookCollectionBook>.Delete));
 
                     Assert.True(calledMethod != null);
 

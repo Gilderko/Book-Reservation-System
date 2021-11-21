@@ -54,7 +54,7 @@ namespace EFInfrastructure
             dbSet.Add(entity);
         }
 
-        public void Delete(int id)
+        public void DeleteById(int id)
         {
             TEntity entityToDelete = dbSet.Find(id);
             Delete(entityToDelete);

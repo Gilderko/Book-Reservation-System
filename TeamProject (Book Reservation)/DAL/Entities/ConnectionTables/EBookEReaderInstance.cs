@@ -12,6 +12,6 @@ namespace DAL.Entities.ConnectionTables
         public int EReaderInstanceID { get; set; }
 
         [ForeignKey(nameof(EReaderInstanceID))]
-        public EReaderInstance EReader { get; set; }
+        public EReaderInstance EReaderInstance { get; set; }
     }
 }

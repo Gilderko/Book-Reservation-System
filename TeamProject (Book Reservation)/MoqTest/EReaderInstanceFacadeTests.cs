@@ -6,6 +6,7 @@ using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.BookInstance;
+using BL.DTOs.Entities.EBook;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Entities.Reservation;
 using BL.Facades;
@@ -35,10 +36,11 @@ namespace MoqTest
             var uow = mock.Mock<IUnitOfWork>().Object;
             var eReaderInstanceRepo = mock.Mock<IRepository<EReaderInstance>>().Object;
             var reservationRepo = mock.Mock<IRepository<Reservation>>().Object;
+            var eBookEReaderInstanceRepo = mock.Mock<IRepository<EBookEReaderInstance>>().Object;
 
             mock.Mock<IQuery<Reservation>>()
                .Setup(x => x.Execute())
-               .Returns(GetEntries());
+               .Returns(GetReservationEntries());
 
             var resBookQuery = mock.Create<IQuery<Reservation>>();
 
@@ -46,22 +48,25 @@ namespace MoqTest
             var quer2 = new QueryObject<ReservationBookInstanceDTO, ReservationBookInstance>(_mapper, null);
 
             var reservationService = new ReservationService(reservationRepo, _mapper, quer1, quer2);
-            var eReaderInstanceService = new EReaderInstanceService(eReaderInstanceRepo, _mapper, null);
+            var eReaderInstanceService = new CRUDService<EReaderInstanceDTO, EReaderInstance>(eReaderInstanceRepo, _mapper);
+            var eBookEReaderInstanceService = new CRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance>(eBookEReaderInstanceRepo, _mapper);
 
-            var eReaderInstanceFacade = new EReaderInstanceFacade(uow, eReaderInstanceService, reservationService);
+            var eReaderInstanceFacade = new EReaderInstanceFacade(uow, eReaderInstanceService, eBookEReaderInstanceService, reservationService);
             return eReaderInstanceFacade;
         }
 
         [Fact]
-        public void GetBookReservationPrevsByEReader()
+        public void TestEReaderInstanceFacade()
         {
             using (var mock = AutoMock.GetLoose())
             {
-                Test(mock, new DateTime(1895, 1, 1), new DateTime(2010, 1, 1), 1);
+                TestQuery(mock, new DateTime(1895, 1, 1), new DateTime(2010, 1, 1), 1);
+                TestAddEBook(mock);
+                TestDeleteEBook(mock);
             }
         }
 
-        private void Test(AutoMock mock, DateTime dateFrom, DateTime dateTill, int eReaderId)
+        private void TestQuery(AutoMock mock, DateTime dateFrom, DateTime dateTill, int eReaderId)
         {
             EReaderInstanceFacade eReaderInstanceFacade = Setup(mock);
 
@@ -69,21 +74,80 @@ namespace MoqTest
 
             Assert.True(result != null);
 
-            Assert.True(result.Count() == GetEntries().Items.Count());
+            Assert.True(result.Count() == GetReservationEntries().Items.Count());
         }
 
-        private void TestAddEBook()
+        private void TestAddEBook(AutoMock mock)
         {
+            EReaderInstanceFacade eReaderInstanceFacade = Setup(mock);
+
+            var counter = 0;
+            foreach (var data in GetNewReservations())
+            {
+                eReaderInstanceFacade.AddEBook(data.Item1, data.Item2);
+                counter++;
+
+                Assert.True(mock.Mock<IRepository<EBookEReaderInstance>>().Invocations
+                    .Where(x => x.Method.Name == nameof(IRepository<EBookEReaderInstance>.Insert)).Count() == counter);
+
+                var calledMethod = mock.Mock<IRepository<EBookEReaderInstance>>()
+                    .Invocations.Last((IInvocation x) => x.Method.Name == nameof(IRepository<EBookEReaderInstance>.Insert));
+
+                Assert.True(calledMethod != null); ;
+
+                var argument = (calledMethod.Arguments.First() as EBookEReaderInstance);
+
+                Assert.True(argument != null);
+
+                Assert.True(argument.EReaderInstanceID == data.Item1.Id && argument.EBookID == data.Item2.Id);
+            }
 
         }
 
-        private void TestDeleteEBook()
+        private void TestDeleteEBook(AutoMock mock)
         {
+            EReaderInstanceFacade eReaderInstanceFacade = Setup(mock);
 
+            var counter = 0;
+            foreach (var data in GetNewReservations())
+            {
+                eReaderInstanceFacade.DeleteEBook(data.Item1,data.Item2);
+                counter++;
+
+                Assert.True(mock.Mock<IRepository<EBookEReaderInstance>>().Invocations
+                    .Where(x => x.Method.Name == nameof(IRepository<EBookEReaderInstance>.Delete)).Count() == counter);
+
+                var calledMethod = mock.Mock<IRepository<EBookEReaderInstance>>()
+                    .Invocations.Last((IInvocation x) => x.Method.Name == nameof(IRepository<EBookEReaderInstance>.Delete));
+
+                Assert.True(calledMethod != null); ;
+
+                var argument = (calledMethod.Arguments.First() as EBookEReaderInstance);
+
+                Assert.True(argument != null);
+
+                Assert.True(argument.EReaderInstanceID == data.Item1.Id && argument.EBookID == data.Item2.Id);
+            }            
         }
 
+        private IEnumerable<Tuple<EReaderInstanceDTO,EBookDTO>> GetNewReservations()
+        {
+            var book1 = new EBookDTO() { Id = 1 };
+            var book2 = new EBookDTO() { Id = 2 };
+            var book3 = new EBookDTO() { Id = 3 };
+            var book4 = new EBookDTO() { Id = 4 };
 
-        public QueryResult<Reservation> GetEntries()
+            var eReaderInst1 = new EReaderInstanceDTO() { Id = 1 };
+            var eReaderInst2 = new EReaderInstanceDTO() { Id = 2 };
+
+            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst1, book1);
+            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst2, book2);
+            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst1, book3);
+            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst2, book4);
+            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst1, book4);
+        }
+
+        public QueryResult<Reservation> GetReservationEntries()
         {
             var result = new QueryResult<Reservation>();
             result.Items = new List<Reservation>()

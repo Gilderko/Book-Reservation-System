@@ -36,7 +36,7 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _service.Delete(id);
+            _service.DeleteById(id);
             _unitOfWork.Commit();
         }
 

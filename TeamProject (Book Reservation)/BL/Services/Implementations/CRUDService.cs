@@ -37,9 +37,9 @@ namespace BL.Services.Implementations
             _repository.Insert(entityToAdd);
         }
 
-        public void Delete(int id)
+        public void DeleteById(int id)
         {
-            _repository.Delete(id);
+            _repository.DeleteById(id);
         }
 
         public void Delete(TEntityDTO DTOToDelete)

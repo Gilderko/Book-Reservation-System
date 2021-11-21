@@ -14,7 +14,7 @@ namespace BL.Services
 
         public void Insert(TEntityDTO DTOToAdd);
 
-        public void Delete(int id);
+        public void DeleteById(int id);
 
         public void Delete(TEntityDTO DTOToDelete);
 

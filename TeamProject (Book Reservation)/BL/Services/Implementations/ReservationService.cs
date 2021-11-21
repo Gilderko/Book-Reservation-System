@@ -89,7 +89,7 @@ namespace BL.Services.Implementations
             
             var result = _reservationBookInstanceQueryObject.ExecuteQuery(filter).Items;
             
-            // filter by date
+            // Filter by date
             var reservations = result.
                 Where(x => x.Reservation.DateFrom >= from && x.Reservation.DateTill <= to);
             

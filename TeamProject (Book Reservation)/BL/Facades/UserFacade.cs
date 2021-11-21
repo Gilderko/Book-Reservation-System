@@ -48,7 +48,7 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _userCrud.Delete(id);
+            _userCrud.DeleteById(id);
             _unitOfWork.Commit();
         }
 

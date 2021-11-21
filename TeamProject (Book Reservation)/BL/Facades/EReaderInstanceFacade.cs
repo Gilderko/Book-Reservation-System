@@ -14,41 +14,41 @@ namespace BL.Facades
     public class EReaderInstanceFacade
     {
         private IUnitOfWork _unitOfWork;
-        private ICRUDService<EReaderInstanceDTO, EReader> _eReaderService;
+        private ICRUDService<EReaderInstanceDTO, EReaderInstance> _eReaderInstanceService;
         private ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> _eBookEReaderInstanceService;
         private IReservationService _reservationService;
 
         public EReaderInstanceFacade(IUnitOfWork unitOfWork,
-                                     ICRUDService<EReaderInstanceDTO, EReader> eReaderService,
+                                     ICRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceService,
                                      ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> eBookEReaderInstanceService,
                                      IReservationService reservationService)
         {
             _unitOfWork = unitOfWork;
-            _eReaderService = eReaderService;
+            _eReaderInstanceService = eReaderInstanceService;
             _eBookEReaderInstanceService = eBookEReaderInstanceService;
             _reservationService = reservationService;
         }
 
         public void Create(EReaderInstanceDTO eReaderInstance)
         {
-            _eReaderService.Insert(eReaderInstance);
+            _eReaderInstanceService.Insert(eReaderInstance);
             _unitOfWork.Commit();
         }
 
         public EReaderInstanceDTO Get(int id)
         {
-            return _eReaderService.GetByID(id);
+            return _eReaderInstanceService.GetByID(id);
         }
 
         public void Update(EReaderInstanceDTO eReaderInstance)
         {
-            _eReaderService.Update(eReaderInstance);
+            _eReaderInstanceService.Update(eReaderInstance);
             _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
-            _eReaderService.Delete(id);
+            _eReaderInstanceService.DeleteById(id);
             _unitOfWork.Commit();
         }
         
@@ -56,8 +56,8 @@ namespace BL.Facades
         {
             _eBookEReaderInstanceService.Insert(new EBookEReaderInstanceDTO
             {
-                EReader = eReaderInstance,
-                EReaderID = eReaderInstance.Id,
+                EReaderInstance = eReaderInstance,
+                EReaderInstanceID = eReaderInstance.Id,
 
                 EBook = eBook,
                 EBookID = eBook.Id
@@ -69,8 +69,8 @@ namespace BL.Facades
         {
             _eBookEReaderInstanceService.Delete(new EBookEReaderInstanceDTO
             {
-                EReader = eReaderInstance,
-                EReaderID = eReaderInstance.Id,
+                EReaderInstance = eReaderInstance,
+                EReaderInstanceID = eReaderInstance.Id,
 
                 EBook = eBook,
                 EBookID = eBook.Id

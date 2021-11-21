@@ -53,7 +53,7 @@ namespace MoqTest
                     Assert.True(mock.Mock<IRepository<AuthorBook>>().Invocations.Count == counter);
 
                     var calledMethod = mock.Mock<IRepository<AuthorBook>>()
-                        .Invocations.Last((IInvocation x) => x.Method.Name == "Insert");
+                        .Invocations.Last((IInvocation x) => x.Method.Name == nameof(IRepository<AuthorBook>.Insert));
 
                     Assert.True(calledMethod != null); ;
 

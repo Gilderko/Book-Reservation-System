@@ -42,7 +42,7 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _authorService.Delete(id);
+            _authorService.DeleteById(id);
             _unitOfWork.Commit();
         }
 

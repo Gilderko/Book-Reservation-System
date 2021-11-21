@@ -10,8 +10,8 @@ namespace BL.DTOs.ConnectionTables
 
         public EBookDTO EBook { get; set; }
 
-        public int EReaderID { get; set; }
+        public int EReaderInstanceID { get; set; }
 
-        public EReaderInstanceDTO EReader { get; set; }
+        public EReaderInstanceDTO EReaderInstance { get; set; }
     }
 }
