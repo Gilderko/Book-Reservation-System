@@ -12,9 +12,9 @@ namespace BL.Facades
     public class ReservationFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<ReservationDTO, Reservation> _service;
+        private IReservationService _service;
 
-        public ReservationFacade(IUnitOfWork unitOfWork, CRUDService<ReservationDTO, Reservation> service)
+        public ReservationFacade(IUnitOfWork unitOfWork, IReservationService service)
         {
             _unitOfWork = unitOfWork;
             _service = service;
@@ -37,7 +37,7 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _service.Delete(id);
+            _service.DeleteById(id);
         }
 
         public void AddBookInstance(BookInstanceDTO bookInstance, ReservationDTO reservation)

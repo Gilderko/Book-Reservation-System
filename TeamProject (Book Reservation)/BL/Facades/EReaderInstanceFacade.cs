@@ -3,60 +3,78 @@ using System.Collections.Generic;
 using BL.DTOs.Entities.EBook;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Entities.Reservation;
+using BL.DTOs.ConnectionTables;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
+using DAL.Entities.ConnectionTables;
 
 namespace BL.Facades
 {
     public class EReaderInstanceFacade
     {
         private IUnitOfWork _unitOfWork;
-        private EReaderInstanceService _eReaderService;
-        private ReservationService _reservationService;
+        private ICRUDService<EReaderInstanceDTO, EReaderInstance> _eReaderInstanceService;
+        private ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> _eBookEReaderInstanceService;
+        private IReservationService _reservationService;
 
-        public EReaderInstanceFacade(IUnitOfWork unitOfWork, CRUDService<EReaderInstanceDTO, 
-                                     EReaderInstance> crudService, 
-                                     EReaderInstanceService eReaderService,
-                                     ReservationService reservationService)
+        public EReaderInstanceFacade(IUnitOfWork unitOfWork,
+                                     ICRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceService,
+                                     ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> eBookEReaderInstanceService,
+                                     IReservationService reservationService)
         {
             _unitOfWork = unitOfWork;
-            _eReaderService = eReaderService;
+            _eReaderInstanceService = eReaderInstanceService;
+            _eBookEReaderInstanceService = eBookEReaderInstanceService;
             _reservationService = reservationService;
         }
 
         public void Create(EReaderInstanceDTO eReaderInstance)
         {
-            _eReaderService.Insert(eReaderInstance);
+            _eReaderInstanceService.Insert(eReaderInstance);
             _unitOfWork.Commit();
         }
 
         public EReaderInstanceDTO Get(int id)
         {
-            return _eReaderService.GetByID(id);
+            return _eReaderInstanceService.GetByID(id);
         }
 
         public void Update(EReaderInstanceDTO eReaderInstance)
         {
-            _eReaderService.Update(eReaderInstance);
+            _eReaderInstanceService.Update(eReaderInstance);
             _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
-            _eReaderService.Delete(id);
+            _eReaderInstanceService.DeleteById(id);
             _unitOfWork.Commit();
         }
         
         public void AddEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
         {
-            _eReaderService.AddEBook(eReaderInstance, eBook);
+            _eBookEReaderInstanceService.Insert(new EBookEReaderInstanceDTO
+            {
+                EReaderInstance = eReaderInstance,
+                EReaderInstanceID = eReaderInstance.Id,
+
+                EBook = eBook,
+                EBookID = eBook.Id
+            });
             _unitOfWork.Commit();
         }
         
         public void DeleteEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
         {
-            _eReaderService.DeleteEBook(eReaderInstance, eBook);
+            _eBookEReaderInstanceService.Delete(new EBookEReaderInstanceDTO
+            {
+                EReaderInstance = eReaderInstance,
+                EReaderInstanceID = eReaderInstance.Id,
+
+                EBook = eBook,
+                EBookID = eBook.Id
+            });
             _unitOfWork.Commit();
         }
 

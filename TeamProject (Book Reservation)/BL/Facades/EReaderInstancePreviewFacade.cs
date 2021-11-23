@@ -7,10 +7,10 @@ namespace BL.Facades
 {
     public class EReaderInstancePreviewFacade
     {
-        private EReaderInstancePreviewService _service;
+        private IEReaderInstancePreviewService _service;
         
 
-        public EReaderInstancePreviewFacade(EReaderInstancePreviewService service)
+        public EReaderInstancePreviewFacade(IEReaderInstancePreviewService service)
         {
             _service = service;
         }

@@ -8,13 +8,11 @@ using System.Collections.Generic;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.User;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class BookCollectionPreviewService : CRUDService<BookCollectionPrevDTO, BookCollection>, 
         IBookCollectionPreviewService
     {
-        private readonly IRepository<BookCollection> _repository;
-        private readonly IMapper _mapper;
         private readonly QueryObject<BookCollectionPrevDTO, BookCollection> _queryObject;
 
         public BookCollectionPreviewService(IRepository<BookCollection> repo, 

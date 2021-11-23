@@ -11,10 +11,10 @@ namespace BL.Facades
     public class BookFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<BookDTO, Book> _service;
+        private ICRUDService<BookDTO, Book> _service;
 
         public BookFacade(IUnitOfWork unitOfWork,
-                          CRUDService<BookDTO, Book> service)
+                          ICRUDService<BookDTO, Book> service)
         {
             _unitOfWork = unitOfWork;
             _service = service;
@@ -39,7 +39,7 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _service.Delete(id);
+            _service.DeleteById(id);
             _unitOfWork.Commit();
         }
         

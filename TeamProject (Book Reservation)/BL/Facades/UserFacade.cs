@@ -11,16 +11,16 @@ namespace BL.Facades
     public class UserFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<UserDTO, User> _userCrud;
-        private CRUDService<BookCollectionDTO, BookCollection> _bookCollCrud;
-        private CRUDService<BookInstanceDTO, BookInstance> _bookInstanceCrud;
-        private CRUDService<EReaderInstanceDTO, EReaderInstance> _eReaderInstanceCrud;
+        private ICRUDService<UserDTO, User> _userCrud;
+        private ICRUDService<BookCollectionDTO, BookCollection> _bookCollCrud;
+        private ICRUDService<BookInstanceDTO, BookInstance> _bookInstanceCrud;
+        private ICRUDService<EReaderInstanceDTO, EReaderInstance> _eReaderInstanceCrud;
 
-        public UserFacade(IUnitOfWork unitOfWork, 
-            CRUDService<UserDTO, User> userCrud, 
-            CRUDService<BookCollectionDTO, BookCollection> bookCollCrud,
-            CRUDService<BookInstanceDTO, BookInstance> bookInstanceCrud,
-            CRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceCrud)
+        public UserFacade(IUnitOfWork unitOfWork,
+            ICRUDService<UserDTO, User> userCrud,
+            ICRUDService<BookCollectionDTO, BookCollection> bookCollCrud,
+            ICRUDService<BookInstanceDTO, BookInstance> bookInstanceCrud,
+            ICRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceCrud)
         {
             _unitOfWork = unitOfWork;
             _userCrud = userCrud;
@@ -48,7 +48,7 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _userCrud.Delete(id);
+            _userCrud.DeleteById(id);
             _unitOfWork.Commit();
         }
 

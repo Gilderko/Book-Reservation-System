@@ -7,18 +7,18 @@ using DAL.Entities;
 using Infrastructure;
 using Infrastructure.Query.Operators;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {    
     public class EReaderInstancePreviewService : CRUDService<EReaderInstancePrevDTO, EReaderInstance>, 
         IEReaderInstancePreviewService
     {
         private QueryObject<EReaderInstancePrevDTO, EReaderInstance> _resQueryObject;
-        
+
         public EReaderInstancePreviewService(IRepository<EReaderInstance> repo, 
                                              IMapper mapper,
                                              QueryObject<EReaderInstancePrevDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
         {
-            _resQueryObject = resQueryObject;
+            _resQueryObject = resQueryObject;               
         }
 
         public IEnumerable<EReaderInstancePrevDTO> GetEReaderInstancesByOwner(int ownerId)

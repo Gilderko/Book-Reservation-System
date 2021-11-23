@@ -11,12 +11,12 @@ namespace BL.Facades
     public class BookCollectionFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<BookCollectionDTO, BookCollection> _bookCollectionService;
-        private CRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
+        private ICRUDService<BookCollectionDTO, BookCollection> _bookCollectionService;
+        private ICRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
 
-        public BookCollectionFacade(IUnitOfWork unitOfWork, 
-                                    CRUDService<BookCollectionDTO, BookCollection> bookCollectionService,
-                                    CRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
+        public BookCollectionFacade(IUnitOfWork unitOfWork,
+                                    ICRUDService<BookCollectionDTO, BookCollection> bookCollectionService,
+                                    ICRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
         {
             _unitOfWork = unitOfWork;
             _bookCollectionService = bookCollectionService;
@@ -42,19 +42,34 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _bookCollectionService.Delete(id);
+            _bookCollectionService.DeleteById(id);
             _unitOfWork.Commit();
         }
 
         public void AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Insert(new BookCollectionBookDTO { BookCollect = bookCollection, Book = book });
+            _bookCollectionBookService.Insert(new BookCollectionBookDTO
+            {
+                BookCollect = bookCollection,
+                BookCollectionID = bookCollection.Id,
+
+                Book = book,
+                BookID = book.Id
+            }) ;
             _unitOfWork.Commit();
         }
 
         public void DeleteBookFromCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Delete(new BookCollectionBookDTO { BookCollect = bookCollection, Book = book });
+            _bookCollectionBookService.Delete(new BookCollectionBookDTO
+            {
+                BookCollect = bookCollection,
+                BookCollectionID = bookCollection.Id,
+
+                Book = book,
+                BookID = book.Id
+            });
+
             _unitOfWork.Commit();
         }
 

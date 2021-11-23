@@ -9,10 +9,10 @@ namespace BL.Facades
 {
     public class EBookPreviewFacade
     {
-        private EBookPreviewService _service;
+        private IEBookPreviewService _service;
         
 
-        public EBookPreviewFacade(EBookPreviewService service)
+        public EBookPreviewFacade(IEBookPreviewService service)
         {
             _service = service;
         }

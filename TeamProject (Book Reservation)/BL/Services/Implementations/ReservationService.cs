@@ -11,7 +11,7 @@ using BL.DTOs.Entities.Reservation;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class ReservationService : CRUDService<ReservationDTO, Reservation>, IReservationService
     {
@@ -89,7 +89,7 @@ namespace BL.Services
             
             var result = _reservationBookInstanceQueryObject.ExecuteQuery(filter).Items;
             
-            // filter by date
+            // Filter by date
             var reservations = result.
                 Where(x => x.Reservation.DateFrom >= from && x.Reservation.DateTill <= to);
             
