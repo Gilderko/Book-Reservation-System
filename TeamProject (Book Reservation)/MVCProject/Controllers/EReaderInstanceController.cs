@@ -97,11 +97,11 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    await _facade.Update(eReaderInstance);
+                    _facade.Update(eReaderInstance);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EReaderInstanceExists(eReaderInstance.Id))
+                    if (!await EReaderInstanceExists(eReaderInstance.Id))
                     {
                         return NotFound();
                     }
@@ -135,15 +135,16 @@ namespace MVCProject.Controllers
         // POST: EReaderInstance/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            await _facade.Delete(id);
+            _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EReaderInstanceExists(int id)
+        private async Task<bool> EReaderInstanceExists(int id)
         {
-            return _facade.Get(id) != null;
+            var eReaderInstance = await _facade.Get(id);
+            return eReaderInstance != null;
         }
     }
 }
