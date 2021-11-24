@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.User;
+using System.Threading.Tasks;
 
 namespace BL.Services
 {
     public interface IBookCollectionPreviewService : ICRUDService<BookCollectionPrevDTO, BookCollection>
     {
-        public IEnumerable<BookCollectionPrevDTO> GetBookCollectionsByUser(UserDTO user, int pageNumber = 1,
+        public Task<IEnumerable<BookCollectionPrevDTO>> GetBookCollectionsByUser(UserDTO user, int pageNumber = 1,
             int pageSize = 20);
 
     }

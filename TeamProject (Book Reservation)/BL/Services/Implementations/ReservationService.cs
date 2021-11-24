@@ -10,6 +10,7 @@ using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Reservation;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
 {
@@ -29,7 +30,7 @@ namespace BL.Services.Implementations
             _reservationBookInstanceQueryObject = reservationBookInstanceQueryObject;
         }
 
-        public IEnumerable<ReservationPrevDTO> GetReservationsPreviewByUser(int userId, DateTime from, DateTime to)
+        public async Task<IEnumerable<ReservationPrevDTO>> GetReservationsPreviewByUser(int userId, DateTime from, DateTime to)
         {
             List<PredicateDto> predicates = new List<PredicateDto>
             {
@@ -47,10 +48,10 @@ namespace BL.Services.Implementations
                 SortAscending = false
             };
 
-            return _resQueryObject.ExecuteQuery(filter).Items;
+            return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
         
-        public IEnumerable<ReservationPrevDTO> GetReservationPrevsByEReader(int eReaderId, DateTime from, DateTime to)
+        public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByEReader(int eReaderId, DateTime from, DateTime to)
         {
             List<PredicateDto> predicates = new List<PredicateDto>
             {
@@ -68,10 +69,10 @@ namespace BL.Services.Implementations
                 SortAscending = false
             };
 
-            return _resQueryObject.ExecuteQuery(filter).Items;
+            return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
         
-        public IEnumerable<ReservationPrevDTO> GetReservationPrevsByBookInstance(int bookId, DateTime from, DateTime to)
+        public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByBookInstance(int bookId, DateTime from, DateTime to)
         {
             string[] referencesToLoad = new[]
             {
@@ -87,7 +88,7 @@ namespace BL.Services.Implementations
                 SortAscending = false,
             };
             
-            var result = _reservationBookInstanceQueryObject.ExecuteQuery(filter).Items;
+            var result = (await _reservationBookInstanceQueryObject.ExecuteQuery(filter)).Items;
             
             // Filter by date
             var reservations = result.

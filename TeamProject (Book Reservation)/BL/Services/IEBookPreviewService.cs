@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.EBook;
 using BL.DTOs.Filters;
@@ -8,6 +9,6 @@ namespace BL.Services
 {
     public interface IEBookPreviewService : ICRUDService<EBookPrevDTO, EBook>
     {
-        public IEnumerable<BookPrevDTO> GetEBookPrevsByFilter(FilterDto filter);
+        public Task<IEnumerable<BookPrevDTO>> GetEBookPrevsByFilter(FilterDto filter);
     }
 }

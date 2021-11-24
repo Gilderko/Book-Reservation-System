@@ -7,6 +7,7 @@ using BL.DTOs.Filters;
 using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
 {
@@ -22,9 +23,9 @@ namespace BL.Services.Implementations
             _resQueryObject = resQueryObject;
         }
 
-        public IEnumerable<BookPrevDTO> GetEBookPrevsByFilter(FilterDto filter)
+        public async Task<IEnumerable<BookPrevDTO>> GetEBookPrevsByFilter(FilterDto filter)
         {
-            return _resQueryObject.ExecuteQuery(filter).Items;
+            return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
     }
 }

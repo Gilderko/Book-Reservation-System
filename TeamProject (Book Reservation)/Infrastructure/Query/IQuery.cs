@@ -1,5 +1,6 @@
 ﻿using DAL.Entities;
 using Infrastructure.Query.Predicates;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Query
 {
@@ -10,6 +11,6 @@ namespace Infrastructure.Query
         public void Page(int pageToFetch, int pageSize);
         public void LoadExplicitReferences(params string[] referencesToLoad);
         public void LoadExplicitCollections(params string[] collectionsToLoad);
-        public abstract QueryResult<TEntity> Execute();
+        public abstract Task<QueryResult<TEntity>> Execute();
     }
 }

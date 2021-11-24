@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.EBook;
@@ -20,9 +21,9 @@ namespace BL.Services.Implementations
             _resQueryObject = resQueryObject;
         }
 
-        public IEnumerable<BookPrevDTO>GetBookPreviewsByFilter(FilterDto filter)
+        public async Task<IEnumerable<BookPrevDTO>> GetBookPreviewsByFilter(FilterDto filter)
         {
-            return _resQueryObject.ExecuteQuery(filter).Items;
+            return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
     }
 }

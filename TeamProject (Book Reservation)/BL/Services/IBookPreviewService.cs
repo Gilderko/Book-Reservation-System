@@ -2,11 +2,12 @@
 using BL.DTOs.Filters;
 using DAL.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BL.Services
 {
     public interface IBookPreviewService : ICRUDService<BookPrevDTO, Book>
     {
-        public IEnumerable<BookPrevDTO> GetBookPreviewsByFilter(FilterDto filter);
+        public Task<IEnumerable<BookPrevDTO>> GetBookPreviewsByFilter(FilterDto filter);
     }
 }

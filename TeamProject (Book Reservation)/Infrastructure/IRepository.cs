@@ -1,4 +1,5 @@
 ﻿using DAL.Entities;
+using System.Threading.Tasks;
 
 namespace Infrastructure
 {
@@ -6,8 +7,8 @@ namespace Infrastructure
     {
         void Delete(TEntity entityToDelete);
         void DeleteById(int id);
-        TEntity GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null);
-        void Insert(TEntity entity);
+        Task<TEntity> GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null);
+        Task Insert(TEntity entity);
         void Update(TEntity entityToUpdate);
     }
 }

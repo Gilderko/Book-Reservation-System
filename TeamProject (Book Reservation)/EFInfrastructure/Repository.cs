@@ -3,6 +3,8 @@ using DAL.Entities;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EFInfrastructure
 {
@@ -17,10 +19,9 @@ namespace EFInfrastructure
             dbSet = dbContext.Set<TEntity>();
         }
 
-        public TEntity GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null)
+        public async Task<TEntity> GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null)
         {
             Func<EBook, string[]> square = x => new string[] { nameof(x.Authors), nameof(x.Genres) };
-
 
             string[] localRefsToLoad = refsToLoad;
             string[] localCollectionsToLoad = collectionsToLoad;
@@ -36,22 +37,26 @@ namespace EFInfrastructure
 
             TEntity loadedEntity = dbSet.Find(id);
 
+            List<Task> loadingTasks = new List<Task>();
+
             foreach (string refToLoad in localRefsToLoad)
             {
-                dbContext.Entry<TEntity>(loadedEntity).Reference(refToLoad).Load();
+                loadingTasks.Add(dbContext.Entry<TEntity>(loadedEntity).Reference(refToLoad).LoadAsync());
             }
 
             foreach (string collectToLoad in localCollectionsToLoad)
             {
-                dbContext.Entry<TEntity>(loadedEntity).Collection(collectToLoad).Load();
+                loadingTasks.Add(dbContext.Entry<TEntity>(loadedEntity).Collection(collectToLoad).LoadAsync());
             }
 
-            return dbSet.Find(id);
+            Task.WaitAll(loadingTasks.ToArray());
+
+            return await dbSet.FindAsync(id);
         }
 
-        public void Insert(TEntity entity)
+        public async Task Insert(TEntity entity)
         {
-            dbSet.Add(entity);
+            await dbSet.AddAsync(entity);
         }
 
         public void DeleteById(int id)
@@ -65,7 +70,7 @@ namespace EFInfrastructure
             if (dbContext.Entry(entityToDelete).State == EntityState.Detached)
             {
                 dbSet.Attach(entityToDelete);
-            }
+            }            
             dbSet.Remove(entityToDelete);
         }
 

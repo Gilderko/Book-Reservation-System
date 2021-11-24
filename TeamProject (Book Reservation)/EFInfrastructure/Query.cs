@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace EFInfrastructure
 {
@@ -142,26 +143,30 @@ namespace EFInfrastructure
             _page = $"OFFSET {(ipageToFetch - 1) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
         }
 
-        public QueryResult<TEntity> Execute()
+        public async Task<QueryResult<TEntity>> Execute()
         {
             _querySql += $"{_where} {_sortBy} {_page}";
 
             Console.WriteLine(_querySql);
 
-            var entities = DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).ToList();
+            var entities = await DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).ToListAsync();
+
+            List<Task> loadingTasks = new List<Task>();
 
             foreach (var entry in entities)
             {
                 foreach (string refToLoad in _refsToLoad)
                 {
-                    DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).Load();
+                    loadingTasks.Add(DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).LoadAsync());
                 }
 
                 foreach (string collectToLoad in _collectionsToLoad)
                 {
-                    DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).Load();
+                    loadingTasks.Add(DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).LoadAsync());
                 }
             }
+
+            Task.WaitAll(loadingTasks.ToArray());
 
             QueryResult<TEntity> result = new QueryResult<TEntity>
             {
