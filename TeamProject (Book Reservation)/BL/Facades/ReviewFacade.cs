@@ -2,6 +2,7 @@
 using BL.DTOs.Entities.Review;
 using BL.Services;
 using DAL.Entities;
+using System.Threading.Tasks;
 using Infrastructure;
 
 namespace BL.Facades
@@ -17,15 +18,15 @@ namespace BL.Facades
             _service = service;
         }
 
-        public void Create(ReviewDTO review)
+        public async Task Create(ReviewDTO review)
         {
-            _service.Insert(review);
+            await _service.Insert(review);
             _unitOfWork.Commit();
         }
 
-        public ReviewDTO Get(int id)
+        public async Task<ReviewDTO> Get(int id)
         {
-            return _service.GetByID(id);
+            return await _service.GetByID(id);
         }
 
         public void Update(ReviewDTO review)

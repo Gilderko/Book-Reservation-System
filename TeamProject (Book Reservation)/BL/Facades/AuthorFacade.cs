@@ -5,6 +5,7 @@ using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -23,15 +24,15 @@ namespace BL.Facades
             _authorBookService = authorBookService;
         }
 
-        public void Create(AuthorDTO author)
+        public async Task Create(AuthorDTO author)
         {
-            _authorService.Insert(author);
+            await _authorService.Insert(author);
             _unitOfWork.Commit();
         }
 
-        public AuthorDTO Get(int id)
+        public async Task<AuthorDTO> Get(int id)
         {
-            return _authorService.GetByID(id);
+            return await _authorService.GetByID(id);
         }
 
         public void Update(AuthorDTO author)
@@ -46,9 +47,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public void AddBookToAuthor(AuthorDTO author, BookDTO book)
+        public async Task AddBookToAuthor(AuthorDTO author, BookDTO book)
         {
-            _authorBookService.Insert(new AuthorBookDTO
+            await _authorBookService.Insert(new AuthorBookDTO
             {                
                 Author = author,
                 AuthorID = author.Id,

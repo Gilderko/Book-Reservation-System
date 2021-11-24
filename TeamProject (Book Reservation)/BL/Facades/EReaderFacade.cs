@@ -2,6 +2,7 @@
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -16,15 +17,15 @@ namespace BL.Facades
             _service = service;
         }
 
-        public void Create(EReaderDTO eReader)
+        public async Task Create(EReaderDTO eReader)
         {
-            _service.Insert(eReader);
+            await _service.Insert(eReader);
             _unitOfWork.Commit();
         }
 
-        public EReaderDTO Get(int id)
+        public async Task<EReaderDTO> Get(int id)
         {
-            return _service.GetByID(id);
+            return await _service.GetByID(id);
         }
 
         public void Update(EReaderDTO eReader)

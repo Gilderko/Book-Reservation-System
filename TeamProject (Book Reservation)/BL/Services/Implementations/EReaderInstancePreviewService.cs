@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Filters;
@@ -21,7 +22,7 @@ namespace BL.Services.Implementations
             _resQueryObject = resQueryObject;               
         }
 
-        public IEnumerable<EReaderInstancePrevDTO> GetEReaderInstancesByOwner(int ownerId)
+        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancesByOwner(int ownerId)
         {
             FilterDto filter = new FilterDto()
             {
@@ -30,7 +31,7 @@ namespace BL.Services.Implementations
                 SortAscending = true
             };
             
-            return _resQueryObject.ExecuteQuery(filter).Items;
+            return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
     }
 }

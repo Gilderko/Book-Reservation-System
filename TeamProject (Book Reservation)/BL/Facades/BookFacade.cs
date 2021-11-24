@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -20,15 +21,15 @@ namespace BL.Facades
             _service = service;
         }
 
-        public void Create(BookDTO book)
+        public async Task Create(BookDTO book)
         {
-            _service.Insert(book);
+            await _service.Insert(book);
             _unitOfWork.Commit();
         }
 
-        public BookDTO Get(int id)
+        public async Task<BookDTO> Get(int id)
         {
-            return _service.GetByID(id);
+            return await _service.GetByID(id);
         }
 
         public void Update(BookDTO book)

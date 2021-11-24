@@ -5,6 +5,7 @@ using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -23,15 +24,15 @@ namespace BL.Facades
             _bookCollectionBookService = bookCollectionBookService;
         }
 
-        public void Create(BookCollectionDTO bookCollection)
+        public async Task Create(BookCollectionDTO bookCollection)
         {
-            _bookCollectionService.Insert(bookCollection);
+            await _bookCollectionService.Insert(bookCollection);
             _unitOfWork.Commit();
         }
 
-        public BookCollectionDTO Get(int id)
+        public async Task<BookCollectionDTO> Get(int id)
         {
-            return _bookCollectionService.GetByID(id);
+            return await _bookCollectionService.GetByID(id);
         }
 
         public void Update(BookCollectionDTO bookCollection)
@@ -46,9 +47,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public void AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
+        public async Task AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Insert(new BookCollectionBookDTO
+            await _bookCollectionBookService.Insert(new BookCollectionBookDTO
             {
                 BookCollect = bookCollection,
                 BookCollectionID = bookCollection.Id,
@@ -69,7 +70,6 @@ namespace BL.Facades
                 Book = book,
                 BookID = book.Id
             });
-
             _unitOfWork.Commit();
         }
 

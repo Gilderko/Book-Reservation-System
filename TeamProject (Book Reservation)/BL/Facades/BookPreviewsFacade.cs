@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BL.Services;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Filters;
@@ -15,9 +16,9 @@ namespace BL.Facades
             _service = service;
         }
         
-        public IEnumerable<BookPrevDTO> GetBookPreviews(FilterDto filter)
+        public async Task<IEnumerable<BookPrevDTO>> GetBookPreviews(FilterDto filter)
         {
-            return _service.GetBookPreviewsByFilter(filter);
+            return await _service.GetBookPreviewsByFilter(filter);
         }
     }
 }

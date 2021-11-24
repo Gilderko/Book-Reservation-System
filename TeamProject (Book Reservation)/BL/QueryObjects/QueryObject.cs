@@ -38,7 +38,7 @@ namespace BL.QueryObjects
             {
                 _myQuery.Where(_mapper.Map<SimplePredicate>(filter.Predicate));
             }
-            else
+            else if (filter.Predicate is CompositePredicate)
             {
                 _myQuery.Where(_mapper.Map<CompositePredicate>(filter.Predicate));
             }

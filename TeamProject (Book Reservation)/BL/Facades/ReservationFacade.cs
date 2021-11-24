@@ -6,6 +6,7 @@ using BL.DTOs.Entities.Reservation;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -20,14 +21,14 @@ namespace BL.Facades
             _service = service;
         }
 
-        public void Create(ReservationDTO reservation)
+        public async Task Create(ReservationDTO reservation)
         {
-            _service.Insert(reservation);
+            await _service.Insert(reservation);
         }
 
-        public ReservationDTO Get(int id)
+        public async Task<ReservationDTO> Get(int id)
         {
-            return _service.GetByID(id);
+            return await _service.GetByID(id);
         }
 
         public void Update(ReservationDTO reservation)
@@ -42,26 +43,20 @@ namespace BL.Facades
 
         public void AddBookInstance(BookInstanceDTO bookInstance, ReservationDTO reservation)
         {
-            using (_unitOfWork)
+            ReservationBookInstanceDTO resBookInstance = new ReservationBookInstanceDTO()
             {
-                ReservationBookInstanceDTO resBookInstance = new ReservationBookInstanceDTO()
-                {
-                    BookInstance = bookInstance,
-                    Reservation = reservation
-                };
-                
-                ((List<ReservationBookInstanceDTO>) reservation.BookInstances).Add(resBookInstance);
-                _unitOfWork.Commit();
-            }
+                BookInstance = bookInstance,
+                Reservation = reservation
+            };
+
+            ((List<ReservationBookInstanceDTO>)reservation.BookInstances).Add(resBookInstance);
+            _unitOfWork.Commit();
         }
 
         public void AddEReaderInstance(EReaderInstanceDTO eReaderInstance, ReservationDTO reservation)
         {
-            using (_unitOfWork)
-            {
-                reservation.EReader = eReaderInstance;
-                _unitOfWork.Commit();
-            }
+            reservation.EReader = eReaderInstance;
+            _unitOfWork.Commit();
         }
 
         public void SubmitReservation(ReservationDTO newReservation)

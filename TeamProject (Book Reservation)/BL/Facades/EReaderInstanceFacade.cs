@@ -8,6 +8,7 @@ using BL.Services;
 using DAL.Entities;
 using Infrastructure;
 using DAL.Entities.ConnectionTables;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -29,15 +30,15 @@ namespace BL.Facades
             _reservationService = reservationService;
         }
 
-        public void Create(EReaderInstanceDTO eReaderInstance)
+        public async Task Create(EReaderInstanceDTO eReaderInstance)
         {
-            _eReaderInstanceService.Insert(eReaderInstance);
+            await _eReaderInstanceService.Insert(eReaderInstance);
             _unitOfWork.Commit();
         }
 
-        public EReaderInstanceDTO Get(int id)
+        public async Task<EReaderInstanceDTO> Get(int id)
         {
-            return _eReaderInstanceService.GetByID(id);
+            return await _eReaderInstanceService.GetByID(id);
         }
 
         public void Update(EReaderInstanceDTO eReaderInstance)
@@ -52,9 +53,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
         
-        public void AddEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
+        public async Task AddEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
         {
-            _eBookEReaderInstanceService.Insert(new EBookEReaderInstanceDTO
+            await _eBookEReaderInstanceService.Insert(new EBookEReaderInstanceDTO
             {
                 EReaderInstance = eReaderInstance,
                 EReaderInstanceID = eReaderInstance.Id,
@@ -78,9 +79,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public IEnumerable<ReservationPrevDTO> GetReservationPrevsByDate(EReaderInstanceDTO eReader, DateTime from, DateTime to)
+        public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByDate(EReaderInstanceDTO eReader, DateTime from, DateTime to)
         {
-            return _reservationService.GetReservationPrevsByEReader(eReader.Id, from, to);
+            return await _reservationService.GetReservationPrevsByEReader(eReader.Id, from, to);
         }
         
         public void Dispose()

@@ -4,6 +4,7 @@ using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Entities.User;
 using BL.Services;
 using DAL.Entities;
+using System.Threading.Tasks;
 using Infrastructure;
 
 namespace BL.Facades
@@ -29,15 +30,15 @@ namespace BL.Facades
             _eReaderInstanceCrud = eReaderInstanceCrud;
         }
 
-        public void Create(UserDTO user)
+        public async Task Create(UserDTO user)
         {
-            _userCrud.Insert(user);
+            await _userCrud.Insert(user);
             _unitOfWork.Commit();
         }
 
-        public UserDTO Get(int id)
+        public async Task<UserDTO> Get(int id)
         {
-            return _userCrud.GetByID(id);
+            return await _userCrud.GetByID(id);
         }
 
         public void Update(UserDTO user)
@@ -52,24 +53,24 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public void AddBookCollection(int authorId, BookCollectionDTO bookCollection)
+        public async Task AddBookCollection(int authorId, BookCollectionDTO bookCollection)
         {
             bookCollection.UserId = authorId;
-            _bookCollCrud.Insert(bookCollection);
+            await _bookCollCrud.Insert(bookCollection);
             _unitOfWork.Commit();
         }
 
-        public void AddBookInstance(int ownerId, BookInstanceDTO bookInstance)
+        public async Task AddBookInstance(int ownerId, BookInstanceDTO bookInstance)
         {
             bookInstance.BookOwnerId = ownerId;
-            _bookInstanceCrud.Insert(bookInstance);
+            await _bookInstanceCrud.Insert(bookInstance);
             _unitOfWork.Commit();
         }
         
-        public void AddEreaderInstance(int ownerId, EReaderInstanceDTO eReaderInstance)
+        public async Task AddEreaderInstance(int ownerId, EReaderInstanceDTO eReaderInstance)
         {
             eReaderInstance.EreaderOwnerId = ownerId;
-            _eReaderInstanceCrud.Insert(eReaderInstance);
+            await _eReaderInstanceCrud.Insert(eReaderInstance);
             _unitOfWork.Commit();
         }
 

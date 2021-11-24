@@ -4,6 +4,7 @@ using BL.DTOs.Entities.EBook;
 using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -17,9 +18,9 @@ namespace BL.Facades
             _service = service;
         }
 
-        public IEnumerable<BookPrevDTO> GetEBookPrevsByFilter(FilterDto filter)
+        public async Task<IEnumerable<BookPrevDTO>> GetEBookPrevsByFilter(FilterDto filter)
         {
-            return _service.GetEBookPrevsByFilter(filter);
+            return await _service.GetEBookPrevsByFilter(filter);
         }
     }
 }

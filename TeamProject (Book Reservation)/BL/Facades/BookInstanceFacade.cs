@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.Reservation;
 using BL.Services;
@@ -23,15 +24,15 @@ namespace BL.Facades
             _reservationService = reservationService;
         }
         
-        public void Create(BookInstanceDTO bookInstance)
+        public async Task Create(BookInstanceDTO bookInstance)
         {
-            _service.Insert(bookInstance);
+            await _service.Insert(bookInstance);
             _unitOfWork.Commit();
         }
 
-        public BookInstanceDTO Get(int id)
+        public async Task<BookInstanceDTO> Get(int id)
         {
-            return _service.GetByID(id);
+            return await _service.GetByID(id);
         }
 
         public void Update(BookInstanceDTO bookInstance)
@@ -46,9 +47,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public IEnumerable<ReservationPrevDTO> GetBookReservationPrevsByUser(int bookInstanceId, DateTime from, DateTime to)
+        public async Task<IEnumerable<ReservationPrevDTO>> GetBookReservationPrevsByUser(int bookInstanceId, DateTime from, DateTime to)
         {
-           return _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to);
+           return await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to);
         }
 
         public void Dispose()
