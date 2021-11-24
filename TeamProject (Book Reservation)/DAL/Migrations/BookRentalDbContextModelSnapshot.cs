@@ -371,7 +371,7 @@ namespace DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.Author_Book", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.AuthorBook", b =>
                 {
                     b.Property<int>("BookID")
                         .HasColumnType("int");
@@ -433,7 +433,7 @@ namespace DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.BookCollection_Book", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.BookCollectionBook", b =>
                 {
                     b.Property<int>("BookID")
                         .HasColumnType("int");
@@ -465,7 +465,7 @@ namespace DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.Book_Genre", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.BookGenre", b =>
                 {
                     b.Property<int>("GenreID")
                         .HasColumnType("int");
@@ -527,7 +527,7 @@ namespace DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.EBook_EReaderInstance", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.EBookEReaderInstance", b =>
                 {
                     b.Property<int>("EBookID")
                         .HasColumnType("int");
@@ -539,7 +539,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("EReaderInstanceID");
 
-                    b.ToTable("EBook_EReaderInstance");
+                    b.ToTable("EBookEReaderInstance");
 
                     b.HasData(
                         new
@@ -559,7 +559,7 @@ namespace DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.Reservation_BookInstance", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.ReservationBookInstance", b =>
                 {
                     b.Property<int>("ReservationID")
                         .HasColumnType("int");
@@ -1069,7 +1069,7 @@ namespace DAL.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.Author_Book", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.AuthorBook", b =>
                 {
                     b.HasOne("DAL.Entities.Author", "Author")
                         .WithMany("AuthorsBooks")
@@ -1088,7 +1088,7 @@ namespace DAL.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.BookCollection_Book", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.BookCollectionBook", b =>
                 {
                     b.HasOne("DAL.Entities.BookCollection", "BookCollect")
                         .WithMany("Books")
@@ -1107,7 +1107,7 @@ namespace DAL.Migrations
                     b.Navigation("BookCollect");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.Book_Genre", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.BookGenre", b =>
                 {
                     b.HasOne("DAL.Entities.Book", "Book")
                         .WithMany("Genres")
@@ -1126,7 +1126,7 @@ namespace DAL.Migrations
                     b.Navigation("Genre");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.EBook_EReaderInstance", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.EBookEReaderInstance", b =>
                 {
                     b.HasOne("DAL.Entities.EBook", "EBook")
                         .WithMany("EReaders")
@@ -1145,7 +1145,7 @@ namespace DAL.Migrations
                     b.Navigation("EReader");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ConnectionTables.Reservation_BookInstance", b =>
+            modelBuilder.Entity("DAL.Entities.ConnectionTables.ReservationBookInstance", b =>
                 {
                     b.HasOne("DAL.Entities.BookInstance", "BookInstance")
                         .WithMany("AllReservations")

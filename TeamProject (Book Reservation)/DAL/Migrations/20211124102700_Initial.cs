@@ -265,7 +265,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EBook_EReaderInstance",
+                name: "EBookEReaderInstance",
                 columns: table => new
                 {
                     EBookID = table.Column<int>(type: "int", nullable: false),
@@ -273,15 +273,15 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EBook_EReaderInstance", x => new { x.EBookID, x.EReaderInstanceID });
+                    table.PrimaryKey("PK_EBookEReaderInstance", x => new { x.EBookID, x.EReaderInstanceID });
                     table.ForeignKey(
-                        name: "FK_EBook_EReaderInstance_Books_EBookID",
+                        name: "FK_EBookEReaderInstance_Books_EBookID",
                         column: x => x.EBookID,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EBook_EReaderInstance_EReaderInstances_EReaderInstanceID",
+                        name: "FK_EBookEReaderInstance_EReaderInstances_EReaderInstanceID",
                         column: x => x.EReaderInstanceID,
                         principalTable: "EReaderInstances",
                         principalColumn: "Id",
@@ -522,7 +522,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "EBook_EReaderInstance",
+                table: "EBookEReaderInstance",
                 columns: new[] { "EBookID", "EReaderInstanceID" },
                 values: new object[,]
                 {
@@ -583,8 +583,8 @@ namespace DAL.Migrations
                 column: "BookTemplateID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EBook_EReaderInstance_EReaderInstanceID",
-                table: "EBook_EReaderInstance",
+                name: "IX_EBookEReaderInstance_EReaderInstanceID",
+                table: "EBookEReaderInstance",
                 column: "EReaderInstanceID");
 
             migrationBuilder.CreateIndex(
@@ -635,7 +635,7 @@ namespace DAL.Migrations
                 name: "BookCollection_Books");
 
             migrationBuilder.DropTable(
-                name: "EBook_EReaderInstance");
+                name: "EBookEReaderInstance");
 
             migrationBuilder.DropTable(
                 name: "Reservation_BookInstances");
