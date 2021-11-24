@@ -1,4 +1,5 @@
-﻿using BL.DTOs.Entities.BookCollection;
+﻿using System;
+using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Entities.User;
@@ -12,19 +13,19 @@ namespace BL.Facades
     public class UserFacade
     {
         private IUnitOfWork _unitOfWork;
-        private ICRUDService<UserDTO, User> _userCrud;
+        private IUserService _userService;
         private ICRUDService<BookCollectionDTO, BookCollection> _bookCollCrud;
         private ICRUDService<BookInstanceDTO, BookInstance> _bookInstanceCrud;
         private ICRUDService<EReaderInstanceDTO, EReaderInstance> _eReaderInstanceCrud;
 
         public UserFacade(IUnitOfWork unitOfWork,
-            ICRUDService<UserDTO, User> userCrud,
+            IUserService userService,
             ICRUDService<BookCollectionDTO, BookCollection> bookCollCrud,
             ICRUDService<BookInstanceDTO, BookInstance> bookInstanceCrud,
             ICRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceCrud)
         {
             _unitOfWork = unitOfWork;
-            _userCrud = userCrud;
+            _userService = userService;
             _bookCollCrud = bookCollCrud;
             _bookInstanceCrud = bookInstanceCrud;
             _eReaderInstanceCrud = eReaderInstanceCrud;
@@ -32,24 +33,24 @@ namespace BL.Facades
 
         public async Task Create(UserDTO user)
         {
-            await _userCrud.Insert(user);
+            await _userService.Insert(user);
             _unitOfWork.Commit();
         }
 
         public async Task<UserDTO> Get(int id)
         {
-            return await _userCrud.GetByID(id);
+            return await _userService.GetByID(id);
         }
 
         public void Update(UserDTO user)
         {
-            _userCrud.Update(user);
+            _userService.Update(user);
             _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
-            _userCrud.DeleteById(id);
+            _userService.DeleteById(id);
             _unitOfWork.Commit();
         }
 
@@ -72,6 +73,29 @@ namespace BL.Facades
             eReaderInstance.EreaderOwnerId = ownerId;
             await _eReaderInstanceCrud.Insert(eReaderInstance);
             _unitOfWork.Commit();
+        }
+        
+        public async Task<UserShowDTO> LoginAsync(UserLoginDTO userLogin)
+        {
+            var user = await _userService.AuthorizeUserAsync(userLogin);
+            if (user != null)
+            {
+                return user;
+            }
+            throw new UnauthorizedAccessException();
+        }
+
+        public async Task<bool> RegisterUserAsync(UserCreateDTO user)
+        {
+            // checks if user with this email already exists
+            if (await _userService.GetUserShowDtoByEmailAsync(user.Email) != null)
+            {
+                return false;
+            }
+            
+            await _userService.RegisterUser(user);
+            _unitOfWork.Commit();
+            return true;
         }
 
         public void Dispose()

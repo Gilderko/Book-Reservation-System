@@ -10,6 +10,6 @@ namespace BL.Services
         
         Task<UserShowDTO> AuthorizeUserAsync(UserLoginDTO login);
         
-        void RegisterUser(UserCreateDTO user);
+        Task RegisterUser(UserCreateDTO user);
     }
 }

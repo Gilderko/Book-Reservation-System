@@ -59,7 +59,7 @@ namespace BL.Services.Implementations
             return succ ? userDto : null;
         }
 
-        public async void RegisterUser(UserCreateDTO user)
+        public async Task RegisterUser(UserCreateDTO user)
         {
             var (hash, salt) = CreateHash(user.Password);
             user.HashedPassword = string.Join(',', hash, salt);
