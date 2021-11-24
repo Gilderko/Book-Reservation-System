@@ -7,14 +7,13 @@ using Infrastructure.Query.Operators;
 using System.Collections.Generic;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.User;
+using System.Threading.Tasks;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class BookCollectionPreviewService : CRUDService<BookCollectionPrevDTO, BookCollection>, 
         IBookCollectionPreviewService
     {
-        private readonly IRepository<BookCollection> _repository;
-        private readonly IMapper _mapper;
         private readonly QueryObject<BookCollectionPrevDTO, BookCollection> _queryObject;
 
         public BookCollectionPreviewService(IRepository<BookCollection> repo, 
@@ -24,7 +23,7 @@ namespace BL.Services
             _queryObject = queryObject;
         }
 
-        public IEnumerable<BookCollectionPrevDTO> GetBookCollectionsByUser(UserDTO user, int pageNumber = 1, int pageSize = 20)
+        public async Task<IEnumerable<BookCollectionPrevDTO>> GetBookCollectionsByUser(UserDTO user, int pageNumber = 1, int pageSize = 20)
         {
             FilterDto filter = new FilterDto()
             {
@@ -33,7 +32,7 @@ namespace BL.Services
                 PageSize = pageSize
             };
 
-            return _queryObject.ExecuteQuery(filter).Items;
+            return (await _queryObject.ExecuteQuery(filter)).Items;
         }
     }
 }

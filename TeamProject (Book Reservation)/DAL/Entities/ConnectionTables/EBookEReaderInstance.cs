@@ -2,7 +2,7 @@
 
 namespace DAL.Entities.ConnectionTables
 {
-    public class EBookEReaderInstance
+    public class EBookEReaderInstance : IEntity
     {
         public int EBookID { get; set; }
 
@@ -12,6 +12,6 @@ namespace DAL.Entities.ConnectionTables
         public int EReaderInstanceID { get; set; }
 
         [ForeignKey(nameof(EReaderInstanceID))]
-        public EReaderInstance EReader { get; set; }
+        public EReaderInstance EReaderInstance { get; set; }
     }
 }

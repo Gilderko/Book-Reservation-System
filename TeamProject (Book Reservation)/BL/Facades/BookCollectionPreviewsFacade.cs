@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.User;
 using DAL.Entities;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
     public class BookCollectionPreviewsFacade
     {
-        private BookCollectionPreviewService _service;
+        private IBookCollectionPreviewService _service;
 
-        public BookCollectionPreviewsFacade(BookCollectionPreviewService service)
+        public BookCollectionPreviewsFacade(IBookCollectionPreviewService service)
         {
             _service = service;
         }
 
-        public IEnumerable<BookCollectionPrevDTO> GetBookCollectionsByUser(UserDTO user, int pageNumber, int pageSize)
+        public async Task<IEnumerable<BookCollectionPrevDTO>> GetBookCollectionsByUser(UserDTO user, int pageNumber, int pageSize)
         {
-            return _service.GetBookCollectionsByUser(user, pageNumber, pageSize);
+            return await _service.GetBookCollectionsByUser(user, pageNumber, pageSize);
         }
     }
 }

@@ -9,6 +9,11 @@ namespace Infrastructure.Query.Predicates
         public List<IPredicate> Predicates { get; private set; }
         public LogicalOperator Operator { get; private set; }
 
+        public CompositePredicate()
+        {
+
+        }
+
         public CompositePredicate(IEnumerable<IPredicate> predicates, LogicalOperator oper)
         {
             Predicates = predicates.ToList();

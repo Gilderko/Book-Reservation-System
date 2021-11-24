@@ -5,33 +5,34 @@ using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
     public class BookCollectionFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<BookCollectionDTO, BookCollection> _bookCollectionService;
-        private CRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
+        private ICRUDService<BookCollectionDTO, BookCollection> _bookCollectionService;
+        private ICRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
 
-        public BookCollectionFacade(IUnitOfWork unitOfWork, 
-                                    CRUDService<BookCollectionDTO, BookCollection> bookCollectionService,
-                                    CRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
+        public BookCollectionFacade(IUnitOfWork unitOfWork,
+                                    ICRUDService<BookCollectionDTO, BookCollection> bookCollectionService,
+                                    ICRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
         {
             _unitOfWork = unitOfWork;
             _bookCollectionService = bookCollectionService;
             _bookCollectionBookService = bookCollectionBookService;
         }
 
-        public void Create(BookCollectionDTO bookCollection)
+        public async Task Create(BookCollectionDTO bookCollection)
         {
-            _bookCollectionService.Insert(bookCollection);
+            await _bookCollectionService.Insert(bookCollection);
             _unitOfWork.Commit();
         }
 
-        public BookCollectionDTO Get(int id)
+        public async Task<BookCollectionDTO> Get(int id)
         {
-            return _bookCollectionService.GetByID(id);
+            return await _bookCollectionService.GetByID(id);
         }
 
         public void Update(BookCollectionDTO bookCollection)
@@ -42,19 +43,33 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _bookCollectionService.Delete(id);
+            _bookCollectionService.DeleteById(id);
             _unitOfWork.Commit();
         }
 
-        public void AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
+        public async Task AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Insert(new BookCollectionBookDTO { BookCollect = bookCollection, Book = book });
+            await _bookCollectionBookService.Insert(new BookCollectionBookDTO
+            {
+                BookCollect = bookCollection,
+                BookCollectionID = bookCollection.Id,
+
+                Book = book,
+                BookID = book.Id
+            }) ;
             _unitOfWork.Commit();
         }
 
         public void DeleteBookFromCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
-            _bookCollectionBookService.Delete(new BookCollectionBookDTO { BookCollect = bookCollection, Book = book });
+            _bookCollectionBookService.Delete(new BookCollectionBookDTO
+            {
+                BookCollect = bookCollection,
+                BookCollectionID = bookCollection.Id,
+
+                Book = book,
+                BookID = book.Id
+            });
             _unitOfWork.Commit();
         }
 

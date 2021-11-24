@@ -5,6 +5,7 @@ using DAL.Entities;
 using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
 using System;
+using System.Threading.Tasks;
 
 namespace BL.QueryObjects
 {
@@ -31,13 +32,13 @@ namespace BL.QueryObjects
             _myQuery.LoadExplicitReferences(referencesToLoad.Invoke(null));
         }
 
-        public QueryResultDTO<TEntityDTO> ExecuteQuery(FilterDto filter)
+        public async Task<QueryResultDTO<TEntityDTO>> ExecuteQuery(FilterDto filter)
         {
             if (filter.Predicate is PredicateDto)
             {
                 _myQuery.Where(_mapper.Map<SimplePredicate>(filter.Predicate));
             }
-            else
+            else if (filter.Predicate is CompositePredicate)
             {
                 _myQuery.Where(_mapper.Map<CompositePredicate>(filter.Predicate));
             }
@@ -51,7 +52,7 @@ namespace BL.QueryObjects
                 _myQuery.Page(filter.RequestedPageNumber.Value, filter.PageSize);
             }
 
-            var queryResult = _myQuery.Execute();
+            var queryResult = await _myQuery.Execute();
 
             var queryResultDto = _mapper.Map<QueryResultDTO<TEntityDTO>>(queryResult);
             return queryResultDto;

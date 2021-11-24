@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Filters;
@@ -7,21 +8,21 @@ using DAL.Entities;
 using Infrastructure;
 using Infrastructure.Query.Operators;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {    
     public class EReaderInstancePreviewService : CRUDService<EReaderInstancePrevDTO, EReaderInstance>, 
         IEReaderInstancePreviewService
     {
         private QueryObject<EReaderInstancePrevDTO, EReaderInstance> _resQueryObject;
-        
+
         public EReaderInstancePreviewService(IRepository<EReaderInstance> repo, 
                                              IMapper mapper,
                                              QueryObject<EReaderInstancePrevDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
         {
-            _resQueryObject = resQueryObject;
+            _resQueryObject = resQueryObject;               
         }
 
-        public IEnumerable<EReaderInstancePrevDTO> GetEReaderInstancesByOwner(int ownerId)
+        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancesByOwner(int ownerId)
         {
             FilterDto filter = new FilterDto()
             {
@@ -30,7 +31,7 @@ namespace BL.Services
                 SortAscending = true
             };
             
-            return _resQueryObject.ExecuteQuery(filter).Items;
+            return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
     }
 }

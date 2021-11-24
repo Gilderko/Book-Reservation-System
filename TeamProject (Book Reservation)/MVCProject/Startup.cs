@@ -45,6 +45,13 @@ namespace MVCProject
             services.AddTransient<ReservationFacade>(services => services.GetService<IContainer>().Resolve<ReservationFacade>());
             services.AddTransient<ReviewFacade>(services => services.GetService<IContainer>().Resolve<ReviewFacade>());
             services.AddTransient<UserFacade>(services => services.GetService<IContainer>().Resolve<UserFacade>());
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(5);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +69,8 @@ namespace MVCProject
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseRouting();
 

@@ -5,33 +5,34 @@ using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
     public class AuthorFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<AuthorDTO, Author> _authorService;
-        private CRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
+        private ICRUDService<AuthorDTO, Author> _authorService;
+        private ICRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
 
-        public AuthorFacade(IUnitOfWork unitOfWork, 
-                            CRUDService<AuthorDTO, Author> authorService, 
-                            CRUDService<AuthorBookDTO, AuthorBook> authorBookService)
+        public AuthorFacade(IUnitOfWork unitOfWork,
+                            ICRUDService<AuthorDTO, Author> authorService,
+                            ICRUDService<AuthorBookDTO, AuthorBook> authorBookService)
         {
             _unitOfWork = unitOfWork;
             _authorService = authorService;
             _authorBookService = authorBookService;
         }
 
-        public void Create(AuthorDTO author)
+        public async Task Create(AuthorDTO author)
         {
-            _authorService.Insert(author);
+            await _authorService.Insert(author);
             _unitOfWork.Commit();
         }
 
-        public AuthorDTO Get(int id)
+        public async Task<AuthorDTO> Get(int id)
         {
-            return _authorService.GetByID(id);
+            return await _authorService.GetByID(id);
         }
 
         public void Update(AuthorDTO author)
@@ -42,13 +43,21 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _authorService.Delete(id);
+            _authorService.DeleteById(id);
             _unitOfWork.Commit();
         }
 
-        public void AddBookToAuthor(AuthorDTO author, BookDTO book)
+        public async Task AddBookToAuthor(AuthorDTO author, BookDTO book)
         {
-            _authorBookService.Insert(new AuthorBookDTO { Author = author, Book = book });
+            await _authorBookService.Insert(new AuthorBookDTO
+            {                
+                Author = author,
+                AuthorID = author.Id,
+
+
+                Book = book,
+                BookID = book.Id
+            });
             _unitOfWork.Commit();
         }
 

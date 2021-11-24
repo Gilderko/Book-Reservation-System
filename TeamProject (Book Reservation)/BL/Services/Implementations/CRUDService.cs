@@ -3,8 +3,9 @@ using BL.DTOs;
 using DAL.Entities;
 using Infrastructure;
 using System;
+using System.Threading.Tasks;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class CRUDService<TEntityDTO, TEntity> : ICRUDService<TEntityDTO, TEntity> where TEntity : class, IEntity
                                                                                       where TEntityDTO : class, IEntityDTO
@@ -18,28 +19,28 @@ namespace BL.Services
             Mapper = mapper;
         }
 
-        public TEntityDTO GetByID(int id, string[] refsToLoad = null, string[] collectToLoad = null)
+        public async Task<TEntityDTO> GetByID(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            TEntity resultEntity = _repository.GetByID(id, refsToLoad, collectToLoad);
+            TEntity resultEntity = await _repository.GetByID(id, refsToLoad, collectToLoad);
             TEntityDTO resultDTO = Mapper.Map<TEntityDTO>(resultEntity);
             return resultDTO;
         }
 
-        public TEntityDTO GetById(int id, Func<TEntity, string[]> refsToLoadFunc = null, Func<TEntity, string[]> collectionsToLoadFunc = null)
+        public async Task<TEntityDTO> GetById(int id, Func<TEntity, string[]> refsToLoadFunc = null, Func<TEntity, string[]> collectionsToLoadFunc = null)
         {
-            return GetByID(id, refsToLoadFunc == null ? new string[0] : refsToLoadFunc.Invoke(null),
+            return await GetByID(id, refsToLoadFunc == null ? new string[0] : refsToLoadFunc.Invoke(null),
                 collectionsToLoadFunc == null ? new string[0] : collectionsToLoadFunc.Invoke(null));
         }
 
-        public void Insert(TEntityDTO DTOToAdd)
+        public async Task Insert(TEntityDTO DTOToAdd)
         {
             TEntity entityToAdd = Mapper.Map<TEntity>(DTOToAdd);
-            _repository.Insert(entityToAdd);
+            await _repository.Insert(entityToAdd);
         }
 
-        public void Delete(int id)
+        public void DeleteById(int id)
         {
-            _repository.Delete(id);
+            _repository.DeleteById(id);
         }
 
         public void Delete(TEntityDTO DTOToDelete)

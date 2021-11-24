@@ -2,6 +2,7 @@
 using System.Collections;
 using BL.Services;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.User;
@@ -11,22 +12,22 @@ namespace BL.Facades
 {
     public class BookInstancePreviewsFacade
     {
-        private BookInstancePreviewService _service;
+        private IBookInstancePreviewService _service;
 
-        public BookInstancePreviewsFacade(BookInstancePreviewService service)
+        public BookInstancePreviewsFacade(IBookInstancePreviewService service)
         {
             _service = service;
         }
 
-        public IEnumerable<BookInstancePrevDTO> GetBookInstancePrevsByUser(UserDTO user, int pageNumber, int pageSize)
+        public async Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(UserDTO user, int pageNumber, int pageSize)
         {
-            return _service.GetBookInstancePrevsByUser(user, pageNumber, pageSize);
+            return await _service.GetBookInstancePrevsByUser(user, pageNumber, pageSize);
         }
 
-        public IEnumerable<BookInstancePrevDTO> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from,
+        public async Task<IEnumerable<BookInstancePrevDTO>> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from,
             DateTime to)
         {
-            return _service.GetAvailableInstancePrevsByDate(book, from, to);
+            return await _service.GetAvailableInstancePrevsByDate(book, from, to);
         }
     }
 }

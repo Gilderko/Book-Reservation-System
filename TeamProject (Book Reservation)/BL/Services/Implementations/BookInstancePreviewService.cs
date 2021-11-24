@@ -12,8 +12,9 @@ using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.User;
 using DAL.Entities.ConnectionTables;
+using System.Threading.Tasks;
 
-namespace BL.Services
+namespace BL.Services.Implementations
 {
     public class BookInstancePreviewService : CRUDService<BookInstancePrevDTO, BookInstance>, IBookInstancePreviewService
     {                                                                                                
@@ -27,7 +28,7 @@ namespace BL.Services
             _queryObject = queryObject;
         }
 
-        public IEnumerable<BookInstancePrevDTO> GetBookInstancePrevsByUser(UserDTO user, int pageNumber = 1, int pageSize = 20)
+        public async Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(UserDTO user, int pageNumber = 1, int pageSize = 20)
         {
             FilterDto filter = new FilterDto()
             {
@@ -36,10 +37,10 @@ namespace BL.Services
                 PageSize = pageSize
             };
 
-            return _queryObject.ExecuteQuery(filter).Items;
+            return (await _queryObject.ExecuteQuery(filter)).Items;
         }
 
-        public IEnumerable<BookInstancePrevDTO> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from, DateTime to, int pageNumber = 1, int pageSize = 20)
+        public async Task<IEnumerable<BookInstancePrevDTO>> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from, DateTime to, int pageNumber = 1, int pageSize = 20)
         { 
             FilterDto filter = new FilterDto()
             {
@@ -48,14 +49,14 @@ namespace BL.Services
                 PageSize = pageSize
             };
             
-            var allInstances = _queryObject.ExecuteQuery(filter).Items;
+            var allInstances = (await _queryObject.ExecuteQuery(filter)).Items;
             
-            FilterAvailableInstances(allInstances.ToHashSet(), from, to);
+            await FilterAvailableInstances(allInstances.ToHashSet(), from, to);
 
-            return _queryObject.ExecuteQuery(filter).Items;
+            return  (await _queryObject.ExecuteQuery(filter)).Items;
         }
         
-        private void FilterAvailableInstances(HashSet<BookInstancePrevDTO> bookInstances, DateTime from, DateTime to)
+        private async Task FilterAvailableInstances(HashSet<BookInstancePrevDTO> bookInstances, DateTime from, DateTime to)
         {
             string[] referencesToLoad = new[]
             {
@@ -71,7 +72,9 @@ namespace BL.Services
                     bookInstances.Select(x => x.Id).ToArray(), ValueComparingOperator.In)
             };
 
-            foreach (var reservation in _reservationQueryObject.ExecuteQuery(filter).Items)
+            var reservations = (await _reservationQueryObject.ExecuteQuery(filter)).Items;
+
+            foreach (var reservation in reservations)
             {
                 BookInstancePrevDTO instancePrev = Mapper.Map<BookInstancePrevDTO>(reservation.BookInstance);
                 

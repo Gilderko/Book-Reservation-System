@@ -2,29 +2,30 @@
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
     public class EReaderFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<EReaderDTO, EReader> _service;
+        private ICRUDService<EReaderDTO, EReader> _service;
 
-        public EReaderFacade(IUnitOfWork unitOfWork, CRUDService<EReaderDTO, EReader> service)
+        public EReaderFacade(IUnitOfWork unitOfWork, ICRUDService<EReaderDTO, EReader> service)
         {
             _unitOfWork = unitOfWork;
             _service = service;
         }
 
-        public void Create(EReaderDTO eReader)
+        public async Task Create(EReaderDTO eReader)
         {
-            _service.Insert(eReader);
+            await _service.Insert(eReader);
             _unitOfWork.Commit();
         }
 
-        public EReaderDTO Get(int id)
+        public async Task<EReaderDTO> Get(int id)
         {
-            return _service.GetByID(id);
+            return await _service.GetByID(id);
         }
 
         public void Update(EReaderDTO eReader)
@@ -35,7 +36,7 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _service.Delete(id);
+            _service.DeleteById(id);
             _unitOfWork.Commit();
         }
 

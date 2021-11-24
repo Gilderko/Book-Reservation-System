@@ -1,4 +1,5 @@
 ﻿using BL.DTOs.Entities.EBook;
+using System.Threading.Tasks;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
@@ -8,23 +9,23 @@ namespace BL.Facades
     public class EBookFacade
     {
         private IUnitOfWork _unitOfWork;
-        private CRUDService<EBookDTO, EBook> _service;
+        private ICRUDService<EBookDTO, EBook> _service;
 
-        public EBookFacade(IUnitOfWork unitOfWork, CRUDService<EBookDTO, EBook> service)
+        public EBookFacade(IUnitOfWork unitOfWork, ICRUDService<EBookDTO, EBook> service)
         {
             _unitOfWork = unitOfWork;
             _service = service;
         }
 
-        public void Create(EBookDTO eBook)
+        public async Task Create(EBookDTO eBook)
         {
-            _service.Insert(eBook);
+            await _service.Insert(eBook);
             _unitOfWork.Commit();
         }
 
-        public EBookDTO Get(int id)
+        public async Task<EBookDTO> Get(int id)
         {
-            return _service.GetByID(id);
+            return await _service.GetByID(id);
         }
 
         public void Update(EBookDTO eBook)
@@ -35,7 +36,7 @@ namespace BL.Facades
 
         public void Delete(int id)
         {
-            _service.Delete(id);
+            _service.DeleteById(id);
             _unitOfWork.Commit();
         }
         

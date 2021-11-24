@@ -1,20 +1,21 @@
 ﻿using BL.DTOs;
 using DAL.Entities;
 using System;
+using System.Threading.Tasks;
 
 namespace BL.Services
 {
     public interface ICRUDService<TEntityDTO, TEntity> where TEntity : class, IEntity
                                                   where TEntityDTO : class, IEntityDTO
     {
-        public TEntityDTO GetByID(int id, string[] refsToLoad = null, string[] collectToLoad = null);
+        public Task<TEntityDTO> GetByID(int id, string[] refsToLoad = null, string[] collectToLoad = null);
 
-        public TEntityDTO GetById(int id, Func<TEntity, string[]> refsToLoadFunc = null,
+        public Task<TEntityDTO> GetById(int id, Func<TEntity, string[]> refsToLoadFunc = null,
             Func<TEntity, string[]> collectionsToLoadFunc = null);
 
-        public void Insert(TEntityDTO DTOToAdd);
+        public Task Insert(TEntityDTO DTOToAdd);
 
-        public void Delete(int id);
+        public void DeleteById(int id);
 
         public void Delete(TEntityDTO DTOToDelete);
 
