@@ -97,11 +97,11 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    await _facade.Update(bookInstance);
+                    _facade.Update(bookInstance);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookInstanceExists(bookInstance.Id))
+                    if (!await BookInstanceExists(bookInstance.Id))
                     {
                         return NotFound();
                     }
@@ -135,15 +135,16 @@ namespace MVCProject.Controllers
         // POST: BookInstance/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            await _facade.Delete(id);
+            _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookInstanceExists(int id)
+        private async Task<bool> BookInstanceExists(int id)
         {
-            return _facade.Get(id) != null;
+            var bookInstance = await _facade.Get(id);
+            return bookInstance != null;
         }
     }
 }
