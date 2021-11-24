@@ -7,23 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.BookCollection;
 
 namespace MVCProject.Controllers
 {
     public class BookCollectionController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly BookCollectionFacade _facade;
 
-        public BookCollectionController(BookRentalDbContext context)
+        public BookCollectionController(BookCollectionFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: BookCollection
         public async Task<IActionResult> Index()
         {
-            var bookRentalDbContext = _context.BookCollections.Include(b => b.OwnerUser);
-            return View(await bookRentalDbContext.ToListAsync());
+            return View();
         }
 
         // GET: BookCollection/Details/5
@@ -34,9 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _context.BookCollections
-                .Include(b => b.OwnerUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var bookCollection = await _facade.Get((int)id);
             if (bookCollection == null)
             {
                 return NotFound();
@@ -48,7 +47,6 @@ namespace MVCProject.Controllers
         // GET: BookCollection/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -57,15 +55,13 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,CreationDate,UserId,Id")] BookCollection bookCollection)
+        public async Task<IActionResult> Create([Bind("Title,Description,CreationDate,UserId,Id")] BookCollectionDTO bookCollection)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bookCollection);
-                await _context.SaveChangesAsync();
+                await _facade.Create(bookCollection);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", bookCollection.UserId);
             return View(bookCollection);
         }
 
@@ -77,12 +73,11 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _context.BookCollections.FindAsync(id);
+            var bookCollection = await _facade.Get((int)id);
             if (bookCollection == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", bookCollection.UserId);
             return View(bookCollection);
         }
 
@@ -91,7 +86,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Description,CreationDate,UserId,Id")] BookCollection bookCollection)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,Description,CreationDate,UserId,Id")] BookCollectionDTO bookCollection)
         {
             if (id != bookCollection.Id)
             {
@@ -102,8 +97,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(bookCollection);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(bookCollection);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,7 +112,6 @@ namespace MVCProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", bookCollection.UserId);
             return View(bookCollection);
         }
 
@@ -130,9 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _context.BookCollections
-                .Include(b => b.OwnerUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var bookCollection = await _facade.Get((int)id);
             if (bookCollection == null)
             {
                 return NotFound();
@@ -146,15 +137,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var bookCollection = await _context.BookCollections.FindAsync(id);
-            _context.BookCollections.Remove(bookCollection);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookCollectionExists(int id)
         {
-            return _context.BookCollections.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }

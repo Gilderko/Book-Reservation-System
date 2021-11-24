@@ -7,23 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.Review;
 
 namespace MVCProject.Controllers
 {
     public class ReviewController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly ReviewFacade _facade;
 
-        public ReviewController(BookRentalDbContext context)
+        public ReviewController(ReviewFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: Review
         public async Task<IActionResult> Index()
         {
-            var bookRentalDbContext = _context.Reviews.Include(r => r.ReserveredBook).Include(r => r.User);
-            return View(await bookRentalDbContext.ToListAsync());
+            /*var bookRentalDbContext = _facade.Reviews.Include(r => r.ReserveredBook).Include(r => r.User);
+            return View(await bookRentalDbContext.ToListAsync()); */
+            return View();
         }
 
         // GET: Review/Details/5
@@ -34,10 +37,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews
-                .Include(r => r.ReserveredBook)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var review = await _facade.Get((int)id);
             if (review == null)
             {
                 return NotFound();
@@ -49,8 +49,6 @@ namespace MVCProject.Controllers
         // GET: Review/Create
         public IActionResult Create()
         {
-            ViewData["BookTemplateID"] = new SelectList(_context.Books, "Id", "Discriminator");
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -59,16 +57,13 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CreationDate,Content,StarsAmmount,BookTemplateID,UserID,Id")] Review review)
+        public async Task<IActionResult> Create([Bind("CreationDate,Content,StarsAmmount,BookTemplateID,UserID,Id")] ReviewDTO review)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(review);
-                await _context.SaveChangesAsync();
+                await _facade.Create(review);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookTemplateID"] = new SelectList(_context.Books, "Id", "Discriminator", review.BookTemplateID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", review.UserID);
             return View(review);
         }
 
@@ -80,13 +75,11 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await _facade.Get((int)id);
             if (review == null)
             {
                 return NotFound();
             }
-            ViewData["BookTemplateID"] = new SelectList(_context.Books, "Id", "Discriminator", review.BookTemplateID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", review.UserID);
             return View(review);
         }
 
@@ -95,7 +88,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CreationDate,Content,StarsAmmount,BookTemplateID,UserID,Id")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("CreationDate,Content,StarsAmmount,BookTemplateID,UserID,Id")] ReviewDTO review)
         {
             if (id != review.Id)
             {
@@ -106,8 +99,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(review);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(review);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,8 +114,6 @@ namespace MVCProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookTemplateID"] = new SelectList(_context.Books, "Id", "Discriminator", review.BookTemplateID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", review.UserID);
             return View(review);
         }
 
@@ -135,10 +125,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews
-                .Include(r => r.ReserveredBook)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var review = await _facade.Get((int)id);
             if (review == null)
             {
                 return NotFound();
@@ -152,15 +139,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var review = await _context.Reviews.FindAsync(id);
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ReviewExists(int id)
         {
-            return _context.Reviews.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }

@@ -7,23 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.BookInstance;
 
 namespace MVCProject.Controllers
 {
     public class BookInstanceController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly BookInstanceFacade _facade;
 
-        public BookInstanceController(BookRentalDbContext context)
+        public BookInstanceController(BookInstanceFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: BookInstance
         public async Task<IActionResult> Index()
         {
-            var bookRentalDbContext = _context.BookInstances.Include(b => b.FromBookTemplate).Include(b => b.Owner);
-            return View(await bookRentalDbContext.ToListAsync());
+            return View();
         }
 
         // GET: BookInstance/Details/5
@@ -34,10 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _context.BookInstances
-                .Include(b => b.FromBookTemplate)
-                .Include(b => b.Owner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var bookInstance = await _facade.Get((int)id);
             if (bookInstance == null)
             {
                 return NotFound();
@@ -49,8 +47,6 @@ namespace MVCProject.Controllers
         // GET: BookInstance/Create
         public IActionResult Create()
         {
-            ViewData["BookTemplateID"] = new SelectList(_context.Books, "Id", "Discriminator");
-            ViewData["BookOwnerId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -59,16 +55,13 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Conditon,BookOwnerId,BookTemplateID,Id")] BookInstance bookInstance)
+        public async Task<IActionResult> Create([Bind("Conditon,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bookInstance);
-                await _context.SaveChangesAsync();
+                await _facade.Create(bookInstance);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookTemplateID"] = new SelectList(_context.Books, "Id", "Discriminator", bookInstance.BookTemplateID);
-            ViewData["BookOwnerId"] = new SelectList(_context.Users, "Id", "Id", bookInstance.BookOwnerId);
             return View(bookInstance);
         }
 
@@ -80,13 +73,11 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _context.BookInstances.FindAsync(id);
+            var bookInstance = await _facade.Get((int)id);
             if (bookInstance == null)
             {
                 return NotFound();
             }
-            ViewData["BookTemplateID"] = new SelectList(_context.Books, "Id", "Discriminator", bookInstance.BookTemplateID);
-            ViewData["BookOwnerId"] = new SelectList(_context.Users, "Id", "Id", bookInstance.BookOwnerId);
             return View(bookInstance);
         }
 
@@ -95,7 +86,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Conditon,BookOwnerId,BookTemplateID,Id")] BookInstance bookInstance)
+        public async Task<IActionResult> Edit(int id, [Bind("Conditon,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
         {
             if (id != bookInstance.Id)
             {
@@ -106,8 +97,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(bookInstance);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(bookInstance);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,8 +112,6 @@ namespace MVCProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookTemplateID"] = new SelectList(_context.Books, "Id", "Discriminator", bookInstance.BookTemplateID);
-            ViewData["BookOwnerId"] = new SelectList(_context.Users, "Id", "Id", bookInstance.BookOwnerId);
             return View(bookInstance);
         }
 
@@ -135,10 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _context.BookInstances
-                .Include(b => b.FromBookTemplate)
-                .Include(b => b.Owner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var bookInstance = await _facade.Get((int)id);
             if (bookInstance == null)
             {
                 return NotFound();
@@ -152,15 +137,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var bookInstance = await _context.BookInstances.FindAsync(id);
-            _context.BookInstances.Remove(bookInstance);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookInstanceExists(int id)
         {
-            return _context.BookInstances.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }

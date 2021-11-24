@@ -7,23 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.EReaderInstance;
 
 namespace MVCProject.Controllers
 {
     public class EReaderInstanceController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly EReaderInstanceFacade _facade;
 
-        public EReaderInstanceController(BookRentalDbContext context)
+        public EReaderInstanceController(EReaderInstanceFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: EReaderInstance
         public async Task<IActionResult> Index()
         {
-            var bookRentalDbContext = _context.EReaderInstances.Include(e => e.EReaderTemplate).Include(e => e.Owner);
-            return View(await bookRentalDbContext.ToListAsync());
+            return View();
         }
 
         // GET: EReaderInstance/Details/5
@@ -34,10 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await _context.EReaderInstances
-                .Include(e => e.EReaderTemplate)
-                .Include(e => e.Owner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var eReaderInstance = await _facade.Get((int)id);
             if (eReaderInstance == null)
             {
                 return NotFound();
@@ -49,8 +47,6 @@ namespace MVCProject.Controllers
         // GET: EReaderInstance/Create
         public IActionResult Create()
         {
-            ViewData["EReaderTemplateID"] = new SelectList(_context.EReaderTemplates, "Id", "Id");
-            ViewData["EreaderOwnerId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -59,16 +55,13 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstance eReaderInstance)
+        public async Task<IActionResult> Create([Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstanceDTO eReaderInstance)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(eReaderInstance);
-                await _context.SaveChangesAsync();
+                await _facade.Create(eReaderInstance);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EReaderTemplateID"] = new SelectList(_context.EReaderTemplates, "Id", "Id", eReaderInstance.EReaderTemplateID);
-            ViewData["EreaderOwnerId"] = new SelectList(_context.Users, "Id", "Id", eReaderInstance.EreaderOwnerId);
             return View(eReaderInstance);
         }
 
@@ -80,13 +73,11 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await _context.EReaderInstances.FindAsync(id);
+            var eReaderInstance = await _facade.Get((int)id);
             if (eReaderInstance == null)
             {
                 return NotFound();
             }
-            ViewData["EReaderTemplateID"] = new SelectList(_context.EReaderTemplates, "Id", "Id", eReaderInstance.EReaderTemplateID);
-            ViewData["EreaderOwnerId"] = new SelectList(_context.Users, "Id", "Id", eReaderInstance.EreaderOwnerId);
             return View(eReaderInstance);
         }
 
@@ -95,7 +86,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstance eReaderInstance)
+        public async Task<IActionResult> Edit(int id, [Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstanceDTO eReaderInstance)
         {
             if (id != eReaderInstance.Id)
             {
@@ -106,8 +97,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(eReaderInstance);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(eReaderInstance);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,8 +112,6 @@ namespace MVCProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EReaderTemplateID"] = new SelectList(_context.EReaderTemplates, "Id", "Id", eReaderInstance.EReaderTemplateID);
-            ViewData["EreaderOwnerId"] = new SelectList(_context.Users, "Id", "Id", eReaderInstance.EreaderOwnerId);
             return View(eReaderInstance);
         }
 
@@ -135,10 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await _context.EReaderInstances
-                .Include(e => e.EReaderTemplate)
-                .Include(e => e.Owner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var eReaderInstance = await _facade.Get((int)id);
             if (eReaderInstance == null)
             {
                 return NotFound();
@@ -152,15 +137,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var eReaderInstance = await _context.EReaderInstances.FindAsync(id);
-            _context.EReaderInstances.Remove(eReaderInstance);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool EReaderInstanceExists(int id)
         {
-            return _context.EReaderInstances.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }

@@ -7,23 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.Reservation;
 
 namespace MVCProject.Controllers
 {
     public class ReservationController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly ReservationFacade _facade;
 
-        public ReservationController(BookRentalDbContext context)
+        public ReservationController(ReservationFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: Reservation
         public async Task<IActionResult> Index()
         {
-            var bookRentalDbContext = _context.Reservations.Include(r => r.EReader).Include(r => r.User);
-            return View(await bookRentalDbContext.ToListAsync());
+            return View();
         }
 
         // GET: Reservation/Details/5
@@ -34,10 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations
-                .Include(r => r.EReader)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var reservation = await _facade.Get((int)id);
             if (reservation == null)
             {
                 return NotFound();
@@ -49,8 +47,6 @@ namespace MVCProject.Controllers
         // GET: Reservation/Create
         public IActionResult Create()
         {
-            ViewData["EReaderID"] = new SelectList(_context.EReaderInstances, "Id", "Id");
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -59,16 +55,13 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DateFrom,DateTill,UserID,EReaderID,Id")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(reservation);
-                await _context.SaveChangesAsync();
+                await _facade.Create(reservation);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EReaderID"] = new SelectList(_context.EReaderInstances, "Id", "Id", reservation.EReaderID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", reservation.UserID);
             return View(reservation);
         }
 
@@ -80,13 +73,11 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _facade.Get((int)id);
             if (reservation == null)
             {
                 return NotFound();
             }
-            ViewData["EReaderID"] = new SelectList(_context.EReaderInstances, "Id", "Id", reservation.EReaderID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", reservation.UserID);
             return View(reservation);
         }
 
@@ -95,7 +86,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DateFrom,DateTill,UserID,EReaderID,Id")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation)
         {
             if (id != reservation.Id)
             {
@@ -106,8 +97,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(reservation);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(reservation);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,8 +112,6 @@ namespace MVCProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EReaderID"] = new SelectList(_context.EReaderInstances, "Id", "Id", reservation.EReaderID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", reservation.UserID);
             return View(reservation);
         }
 
@@ -135,10 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations
-                .Include(r => r.EReader)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var reservation = await _facade.Get((int)id);
             if (reservation == null)
             {
                 return NotFound();
@@ -152,15 +137,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
-            _context.Reservations.Remove(reservation);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ReservationExists(int id)
         {
-            return _context.Reservations.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }

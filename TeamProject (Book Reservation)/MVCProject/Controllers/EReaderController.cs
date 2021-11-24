@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.EReader;
 
 namespace MVCProject.Controllers
 {
     public class EReaderController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly EReaderFacade _facade;
 
-        public EReaderController(BookRentalDbContext context)
+        public EReaderController(EReaderFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: EReader
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EReaderTemplates.ToListAsync());
+            /*return View(await _context.EReaderTemplates.ToListAsync());*/
+            return View();
         }
 
         // GET: EReader/Details/5
@@ -33,8 +36,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReader = await _context.EReaderTemplates
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var eReader = await _facade.Get((int)id);
             if (eReader == null)
             {
                 return NotFound();
@@ -54,12 +56,11 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Model,CompanyMake,MemoryInMB,Id")] EReader eReader)
+        public async Task<IActionResult> Create([Bind("Model,CompanyMake,MemoryInMB,Id")] EReaderDTO eReader)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(eReader);
-                await _context.SaveChangesAsync();
+                await _facade.Create(eReader);
                 return RedirectToAction(nameof(Index));
             }
             return View(eReader);
@@ -73,7 +74,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReader = await _context.EReaderTemplates.FindAsync(id);
+            var eReader = await _facade.Get((int)id);
             if (eReader == null)
             {
                 return NotFound();
@@ -86,7 +87,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Model,CompanyMake,MemoryInMB,Id")] EReader eReader)
+        public async Task<IActionResult> Edit(int id, [Bind("Model,CompanyMake,MemoryInMB,Id")] EReaderDTO eReader)
         {
             if (id != eReader.Id)
             {
@@ -97,8 +98,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(eReader);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(eReader);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +124,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReader = await _context.EReaderTemplates
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var eReader = await _facade.Get((int)id);
             if (eReader == null)
             {
                 return NotFound();
@@ -139,15 +138,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var eReader = await _context.EReaderTemplates.FindAsync(id);
-            _context.EReaderTemplates.Remove(eReader);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool EReaderExists(int id)
         {
-            return _context.EReaderTemplates.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }

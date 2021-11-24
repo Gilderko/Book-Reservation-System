@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.EBook;
 
 namespace MVCProject.Controllers
 {
     public class EBookController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly EBookFacade _facade;
 
-        public EBookController(BookRentalDbContext context)
+        public EBookController(EBookFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: EBook
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EBookTemplates.ToListAsync());
+            return View();
         }
 
         // GET: EBook/Details/5
@@ -33,8 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _context.EBookTemplates
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var eBook = await _facade.Get((int)id);
             if (eBook == null)
             {
                 return NotFound();
@@ -54,12 +55,11 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MemorySize,Format,Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] EBook eBook)
+        public async Task<IActionResult> Create([Bind("MemorySize,Format,Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] EBookDTO eBook)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(eBook);
-                await _context.SaveChangesAsync();
+                await _facade.Create(eBook);
                 return RedirectToAction(nameof(Index));
             }
             return View(eBook);
@@ -73,7 +73,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _context.EBookTemplates.FindAsync(id);
+            var eBook = await _facade.Get((int)id);
             if (eBook == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MemorySize,Format,Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] EBook eBook)
+        public async Task<IActionResult> Edit(int id, [Bind("MemorySize,Format,Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] EBookDTO eBook)
         {
             if (id != eBook.Id)
             {
@@ -97,8 +97,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(eBook);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(eBook);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _context.EBookTemplates
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var eBook = await _facade.Get((int)id);
             if (eBook == null)
             {
                 return NotFound();
@@ -139,15 +137,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var eBook = await _context.EBookTemplates.FindAsync(id);
-            _context.EBookTemplates.Remove(eBook);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool EBookExists(int id)
         {
-            return _context.EBookTemplates.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }

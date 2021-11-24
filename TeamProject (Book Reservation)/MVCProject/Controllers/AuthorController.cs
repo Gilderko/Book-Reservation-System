@@ -35,7 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var author = _facade.Get((int)id);
+            var author = await _facade.Get((int)id);
             if (author == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _facade.Create(author);
+                await _facade.Create(author);
                 return RedirectToAction(nameof(Index));
             }
             return View(author);
@@ -73,7 +73,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var author = _facade.Get((int)id);
+            var author = await _facade.Get((int)id);
             if (author == null)
             {
                 return NotFound();
@@ -97,7 +97,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _facade.Update(author);
+                    await _facade.Update(author);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,7 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var author = _facade.Get((int)id);
+            var author = await _facade.Get((int)id);
             if (author == null)
             {
                 return NotFound();
@@ -137,7 +137,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _facade.Delete(id);
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 

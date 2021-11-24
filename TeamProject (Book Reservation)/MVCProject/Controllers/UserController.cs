@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.User;
 
 namespace MVCProject.Controllers
 {
     public class UserController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly UserFacade _facade;
 
-        public UserController(BookRentalDbContext context)
+        public UserController(UserFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return View();
         }
 
         // GET: User/Details/5
@@ -33,8 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _facade.Get((int)id);
             if (user == null)
             {
                 return NotFound();
@@ -54,12 +55,11 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Surname,Email,HashedPassword,IsAdmin,Id")] User user)
+        public async Task<IActionResult> Create([Bind("Name,Surname,Email,HashedPassword,IsAdmin,Id")] UserDTO user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                await _facade.Create(user);
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -73,7 +73,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _facade.Get((int)id);
             if (user == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Surname,Email,HashedPassword,IsAdmin,Id")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Surname,Email,HashedPassword,IsAdmin,Id")] UserDTO user)
         {
             if (id != user.Id)
             {
@@ -97,8 +97,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _facade.Get((int)id);
             if (user == null)
             {
                 return NotFound();
@@ -139,15 +137,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }

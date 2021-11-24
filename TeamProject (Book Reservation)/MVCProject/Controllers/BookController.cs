@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Entities;
+using BL.Facades;
+using BL.DTOs.Entities.Book;
 
 namespace MVCProject.Controllers
 {
     public class BookController : Controller
     {
-        private readonly BookRentalDbContext _context;
+        private readonly BookFacade _facade;
 
-        public BookController(BookRentalDbContext context)
+        public BookController(BookFacade facade)
         {
-            _context = context;
+            _facade = facade;
         }
 
         // GET: Book
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Books.ToListAsync());
+            return View();
         }
 
         // GET: Book/Details/5
@@ -33,8 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _facade.Get((int)id);
             if (book == null)
             {
                 return NotFound();
@@ -54,12 +55,11 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] Book book)
+        public async Task<IActionResult> Create([Bind("Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] BookDTO book)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(book);
-                await _context.SaveChangesAsync();
+                await _facade.Create(book);
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
@@ -73,7 +73,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books.FindAsync(id);
+            var book = await _facade.Get((int)id);
             if (book == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] BookDTO book)
         {
             if (id != book.Id)
             {
@@ -97,8 +97,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _context.Update(book);
-                    await _context.SaveChangesAsync();
+                    await _facade.Update(book);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _facade.Get((int)id);
             if (book == null)
             {
                 return NotFound();
@@ -139,15 +137,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
+            await _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookExists(int id)
         {
-            return _context.Books.Any(e => e.Id == id);
+            return _facade.Get(id) != null;
         }
     }
 }
