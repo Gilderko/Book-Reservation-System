@@ -55,6 +55,7 @@ namespace BL.Config
             config.CreateMap<EReader, EReaderPrevDTO>().ReverseMap();
             config.CreateMap<Reservation, ReservationPrevDTO>().ReverseMap();
             config.CreateMap<User, UserPrevDTO>().ReverseMap();
+            config.CreateMap<UserDTO, UserPrevDTO>().ReverseMap();
             config.CreateMap<EBook, EBookPrevDTO>().ReverseMap();
             config.CreateMap<EReaderInstance, EReaderInstancePrevDTO>();
             config.CreateMap<ReservationDTO, ReservationPrevDTO>();

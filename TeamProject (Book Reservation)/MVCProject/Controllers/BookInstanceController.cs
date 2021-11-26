@@ -23,7 +23,7 @@ namespace MVCProject.Controllers
 
         // GET: BookInstance
         public async Task<IActionResult> Index()
-        {
+        {            
             return View();
         }
 
@@ -35,7 +35,40 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _facade.Get((int)id);
+            var references = new string[]
+            {
+                nameof(BookInstanceDTO.Owner),
+                nameof(BookInstanceDTO.FromBookTemplate)
+            };
+
+            var bookInstance = await _facade.Get((int)id,references);
+            if (bookInstance == null)
+            {
+                return NotFound();
+            }
+
+            return View(bookInstance);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Details(int? id, DateTime? StartDate, DateTime? EndDate)
+        {
+            if (id == null || StartDate == null || EndDate == null)
+            {
+                return NotFound();
+            }
+
+            var references = new string[]
+            {
+                nameof(BookInstanceDTO.Owner),
+                nameof(BookInstanceDTO.FromBookTemplate)
+            };
+
+            var bookInstance = await _facade.Get((int)id, references);
+            var resultQuery = await _facade.GetBookReservationPrevsByUser(id.Value, StartDate.Value, EndDate.Value);
+
+            ViewData.Add("queryResult", resultQuery);
+
             if (bookInstance == null)
             {
                 return NotFound();

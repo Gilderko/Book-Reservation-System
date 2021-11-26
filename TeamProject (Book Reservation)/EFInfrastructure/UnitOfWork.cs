@@ -11,7 +11,6 @@ namespace EFInfrastructure
 
         public UnitOfWork(BookRentalDbContext dbContextInit)
         {
-            Console.WriteLine("creating Unit of work");
             Context = dbContextInit;
         }
 

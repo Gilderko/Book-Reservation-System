@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.Reservation;
+using BL.DTOs.Entities.User;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
@@ -13,14 +14,17 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private ICRUDService<BookInstanceDTO,BookInstance> _service;
+        private ICRUDService<UserPrevDTO, User> _userPrevService;
         private IReservationService _reservationService;
 
         public BookInstanceFacade(IUnitOfWork unitOfWork,
                                   ICRUDService<BookInstanceDTO, BookInstance> service,
+                                  ICRUDService<UserPrevDTO, User> userPrevService,
                                   IReservationService reservationService)
         {
             _unitOfWork = unitOfWork;
             _service = service;
+            _userPrevService = userPrevService;
             _reservationService = reservationService;
         }
         
@@ -49,7 +53,15 @@ namespace BL.Facades
 
         public async Task<IEnumerable<ReservationPrevDTO>> GetBookReservationPrevsByUser(int bookInstanceId, DateTime from, DateTime to)
         {
-           return await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to);
+            var reservationPreviews = await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to);
+            
+            foreach (var reservationPrev in reservationPreviews)
+            {
+                var userPrev = await _userPrevService.GetByID(reservationPrev.Id);
+                reservationPrev.User = userPrev;
+            }
+
+            return reservationPreviews;
         }
 
         public void Dispose()
