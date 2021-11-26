@@ -7,7 +7,6 @@
 <h1>My Account</h1>
 
 <div>
-    <h4>User</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -31,5 +30,9 @@
     </dl>
 </div>
 <div>
-    <a asp-action="AccountEdit">Edit</a>
+    <input type="button" class="btn btn-primary" value="Edit" onclick="location.href='@Url.Action("AccountEdit")'" />
+    <input type="button" class="btn btn-primary" value="My collections" onclick="location.href='@Url.Action("UserCollections", "BookCollection")'" />
+    <input type="button" class="btn btn-primary" value="My books" onclick="location.href='@Url.Action("UserBookInstances", "BookInstance")'" />
+    <input type="button" class="btn btn-primary" value="My e-readers" onclick="location.href='@Url.Action("UserCollections", "BookCollection")'" />
+    <input type="button" class="btn btn-primary" value="My reservations" onclick="location.href='@Url.Action("UserCollections", "BookCollection")'" />
 </div>

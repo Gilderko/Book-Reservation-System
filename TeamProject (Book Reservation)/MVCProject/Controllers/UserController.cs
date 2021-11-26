@@ -100,7 +100,7 @@ namespace MVCProject.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var user = await _userFacade.Get((int)id);
+            var user = await _userFacade.GetEditDTO((int)id);
             if (user == null)
             {
                 return NotFound();
@@ -111,25 +111,15 @@ namespace MVCProject.Controllers
         // POST: User/MyAccount/AccountEdit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AccountEdit([Bind("Name,Surname,Email,HashedPassword,IsAdmin,Id")] UserDTO user)
+        public IActionResult AccountEdit([Bind("Name,Surname,Email,Password,Id")] UserEditDTO user)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _userFacade.Update(user);
+                    _userFacade.UpdateCredentials(user);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
                 catch (ArgumentException)
                 {
                     ModelState.AddModelError("Email", "Account with that email already exists!");

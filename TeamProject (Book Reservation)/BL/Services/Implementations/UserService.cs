@@ -16,13 +16,16 @@ namespace BL.Services.Implementations
     public class UserService : CRUDService<UserDTO, User>, IUserService
     {
         private QueryObject<UserShowDTO, User> _resQueryObject;
+        private QueryObject<UserEditDTO, User> _resEditQueryObject;
         private const int PBKDF2IterCount = 100000;
         private const int PBKDF2SubkeyLength = 160 / 8;
         private const int saltSize = 128 / 8;
         
-        public UserService(IRepository<User> repo, IMapper mapper, QueryObject<UserShowDTO, User> query) : base (repo, mapper)
+        public UserService(IRepository<User> repo, IMapper mapper, QueryObject<UserShowDTO, User> query, 
+            QueryObject<UserEditDTO, User> queryEdit) : base (repo, mapper)
         {
             _resQueryObject = query;
+            _resEditQueryObject = queryEdit;
         }
 
         public async Task<UserShowDTO> GetUserShowDtoByEmailAsync(string email)
@@ -70,6 +73,34 @@ namespace BL.Services.Implementations
             Mapper.Map(user, userDto);
             
             await Insert(userDto);
+        }
+
+        public async Task<UserEditDTO> GetEditDTO(int id)
+        {
+            FilterDto filter = new FilterDto()
+            {
+                Predicate = new PredicateDto(nameof(User.Id), id, ValueComparingOperator.Equal)
+            };
+
+            var result = await _resEditQueryObject.ExecuteQuery(filter);
+
+            if (result.TotalItemsCount > 0)
+            {
+                return result.Items.ToArray()[0];
+            }
+
+            return null;
+        }
+
+        public void UpdateCredentials(UserEditDTO userEdit)
+        {
+            var (hash, salt) = CreateHash(userEdit.Password);
+            userEdit.HashedPassword = string.Join(',', hash, salt);
+
+            UserDTO userDto = new UserDTO();
+            Mapper.Map(userEdit, userDto);
+
+            Update(userDto);
         }
 
         private (string, string) GetPassAndSalt(string passwordHash)

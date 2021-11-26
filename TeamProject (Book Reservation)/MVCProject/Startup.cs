@@ -33,7 +33,6 @@ namespace MVCProject
 
             services.AddTransient<AuthorFacade>(services => services.GetService<IContainer>().Resolve<AuthorFacade>());
             services.AddTransient<BookCollectionFacade>(services => services.GetService<IContainer>().Resolve<BookCollectionFacade>());
-            services.AddTransient<BookCollectionPreviewsFacade>(services => services.GetService<IContainer>().Resolve<BookCollectionPreviewsFacade>());
             services.AddTransient<BookFacade>(services => services.GetService<IContainer>().Resolve<BookFacade>());
             services.AddTransient<BookInstanceFacade>(services => services.GetService<IContainer>().Resolve<BookInstanceFacade>());
             services.AddTransient<EBookFacade>(services => services.GetService<IContainer>().Resolve<EBookFacade>());

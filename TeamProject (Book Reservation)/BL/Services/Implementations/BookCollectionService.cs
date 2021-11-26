@@ -8,31 +8,39 @@ using System.Collections.Generic;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.User;
 using System.Threading.Tasks;
+using BL.DTOs.Entities.Book;
+using System;
 
 namespace BL.Services.Implementations
 {
-    public class BookCollectionPreviewService : CRUDService<BookCollectionPrevDTO, BookCollection>, 
-        IBookCollectionPreviewService
+    public class BookCollectionService : CRUDService<BookCollectionDTO, BookCollection>, IBookCollectionService
     {
         private readonly QueryObject<BookCollectionPrevDTO, BookCollection> _queryObject;
 
-        public BookCollectionPreviewService(IRepository<BookCollection> repo, 
+        public BookCollectionService(IRepository<BookCollection> repo, 
                                             IMapper mapper, 
                                             QueryObject<BookCollectionPrevDTO, BookCollection> queryObject) : base(repo, mapper)
         {
             _queryObject = queryObject;
         }
 
-        public async Task<IEnumerable<BookCollectionPrevDTO>> GetBookCollectionsByUser(UserDTO user, int pageNumber = 1, int pageSize = 20)
+        public async Task<IEnumerable<BookCollectionPrevDTO>> GetBookCollectionPrevsByUser(int userId)
         {
             FilterDto filter = new FilterDto()
             {
-                Predicate = new PredicateDto(nameof(BookCollectionDTO.UserId), user.Id, ValueComparingOperator.Equal),
-                RequestedPageNumber = pageNumber,
-                PageSize = pageSize
+                Predicate = new PredicateDto(nameof(BookCollectionDTO.UserId), userId, ValueComparingOperator.Equal)
             };
 
             return (await _queryObject.ExecuteQuery(filter)).Items;
+        }
+
+        public async Task CreateUserCollection(BookCollectionCreateDTO bookCollection, int userId)
+        {
+            bookCollection.CreationDate = DateTime.Now;
+            bookCollection.UserId = userId;
+
+            BookCollectionDTO fullBookCollection = Mapper.Map<BookCollectionDTO>(bookCollection);
+            await Insert(fullBookCollection);
         }
     }
 }

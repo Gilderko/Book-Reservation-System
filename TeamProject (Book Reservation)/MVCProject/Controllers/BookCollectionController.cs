@@ -14,17 +14,34 @@ namespace MVCProject.Controllers
 {
     public class BookCollectionController : Controller
     {
-        private readonly BookCollectionFacade _facade;
+        private readonly BookCollectionFacade _bookCollectionFacade;
 
         public BookCollectionController(BookCollectionFacade facade)
         {
-            _facade = facade;
+            _bookCollectionFacade = facade;
         }
 
         // GET: BookCollection
         public async Task<IActionResult> Index()
         {
             return View();
+        }
+
+        // GET: BookCollection/UserCollections
+        public async Task<IActionResult> UserCollections()
+        {
+            int id;
+
+            if (User.Identity.Name is not null)
+            {
+                id = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(await _bookCollectionFacade.GetBookCollectionPrevsByUser(id));
         }
 
         // GET: BookCollection/Details/5
@@ -35,12 +52,41 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _facade.Get((int)id);
+            var bookCollection = await _bookCollectionFacade.Get((int)id);
             if (bookCollection == null)
             {
                 return NotFound();
             }
 
+            return View(bookCollection);
+        }
+
+        // GET: BookCollection/UserCreateCollection
+        public IActionResult UserCreateCollection()
+        {
+            return View();
+        }
+
+        // POST: BookCollection/UserCreateCollection
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserCreateCollection([Bind("Title,Description")] BookCollectionCreateDTO bookCollection)
+        {
+            if (ModelState.IsValid)
+            {
+                int userId;
+                if (User.Identity.Name is not null)
+                {
+                    userId = int.Parse(User.Identity.Name);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                await _bookCollectionFacade.CreateUserCollection(bookCollection, userId);
+                return RedirectToAction(nameof(UserCollections));
+            }
             return View(bookCollection);
         }
 
@@ -59,7 +105,7 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _facade.Create(bookCollection);
+                await _bookCollectionFacade.Create(bookCollection);
                 return RedirectToAction(nameof(Index));
             }
             return View(bookCollection);
@@ -73,7 +119,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _facade.Get((int)id);
+            var bookCollection = await _bookCollectionFacade.Get((int)id);
             if (bookCollection == null)
             {
                 return NotFound();
@@ -97,7 +143,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _facade.Update(bookCollection);
+                    _bookCollectionFacade.Update(bookCollection);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,7 +169,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _facade.Get((int)id);
+            var bookCollection = await _bookCollectionFacade.Get((int)id);
             if (bookCollection == null)
             {
                 return NotFound();
@@ -137,13 +183,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            _facade.Delete(id);
+            _bookCollectionFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> BookCollectionExists(int id)
         {
-            var bookCollection = await _facade.Get(id);
+            var bookCollection = await _bookCollectionFacade.Get(id);
             return bookCollection != null;
         }
     }

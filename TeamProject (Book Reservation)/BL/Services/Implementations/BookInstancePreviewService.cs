@@ -28,13 +28,18 @@ namespace BL.Services.Implementations
             _queryObject = queryObject;
         }
 
-        public async Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(UserDTO user, int pageNumber = 1, int pageSize = 20)
+        public async Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(int userId)
         {
+            string[] referencesToLoad = new[]
+            {
+                nameof(BookInstance.FromBookTemplate)
+            };
+
+            _queryObject.LoadExplicitReferences(x => referencesToLoad);
+
             FilterDto filter = new FilterDto()
             {
-                Predicate = new PredicateDto(nameof(BookInstance.BookOwnerId), user.Id, ValueComparingOperator.Equal),
-                RequestedPageNumber = pageNumber,
-                PageSize = pageSize
+                Predicate = new PredicateDto(nameof(BookInstance.BookOwnerId), userId, ValueComparingOperator.Equal),
             };
 
             return (await _queryObject.ExecuteQuery(filter)).Items;

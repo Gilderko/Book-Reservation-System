@@ -14,17 +14,32 @@ namespace MVCProject.Controllers
 {
     public class BookInstanceController : Controller
     {
-        private readonly BookInstanceFacade _facade;
+        private readonly BookInstanceFacade _bookInstanceFacade;
 
         public BookInstanceController(BookInstanceFacade facade)
         {
-            _facade = facade;
+            _bookInstanceFacade = facade;
         }
 
         // GET: BookInstance
         public async Task<IActionResult> Index()
         {
             return View();
+        }
+
+        // GET: UserBookInstances
+        public async Task<IActionResult> UserBookInstances()
+        {
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View(await _bookInstanceFacade.GetBookInstancePrevsByUser(userId));
         }
 
         // GET: BookInstance/Details/5
@@ -35,7 +50,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _facade.Get((int)id);
+            var bookInstance = await _bookInstanceFacade.Get((int)id);
             if (bookInstance == null)
             {
                 return NotFound();
@@ -59,7 +74,7 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _facade.Create(bookInstance);
+                await _bookInstanceFacade.Create(bookInstance);
                 return RedirectToAction(nameof(Index));
             }
             return View(bookInstance);
@@ -73,7 +88,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _facade.Get((int)id);
+            var bookInstance = await _bookInstanceFacade.Get((int)id);
             if (bookInstance == null)
             {
                 return NotFound();
@@ -97,7 +112,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _facade.Update(bookInstance);
+                    _bookInstanceFacade.Update(bookInstance);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,7 +138,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _facade.Get((int)id);
+            var bookInstance = await _bookInstanceFacade.Get((int)id);
             if (bookInstance == null)
             {
                 return NotFound();
@@ -137,13 +152,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            _facade.Delete(id);
+            _bookInstanceFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> BookInstanceExists(int id)
         {
-            var bookInstance = await _facade.Get(id);
+            var bookInstance = await _bookInstanceFacade.Get(id);
             return bookInstance != null;
         }
     }

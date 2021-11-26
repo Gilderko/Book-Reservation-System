@@ -28,6 +28,8 @@ namespace BL.Config
 
             config.CreateMap<Author, AuthorDTO>().ReverseMap();
             config.CreateMap<BookCollection, BookCollectionDTO>().ReverseMap();
+            config.CreateMap<BookCollection, BookCollectionCreateDTO>().ReverseMap();
+            config.CreateMap<BookCollectionDTO, BookCollectionCreateDTO>().ReverseMap();
             config.CreateMap<Book, BookDTO>().ReverseMap();
             config.CreateMap<BookInstance, BookInstanceDTO>().ReverseMap();
             config.CreateMap<EBook, EBookDTO>().ReverseMap();
@@ -40,6 +42,7 @@ namespace BL.Config
             config.CreateMap<User, UserLoginDTO>().ReverseMap();
             config.CreateMap<User, UserCreateDTO>().ReverseMap();
             config.CreateMap<UserDTO, UserCreateDTO>().ReverseMap();
+            config.CreateMap<UserDTO, UserEditDTO>().ReverseMap();
             config.CreateMap<User, UserShowDTO>().ReverseMap();
             config.CreateMap<User, UserEditDTO>().ReverseMap();
 

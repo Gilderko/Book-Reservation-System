@@ -60,6 +60,17 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
+        public async Task<UserEditDTO> GetEditDTO(int id)
+        {
+            return await _userService.GetEditDTO(id);
+        }
+
+        public void UpdateCredentials(UserEditDTO userEdit)
+        {
+            _userService.UpdateCredentials(userEdit);
+            _unitOfWork.Commit();
+        }
+
         public async Task AddBookCollection(int authorId, BookCollectionDTO bookCollection)
         {
             bookCollection.UserId = authorId;

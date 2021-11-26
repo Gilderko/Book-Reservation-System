@@ -51,7 +51,9 @@ namespace EFInfrastructure
 
             Task.WaitAll(loadingTasks.ToArray());
 
-            return await dbSet.FindAsync(id);
+            var result = await dbSet.FindAsync(id);
+            dbContext.Entry(result).State = EntityState.Detached;
+            return result;
         }
 
         public async Task Insert(TEntity entity)
@@ -76,7 +78,10 @@ namespace EFInfrastructure
 
         public void Update(TEntity entityToUpdate)
         {
-            dbSet.Attach(entityToUpdate);
+            if (dbContext.Entry(entityToUpdate).State == EntityState.Detached)
+            {
+                dbSet.Attach(entityToUpdate);
+            }
             dbContext.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }

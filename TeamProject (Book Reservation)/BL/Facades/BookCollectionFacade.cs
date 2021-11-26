@@ -2,9 +2,9 @@
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookCollection;
 using BL.Services;
-using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BL.Facades
@@ -12,11 +12,11 @@ namespace BL.Facades
     public class BookCollectionFacade
     {
         private IUnitOfWork _unitOfWork;
-        private ICRUDService<BookCollectionDTO, BookCollection> _bookCollectionService;
+        private IBookCollectionService _bookCollectionService;
         private ICRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
 
         public BookCollectionFacade(IUnitOfWork unitOfWork,
-                                    ICRUDService<BookCollectionDTO, BookCollection> bookCollectionService,
+                                    IBookCollectionService bookCollectionService,
                                     ICRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
         {
             _unitOfWork = unitOfWork;
@@ -47,6 +47,11 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
+        public async Task<IEnumerable<BookCollectionPrevDTO>> GetBookCollectionPrevsByUser(int id)
+        {
+            return await _bookCollectionService.GetBookCollectionPrevsByUser(id);
+        }
+
         public async Task AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
         {
             await _bookCollectionBookService.Insert(new BookCollectionBookDTO
@@ -70,6 +75,12 @@ namespace BL.Facades
                 Book = book,
                 BookID = book.Id
             });
+            _unitOfWork.Commit();
+        }
+
+        public async Task CreateUserCollection(BookCollectionCreateDTO bookCollection, int userId)
+        {
+            await _bookCollectionService.CreateUserCollection(bookCollection, userId);
             _unitOfWork.Commit();
         }
 

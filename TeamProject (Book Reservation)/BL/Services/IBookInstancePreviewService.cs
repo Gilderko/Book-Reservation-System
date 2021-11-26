@@ -11,8 +11,7 @@ namespace BL.Services
     public interface IBookInstancePreviewService : ICRUDService<BookInstancePrevDTO, BookInstance>
     {
 
-        public Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(UserDTO user, int pageNumber = 1,
-            int pageSize = 20);
+        public Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(int userId);
 
         public Task<IEnumerable<BookInstancePrevDTO>> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from, DateTime to,
             int pageNumber = 1, int pageSize = 20);
