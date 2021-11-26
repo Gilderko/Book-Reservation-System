@@ -44,22 +44,6 @@ namespace MVCProject.StateManager
         }
 
         /// <summary>
-        /// Reads and destroys the value unless saving was called before
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public object ReadAndDestroy(Controller controller, TempDataKeys key)
-        {
-            return controller.TempData[key.ToString()];
-        }
-
-        public object ReadAndDestroy(ITempDataDictionary tempData, TempDataKeys key)
-        {
-            return tempData[key.ToString()];
-        }
-
-        /// <summary>
         /// Peeks at the value and doesnt destroy it immidiately even if the save wasnt called
         /// </summary>
         /// <param name="controller"></param>
