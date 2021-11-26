@@ -38,9 +38,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<UserDTO> Get(int id)
+        public async Task<UserDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _userService.GetByID(id);
+            return await _userService.GetByID(id, refsToLoad, collectToLoad);
         }
 
         public async Task Update(UserDTO user)

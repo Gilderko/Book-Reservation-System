@@ -15,6 +15,7 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private ICRUDService<BookInstanceDTO,BookInstance> _service;
+        private ICRUDService<UserPrevDTO, User> _userPrevService;
         private IReservationService _reservationService;
         private IBookInstancePreviewService _bookInstancePreviewService;
 
@@ -25,6 +26,7 @@ namespace BL.Facades
         {
             _unitOfWork = unitOfWork;
             _service = service;
+            _userPrevService = userPrevService;
             _reservationService = reservationService;
             _bookInstancePreviewService = bookInstancePreviewService;
         }
@@ -35,9 +37,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<BookInstanceDTO> Get(int id)
+        public async Task<BookInstanceDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _service.GetByID(id);
+            return await _service.GetByID(id, refsToLoad, collectToLoad);
         }
 
         public void Update(BookInstanceDTO bookInstance)
@@ -54,7 +56,15 @@ namespace BL.Facades
 
         public async Task<IEnumerable<ReservationPrevDTO>> GetBookReservationPrevsByUser(int bookInstanceId, DateTime from, DateTime to)
         {
-           return await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to);
+            var reservationPreviews = await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to);
+            
+            foreach (var reservationPrev in reservationPreviews)
+            {
+                var userPrev = await _userPrevService.GetByID(reservationPrev.Id);
+                reservationPrev.User = userPrev;
+            }
+
+            return reservationPreviews;
         }
 
         public async Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(int userId)

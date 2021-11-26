@@ -26,9 +26,9 @@ namespace BL.Facades
             await _service.Insert(reservation);
         }
 
-        public async Task<ReservationDTO> Get(int id)
+        public async Task<ReservationDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _service.GetByID(id);
+            return await _service.GetByID(id, refsToLoad, collectToLoad);
         }
 
         public void Update(ReservationDTO reservation)

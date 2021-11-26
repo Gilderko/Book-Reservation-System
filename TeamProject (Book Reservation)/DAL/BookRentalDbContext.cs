@@ -45,6 +45,8 @@ namespace DAL
         {
             optionsBuilder.UseSqlServer(ConnectionString);
 
+            optionsBuilder.EnableSensitiveDataLogging();
+
             base.OnConfiguring(optionsBuilder);
         }
 

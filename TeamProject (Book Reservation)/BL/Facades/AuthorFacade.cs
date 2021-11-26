@@ -1,4 +1,5 @@
-﻿using BL.DTOs.ConnectionTables;
+﻿using Autofac.Features.OwnedInstances;
+using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using BL.Services;
@@ -17,7 +18,7 @@ namespace BL.Facades
 
         public AuthorFacade(IUnitOfWork unitOfWork,
                             ICRUDService<AuthorDTO, Author> authorService,
-                            ICRUDService<AuthorBookDTO, AuthorBook> authorBookService)
+                            ICRUDService<AuthorBookDTO, AuthorBook> authorBookService) 
         {
             _unitOfWork = unitOfWork;
             _authorService = authorService;
@@ -30,9 +31,10 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<AuthorDTO> Get(int id)
+        public async Task<AuthorDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _authorService.GetByID(id);
+            var result = await _authorService.GetByID(id, refsToLoad, collectToLoad);
+            return result;
         }
 
         public void Update(AuthorDTO author)
@@ -59,11 +61,6 @@ namespace BL.Facades
                 BookID = book.Id
             });
             _unitOfWork.Commit();
-        }
-
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
         }
     }
 }

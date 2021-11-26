@@ -74,7 +74,7 @@ namespace BL.Services.Implementations
         {
             string[] referencesToLoad = new[]
             {
-                nameof(Reservation)
+                nameof(ReservationBookInstanceDTO.Reservation)
             };
                 
             _reservationBookInstanceQueryObject.LoadExplicitReferences(instance => referencesToLoad);
@@ -89,10 +89,11 @@ namespace BL.Services.Implementations
             var result = (await _reservationBookInstanceQueryObject.ExecuteQuery(filter)).Items;
             
             // Filter by date
-            var reservations = result.
-                Where(x => x.Reservation.DateFrom >= from && x.Reservation.DateTill <= to);
+            var reservations = result
+                .Where(x => x.Reservation.DateFrom >= from && x.Reservation.DateTill <= to)
+                .Select(x => Mapper.Map<ReservationDTO, ReservationPrevDTO>(x.Reservation));
             
-            return reservations.Select(x => Mapper.Map<ReservationDTO, ReservationPrevDTO>(x.Reservation)).ToList();
+            return reservations.ToList();
         }
     }
 }

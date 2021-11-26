@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MVCProject.StateManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,21 +30,20 @@ namespace MVCProject
         {
             services.AddControllersWithViews();
 
-            services.AddSingleton<IContainer>(services => AutofacBLConfig.Configure());
-
-            services.AddTransient<AuthorFacade>(services => services.GetService<IContainer>().Resolve<AuthorFacade>());
-            services.AddTransient<BookCollectionFacade>(services => services.GetService<IContainer>().Resolve<BookCollectionFacade>());
-            services.AddTransient<BookFacade>(services => services.GetService<IContainer>().Resolve<BookFacade>());
-            services.AddTransient<BookInstanceFacade>(services => services.GetService<IContainer>().Resolve<BookInstanceFacade>());
-            services.AddTransient<EBookFacade>(services => services.GetService<IContainer>().Resolve<EBookFacade>());
-            services.AddTransient<EBookPreviewFacade>(services => services.GetService<IContainer>().Resolve<EBookPreviewFacade>());
-            services.AddTransient<EReaderFacade>(services => services.GetService<IContainer>().Resolve<EReaderFacade>());
-            services.AddTransient<EReaderFacade>(services => services.GetService<IContainer>().Resolve<EReaderFacade>());
-            services.AddTransient<EReaderInstanceFacade>(services => services.GetService<IContainer>().Resolve<EReaderInstanceFacade>());
-            services.AddTransient<EReaderInstancePreviewFacade>(services => services.GetService<IContainer>().Resolve<EReaderInstancePreviewFacade>());
-            services.AddTransient<ReservationFacade>(services => services.GetService<IContainer>().Resolve<ReservationFacade>());
-            services.AddTransient<ReviewFacade>(services => services.GetService<IContainer>().Resolve<ReviewFacade>());
-            services.AddTransient<UserFacade>(services => services.GetService<IContainer>().Resolve<UserFacade>());
+            services.AddTransient<AuthorFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<AuthorFacade>());
+            services.AddTransient<BookCollectionFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookCollectionFacade>());
+            services.AddTransient<BookCollectionPreviewsFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookCollectionPreviewsFacade>());
+            services.AddTransient<BookFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookFacade>());
+            services.AddTransient<BookInstanceFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookInstanceFacade>());
+            services.AddTransient<EBookFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EBookFacade>());
+            services.AddTransient<EBookPreviewFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EBookPreviewFacade>());
+            services.AddTransient<EReaderFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderFacade>());
+            services.AddTransient<EReaderFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderFacade>());
+            services.AddTransient<EReaderInstanceFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderInstanceFacade>());
+            services.AddTransient<EReaderInstancePreviewFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderInstancePreviewFacade>());
+            services.AddTransient<ReservationFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<ReservationFacade>());
+            services.AddTransient<ReviewFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<ReviewFacade>());
+            services.AddTransient<UserFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<UserFacade>());
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie();

@@ -24,9 +24,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<ReviewDTO> Get(int id)
+        public async Task<ReviewDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _service.GetByID(id);
+            return await _service.GetByID(id, refsToLoad, collectToLoad);
         }
 
         public void Update(ReviewDTO review)

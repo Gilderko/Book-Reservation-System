@@ -78,6 +78,7 @@ namespace MVCProject.Controllers
             {
                 return NotFound();
             }
+
             return View(author);
         }
 

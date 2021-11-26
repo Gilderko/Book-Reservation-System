@@ -1,4 +1,6 @@
-﻿using BL.DTOs.Entities.Reservation;
+﻿using Autofac;
+using BL.Config;
+using BL.DTOs.Entities.Reservation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -14,12 +16,16 @@ namespace MVCProject.StateManager
         // Singleton pattern 
 
         private static readonly StateKeeper instance = new StateKeeper();
+
         static StateKeeper()
         {
         }
+
         private StateKeeper()
         {
+            _container = AutofacBLConfig.Configure();
         }
+
         public static StateKeeper Instance
         {
             get
@@ -108,5 +114,28 @@ namespace MVCProject.StateManager
         {
             return currSession.Get<ReservationDTO>(_reservationKey);
         }
+
+        // LifeTimeScope
+
+        private IContainer _container = null;
+
+        private ILifetimeScope _currentScope = null;
+
+        public ILifetimeScope GetNewScope()
+        {
+            if (_currentScope == null)
+            {
+                _currentScope = _container.BeginLifetimeScope();
+            }
+            else
+            {
+                _currentScope.Dispose();
+                _currentScope = _container.BeginLifetimeScope();
+            }
+
+            return _currentScope;
+        }
+
+        // LifeTimeScope
     }
 }
