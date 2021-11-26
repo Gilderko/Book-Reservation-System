@@ -23,6 +23,12 @@ namespace BL.Services.Implementations
 
         public async Task<IEnumerable<BookPrevDTO>> GetBookPreviewsByFilter(FilterDto filter)
         {
+            string[] collectionsToLoad = new string[]
+            {
+                nameof(Book.Authors)
+            };
+
+            _resQueryObject.LoadExplicitCollections(x => collectionsToLoad);
             return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
     }

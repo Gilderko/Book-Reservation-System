@@ -20,6 +20,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 
@@ -73,7 +74,7 @@ namespace MoqTest
             Assert.True(mock.Mock<IRepository<Reservation>>().Invocations.Count == 0 &&
                 mock.Mock<IRepository<BookInstance>>().Invocations.Count == 0);
 
-            Assert.True(result.Count() == GetValidCount(GetTestEntries().Items, dateFrom, dateTill));
+            Assert.True(result.Result.Count() == GetValidCount(GetTestEntries().Result.Items, dateFrom, dateTill));
         }
 
         private int GetValidCount(IEnumerable<ReservationBookInstance> data, DateTime from, DateTime till)
@@ -82,7 +83,7 @@ namespace MoqTest
             return count;
         }
 
-        private QueryResult<ReservationBookInstance> GetTestEntries()
+        private async Task<QueryResult<ReservationBookInstance>> GetTestEntries()
         {
             var result = new QueryResult<ReservationBookInstance>();
 

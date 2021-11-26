@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(BookRentalDbContext))]
-    [Migration("20211124102700_Initial")]
+    [Migration("20211125221021_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1136,7 +1136,7 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.EReaderInstance", "EReader")
+                    b.HasOne("DAL.Entities.EReaderInstance", "EReaderInstance")
                         .WithMany("BooksIncluded")
                         .HasForeignKey("EReaderInstanceID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1144,7 +1144,7 @@ namespace DAL.Migrations
 
                     b.Navigation("EBook");
 
-                    b.Navigation("EReader");
+                    b.Navigation("EReaderInstance");
                 });
 
             modelBuilder.Entity("DAL.Entities.ConnectionTables.ReservationBookInstance", b =>

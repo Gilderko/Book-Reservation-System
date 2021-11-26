@@ -1134,7 +1134,7 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.EReaderInstance", "EReader")
+                    b.HasOne("DAL.Entities.EReaderInstance", "EReaderInstance")
                         .WithMany("BooksIncluded")
                         .HasForeignKey("EReaderInstanceID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1142,7 +1142,7 @@ namespace DAL.Migrations
 
                     b.Navigation("EBook");
 
-                    b.Navigation("EReader");
+                    b.Navigation("EReaderInstance");
                 });
 
             modelBuilder.Entity("DAL.Entities.ConnectionTables.ReservationBookInstance", b =>

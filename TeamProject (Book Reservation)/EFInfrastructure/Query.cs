@@ -7,6 +7,7 @@ using Infrastructure.Query.Predicates;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,7 +62,10 @@ namespace EFInfrastructure
                     {
                         cmpValFormat = $"'%{simplePred.ComparedValue}%'";
                     }
-                    
+                    else
+                    {
+                        cmpValFormat = $"'{simplePred.ComparedValue}'";
+                    }
                 }
                 else if (simplePred.ComparedValue is IEnumerable<int>)
                 {
@@ -151,22 +155,19 @@ namespace EFInfrastructure
 
             var entities = await DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).ToListAsync();
 
-            List<Task> loadingTasks = new List<Task>();
 
             foreach (var entry in entities)
             {
                 foreach (string refToLoad in _refsToLoad)
                 {
-                    loadingTasks.Add(DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).LoadAsync());
+                    await DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).LoadAsync();
                 }
 
                 foreach (string collectToLoad in _collectionsToLoad)
                 {
-                    loadingTasks.Add(DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).LoadAsync());
+                    await DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).LoadAsync();
                 }
             }
-
-            Task.WaitAll(loadingTasks.ToArray());
 
             QueryResult<TEntity> result = new QueryResult<TEntity>
             {

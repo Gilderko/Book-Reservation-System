@@ -37,7 +37,7 @@ namespace MoqTest
             var bookInstanceRepo = mock.Mock<IRepository<BookInstance>>().Object;
             var eReaderInstanceRepo = mock.Mock<IRepository<EReaderInstance>>().Object;
 
-            var userService = new CRUDService<UserDTO, User>(userRepo, _mapper);
+            var userService = new UserService(userRepo, _mapper);
             var bookCollectionService = new CRUDService<BookCollectionDTO, BookCollection>(bookCollectionRepo, _mapper);
             var bookInstanceService = new CRUDService<BookInstanceDTO, BookInstance>(bookInstanceRepo, _mapper);
             var EReaderInstanceService = new CRUDService<EReaderInstanceDTO, EReaderInstance>(eReaderInstanceRepo, _mapper);

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
 using System.Threading.Tasks;
+using BL.DTOs.Filters;
 
 namespace BL.Facades
 {
@@ -13,12 +14,20 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private ICRUDService<BookDTO, Book> _service;
+        private IBookPreviewService _bookPrevService;
 
         public BookFacade(IUnitOfWork unitOfWork,
-                          ICRUDService<BookDTO, Book> service)
+                          ICRUDService<BookDTO, Book> service,
+                          IBookPreviewService bookPrevService)
         {
             _unitOfWork = unitOfWork;
             _service = service;
+            _bookPrevService = bookPrevService;
+        }
+
+        public async Task<IEnumerable<BookPrevDTO>> GetBookPreviews(FilterDto filter)
+        {
+            return await _bookPrevService.GetBookPreviewsByFilter(filter);
         }
 
         public async Task Create(BookDTO book)

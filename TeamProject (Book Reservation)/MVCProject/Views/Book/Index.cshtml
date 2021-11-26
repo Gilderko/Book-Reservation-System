@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DAL.Entities.Book>
+﻿@model IEnumerable<BL.DTOs.Entities.Book.BookPrevDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,16 +16,10 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Authors)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ISBN)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PageCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateOfRelease)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Language)
@@ -40,16 +34,10 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Authors)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ISBN)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PageCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfRelease)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Language)

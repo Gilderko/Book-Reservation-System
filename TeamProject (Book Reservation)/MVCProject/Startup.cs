@@ -35,7 +35,6 @@ namespace MVCProject
             services.AddTransient<BookCollectionPreviewsFacade>(services => services.GetService<IContainer>().Resolve<BookCollectionPreviewsFacade>());
             services.AddTransient<BookFacade>(services => services.GetService<IContainer>().Resolve<BookFacade>());
             services.AddTransient<BookInstanceFacade>(services => services.GetService<IContainer>().Resolve<BookInstanceFacade>());
-            services.AddTransient<BookPreviewsFacade>(services => services.GetService<IContainer>().Resolve<BookPreviewsFacade>());
             services.AddTransient<EBookFacade>(services => services.GetService<IContainer>().Resolve<EBookFacade>());
             services.AddTransient<EBookPreviewFacade>(services => services.GetService<IContainer>().Resolve<EBookPreviewFacade>());
             services.AddTransient<EReaderFacade>(services => services.GetService<IContainer>().Resolve<EReaderFacade>());

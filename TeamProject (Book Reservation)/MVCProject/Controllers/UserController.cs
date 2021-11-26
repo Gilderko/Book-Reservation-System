@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
+﻿using BL.DTOs.Entities.User;
 using BL.Facades;
-using BL.DTOs.Entities.User;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
     public class UserController : Controller
     {
-        private readonly UserFacade _facade;
+        private readonly UserFacade _userFacade;
 
         public UserController(UserFacade facade)
         {
-            _facade = facade;
+            _userFacade = facade;
         }
 
         // GET: User
@@ -35,7 +34,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _facade.Get((int)id);
+            var user = await _userFacade.Get((int)id);
             if (user == null)
             {
                 return NotFound();
@@ -59,7 +58,7 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _facade.Create(user);
+                await _userFacade.Create(user);
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -73,7 +72,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _facade.Get((int)id);
+            var user = await _userFacade.Get((int)id);
             if (user == null)
             {
                 return NotFound();
@@ -97,7 +96,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _facade.Update(user);
+                    _userFacade.Update(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,7 +122,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _facade.Get((int)id);
+            var user = await _userFacade.Get((int)id);
             if (user == null)
             {
                 return NotFound();
@@ -137,14 +136,116 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            _facade.Delete(id);
+            _userFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> UserExists(int id)
         {
-            var user = await _facade.Get(id);
+            var user = await _userFacade.Get(id);
             return user != null;
+        }
+
+        // GET: User/Register
+        [HttpGet, ActionName("Register")]
+        public IActionResult Register()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        // POST: User/Register
+        [HttpPost, ActionName("Register")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterAsync([Bind("Name,Surname,Email,Password")] UserCreateDTO user)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //Here should be a check for existing user 
+                    await _userFacade.RegisterUserAsync(user);
+
+                    return RedirectToAction("Login", "User");
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("Email", "Account with that email already exists!");
+                    return View(user);
+                }
+            }
+            return View(user);
+        }
+
+        // GET: User/Login
+        [HttpGet, ActionName("Login")]
+        public IActionResult Login()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        // GET: User/Logout
+        [HttpGet, ActionName("Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        // POST: User/Login
+        [HttpPost, ActionName("Login")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginAsync([Bind("Email,Password")] UserLoginDTO userLogin)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {     
+                    var user = await _userFacade.LoginAsync(userLogin);
+
+                    await CreateClaimsAndSignInAsync(user);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    ModelState.AddModelError("Password", "Invalid credentials combination!");
+                    return View(userLogin);
+                }
+            }
+            return View(userLogin);
+        }
+
+        private async Task CreateClaimsAndSignInAsync(UserShowDTO user)
+        {
+            var claims = new List<Claim>
+            {
+                //Set User Identity Name to actual user Id - easier access with user connected operations
+                new Claim(ClaimTypes.Name, user.Id.ToString())
+            };
+            
+            if (user.IsAdmin)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "User"));
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+            }
+            else
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "User"));
+            }
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity));
         }
     }
 }

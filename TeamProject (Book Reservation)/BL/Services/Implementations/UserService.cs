@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -19,8 +20,9 @@ namespace BL.Services.Implementations
         private const int PBKDF2SubkeyLength = 160 / 8;
         private const int saltSize = 128 / 8;
         
-        public UserService(IRepository<User> repo, IMapper mapper) : base (repo, mapper)
+        public UserService(IRepository<User> repo, IMapper mapper, QueryObject<UserShowDTO, User> query) : base (repo, mapper)
         {
+            _resQueryObject = query;
         }
 
         public async Task<UserShowDTO> GetUserShowDtoByEmailAsync(string email)
@@ -44,7 +46,7 @@ namespace BL.Services.Implementations
         {
             // get userId
             UserShowDTO userDto = await GetUserShowDtoByEmailAsync(login.Email);
-            
+
             if (userDto == null)
             {
                 return null;

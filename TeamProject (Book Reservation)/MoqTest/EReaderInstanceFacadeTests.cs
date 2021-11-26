@@ -22,6 +22,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 
@@ -74,7 +75,7 @@ namespace MoqTest
 
             Assert.True(result != null);
 
-            Assert.True(result.Count() == GetReservationEntries().Items.Count());
+            Assert.True(result.Result.Count() == GetReservationEntries().Result.Items.Count());
         }
 
         private void TestAddEBook(AutoMock mock)
@@ -147,7 +148,7 @@ namespace MoqTest
             yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst1, book4);
         }
 
-        public QueryResult<Reservation> GetReservationEntries()
+        public async Task<QueryResult<Reservation>> GetReservationEntries()
         {
             var result = new QueryResult<Reservation>();
             result.Items = new List<Reservation>()

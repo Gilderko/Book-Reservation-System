@@ -7,6 +7,7 @@ using BL.Services;
 using DAL.Entities;
 using System.Threading.Tasks;
 using Infrastructure;
+using System.IO;
 
 namespace BL.Facades
 {
@@ -85,17 +86,16 @@ namespace BL.Facades
             throw new UnauthorizedAccessException();
         }
 
-        public async Task<bool> RegisterUserAsync(UserCreateDTO user)
+        public async Task RegisterUserAsync(UserCreateDTO user)
         {
             // checks if user with this email already exists
             if (await _userService.GetUserShowDtoByEmailAsync(user.Email) != null)
             {
-                return false;
+                throw new ArgumentException("User with this email already exist!");
             }
             
             await _userService.RegisterUser(user);
             _unitOfWork.Commit();
-            return true;
         }
 
         public void Dispose()

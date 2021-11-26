@@ -40,7 +40,7 @@ namespace BL.Config
             config.CreateMap<User, UserLoginDTO>().ReverseMap();
             config.CreateMap<User, UserCreateDTO>().ReverseMap();
             config.CreateMap<UserDTO, UserCreateDTO>().ReverseMap();
-            config.CreateMap<UserDTO, UserShowDTO>().ReverseMap(); 
+            config.CreateMap<UserDTO, UserShowDTO>().ReverseMap();
 
             config.CreateMap<CompositePredicate, CompositePredicateDto>().ReverseMap();
             config.CreateMap<IPredicate, IPredicateDto>().ReverseMap();
