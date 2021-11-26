@@ -21,37 +21,25 @@ namespace EFInfrastructure
 
         public async Task<TEntity> GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null)
         {
-            Func<EBook, string[]> square = x => new string[] { nameof(x.Authors), nameof(x.Genres) };
+            TEntity loadedEntity = await dbSet.FindAsync(id);
 
-            string[] localRefsToLoad = refsToLoad;
-            string[] localCollectionsToLoad = collectionsToLoad;
-
-            if (localRefsToLoad == null)
+            if (refsToLoad != null)
             {
-                localRefsToLoad = Array.Empty<string>();
-            }
-            if (localCollectionsToLoad == null)
-            {
-                localCollectionsToLoad = Array.Empty<string>();
+                foreach (string refToLoad in refsToLoad)
+                {
+                    await dbContext.Entry<TEntity>(loadedEntity).Reference(refToLoad).LoadAsync();
+                }
             }
 
-            TEntity loadedEntity = dbSet.Find(id);
-
-            List<Task> loadingTasks = new List<Task>();
-
-            foreach (string refToLoad in localRefsToLoad)
+            if (collectionsToLoad != null)
             {
-                loadingTasks.Add(dbContext.Entry<TEntity>(loadedEntity).Reference(refToLoad).LoadAsync());
-            }
+                foreach (string collectToLoad in collectionsToLoad)
+                {
+                    await dbContext.Entry<TEntity>(loadedEntity).Collection(collectToLoad).LoadAsync();
+                }
+            }            
 
-            foreach (string collectToLoad in localCollectionsToLoad)
-            {
-                loadingTasks.Add(dbContext.Entry<TEntity>(loadedEntity).Collection(collectToLoad).LoadAsync());
-            }
-
-            Task.WaitAll(loadingTasks.ToArray());
-
-            return await dbSet.FindAsync(id);
+            return loadedEntity;
         }
 
         public async Task Insert(TEntity entity)
