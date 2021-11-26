@@ -30,9 +30,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<BookCollectionDTO> Get(int id)
+        public async Task<BookCollectionDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _bookCollectionService.GetByID(id);
+            return await _bookCollectionService.GetByID(id, refsToLoad, collectToLoad);
         }
 
         public void Update(BookCollectionDTO bookCollection)

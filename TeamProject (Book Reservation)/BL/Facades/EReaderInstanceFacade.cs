@@ -36,9 +36,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<EReaderInstanceDTO> Get(int id)
+        public async Task<EReaderInstanceDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _eReaderInstanceService.GetByID(id);
+            return await _eReaderInstanceService.GetByID(id, refsToLoad, collectToLoad);
         }
 
         public void Update(EReaderInstanceDTO eReaderInstance)

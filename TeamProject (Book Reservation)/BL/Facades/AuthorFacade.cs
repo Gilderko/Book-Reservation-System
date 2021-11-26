@@ -30,9 +30,9 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<AuthorDTO> Get(int id)
+        public async Task<AuthorDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _authorService.GetByID(id);
+            return await _authorService.GetByID(id, refsToLoad, collectToLoad);
         }
 
         public void Update(AuthorDTO author)
