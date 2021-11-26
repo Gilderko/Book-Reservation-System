@@ -1,6 +1,7 @@
 using Autofac;
 using BL.Config;
 using BL.Facades;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -45,6 +46,9 @@ namespace MVCProject
             services.AddTransient<ReviewFacade>(services => services.GetService<IContainer>().Resolve<ReviewFacade>());
             services.AddTransient<UserFacade>(services => services.GetService<IContainer>().Resolve<UserFacade>());
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie();
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(5);
@@ -74,6 +78,9 @@ namespace MVCProject
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCookiePolicy();
+            app.UseAuthentication();
+
 
             app.UseEndpoints(endpoints =>
             {

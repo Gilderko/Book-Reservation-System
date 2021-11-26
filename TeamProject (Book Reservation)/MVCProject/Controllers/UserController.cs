@@ -64,6 +64,82 @@ namespace MVCProject.Controllers
             return View(user);
         }
 
+        // GET: User/MyAccount
+        public async Task<IActionResult> MyAccount()
+        {
+            int id;
+
+            if (User.Identity.Name is not null)
+            {
+                id = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var user = await _userFacade.Get((int)id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+        // GET: User/MyAccount/AccountEdit
+        public async Task<IActionResult> AccountEdit()
+        {
+            int id;
+
+            if (User.Identity.Name is not null)
+            {
+                id = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var user = await _userFacade.Get((int)id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+        // POST: User/MyAccount/AccountEdit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AccountEdit([Bind("Name,Surname,Email,HashedPassword,IsAdmin,Id")] UserDTO user)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _userFacade.Update(user);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await UserExists(user.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    ModelState.AddModelError("Email", "Account with that email already exists!");
+                    return View(user);
+                }
+                return RedirectToAction(nameof(MyAccount));
+            }
+            return View(user);
+        }
+
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -96,7 +172,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _userFacade.Update(user);
+                    await _userFacade.Update(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

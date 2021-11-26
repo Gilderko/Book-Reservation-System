@@ -1,4 +1,5 @@
-﻿using BL.DTOs.Entities.Author;
+﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.Author;
 using DAL.Enums;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +18,6 @@ namespace BL.DTOs.Entities.Book
 
         // In map config add a custom mapping from Entity
 
-        public ICollection<AuthorPrevDTO> Authors { get; set; }
+        public ICollection<AuthorBookDTO> Authors { get; set; }
     }
 }
