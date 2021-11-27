@@ -30,17 +30,21 @@
             @Html.DisplayFor(model => model.StarsAmmount)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReserveredBook)
+            @Html.DisplayNameFor(model => model.ReservedBook)
         </dt>
-        @*<dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReserveredBook.Discriminator)
-        </dd class>*@
+       <dd class = "col-sm-10">
+           <a asp-controller="Book" asp-action="Details" asp-route-id="@Model.BookTemplateID">
+               @Html.DisplayFor(model => model.ReservedBook.Title)
+           </a>
+        </dd class>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.User)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd class>
+        <dd class="col-sm-10">
+            <a asp-controller="User" asp-action="Details" asp-route-id="@Model.UserID">
+                @Html.DisplayFor(model => model.User.Name) @Html.DisplayFor(model => model.User.Surname)
+            </a>
+        </dd>
     </dl>
     
     <form asp-action="Delete">

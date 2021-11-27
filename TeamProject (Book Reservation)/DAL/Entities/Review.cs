@@ -18,7 +18,7 @@ namespace DAL.Entities
         public int BookTemplateID { get; set; }
 
         [ForeignKey(nameof(BookTemplateID))]
-        public Book ReserveredBook { get; set; }
+        public Book ReservedBook { get; set; }
 
         public int UserID { get; set; }
 
