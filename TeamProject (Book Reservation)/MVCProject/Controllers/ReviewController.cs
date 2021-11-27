@@ -24,8 +24,6 @@ namespace MVCProject.Controllers
         // GET: Review
         public async Task<IActionResult> Index()
         {
-            /*var bookRentalDbContext = _facade.Reviews.Include(r => r.ReserveredBook).Include(r => r.User);
-            return View(await bookRentalDbContext.ToListAsync()); */
             return View();
         }
 
@@ -37,7 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var review = await _facade.Get((int)id);
+            var review = await GetWithReferences((int)id);
             if (review == null)
             {
                 return NotFound();
@@ -75,7 +73,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var review = await _facade.Get((int)id);
+            var review = await GetWithReferences((int)id);
             if (review == null)
             {
                 return NotFound();
@@ -124,8 +122,8 @@ namespace MVCProject.Controllers
             {
                 return NotFound();
             }
-
-            var review = await _facade.Get((int)id);
+            
+            var review = await GetWithReferences((int) id);
             if (review == null)
             {
                 return NotFound();
@@ -147,6 +145,18 @@ namespace MVCProject.Controllers
         {
             var review = await _facade.Get(id);
             return review != null;
+        }
+
+        private async Task<ReviewDTO> GetWithReferences(int id)
+        {
+            string[] referencesToLoad = new[]
+            {
+                nameof(ReviewDTO.User),
+                nameof(ReviewDTO.ReservedBook)
+            };
+
+            var review = await _facade.Get(id, referencesToLoad);
+            return review;
         }
     }
 }
