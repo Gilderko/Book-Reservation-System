@@ -21,6 +21,7 @@ namespace BL.Facades
 
         public BookInstanceFacade(IUnitOfWork unitOfWork,
                                   ICRUDService<BookInstanceDTO, BookInstance> service,
+                                  ICRUDService<UserPrevDTO, User> userPrevService,
                                   IReservationService reservationService,
                                   IBookInstancePreviewService bookInstancePreviewService)
         {
