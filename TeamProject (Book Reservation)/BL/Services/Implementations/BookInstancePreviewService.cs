@@ -23,9 +23,11 @@ namespace BL.Services.Implementations
         
         public BookInstancePreviewService(IRepository<BookInstance> repo, 
                                           IMapper mapper, 
-                                          QueryObject<BookInstancePrevDTO, BookInstance> queryObject) : base(repo, mapper)
+                                          QueryObject<BookInstancePrevDTO, BookInstance> queryObject,
+                                          QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationQueryObject) : base(repo, mapper)
         {
             _queryObject = queryObject;
+            _reservationQueryObject = reservationQueryObject;
         }
 
         public async Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(int userId)

@@ -56,7 +56,7 @@ namespace MVCProject.Controllers
                 nameof(BookInstanceDTO.FromBookTemplate)
             };
 
-            var bookInstance = await _facade.Get((int)id,references);
+            var bookInstance = await _bookInstanceFacade.Get((int)id,references);
             if (bookInstance == null)
             {
                 return NotFound();
@@ -79,8 +79,8 @@ namespace MVCProject.Controllers
                 nameof(BookInstanceDTO.FromBookTemplate)
             };
 
-            var bookInstance = await _facade.Get((int)id, references);
-            var resultQuery = await _facade.GetBookReservationPrevsByUser(id.Value, StartDate.Value, EndDate.Value);
+            var bookInstance = await _bookInstanceFacade.Get((int)id, references);
+            var resultQuery = await _bookInstanceFacade.GetBookReservationPrevsByUser(id.Value, StartDate.Value, EndDate.Value);
 
             ViewData.Add("queryResult", resultQuery);
 
