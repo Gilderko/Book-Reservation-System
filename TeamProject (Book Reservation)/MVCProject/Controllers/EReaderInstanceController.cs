@@ -35,7 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await _facade.Get((int)id);
+            var eReaderInstance = await GetWithReferences((int)id);
             if (eReaderInstance == null)
             {
                 return NotFound();
@@ -73,7 +73,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await _facade.Get((int)id);
+            var eReaderInstance = await GetWithReferences((int)id);
             if (eReaderInstance == null)
             {
                 return NotFound();
@@ -123,7 +123,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await _facade.Get((int)id);
+            var eReaderInstance = await GetWithReferences((int)id);
             if (eReaderInstance == null)
             {
                 return NotFound();
@@ -145,6 +145,18 @@ namespace MVCProject.Controllers
         {
             var eReaderInstance = await _facade.Get(id);
             return eReaderInstance != null;
+        }
+
+        private async Task<EReaderInstanceDTO> GetWithReferences(int id)
+        {
+            string[] referencesToLoad = new[]
+            {
+                nameof(EReaderInstanceDTO.EReaderTemplate),
+                nameof(EReaderInstanceDTO.Owner)
+            };
+
+            var review = await _facade.Get(id, referencesToLoad);
+            return review;
         }
     }
 }
