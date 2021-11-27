@@ -35,7 +35,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var author = await _facade.Get((int)id);
+            var author = await _facade.Get((int)id, collectToLoad: new[] { nameof(AuthorDTO.AuthorsBooks) });
             if (author == null)
             {
                 return NotFound();

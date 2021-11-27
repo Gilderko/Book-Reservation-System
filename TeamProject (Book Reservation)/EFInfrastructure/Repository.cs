@@ -23,21 +23,24 @@ namespace EFInfrastructure
         {
             TEntity loadedEntity = await dbSet.FindAsync(id);
 
-            if (refsToLoad != null)
+            if (loadedEntity != null)
             {
-                foreach (string refToLoad in refsToLoad)
+                if (refsToLoad != null)
                 {
-                    await dbContext.Entry<TEntity>(loadedEntity).Reference(refToLoad).LoadAsync();
+                    foreach (string refToLoad in refsToLoad)
+                    {
+                        await dbContext.Entry<TEntity>(loadedEntity).Reference(refToLoad).LoadAsync();
+                    }
+                }
+
+                if (collectionsToLoad != null)
+                {
+                    foreach (string collectToLoad in collectionsToLoad)
+                    {
+                        await dbContext.Entry<TEntity>(loadedEntity).Collection(collectToLoad).LoadAsync();
+                    }
                 }
             }
-
-            if (collectionsToLoad != null)
-            {
-                foreach (string collectToLoad in collectionsToLoad)
-                {
-                    await dbContext.Entry<TEntity>(loadedEntity).Collection(collectToLoad).LoadAsync();
-                }
-            }            
 
             return loadedEntity;
         }

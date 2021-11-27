@@ -20,14 +20,14 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Owner)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Owner.Id)
-        </dd class>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Owner.Name) @Html.DisplayFor(model => model.Owner.Surname)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.EReaderTemplate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EReaderTemplate.Id)
+            @Html.DisplayFor(model => model.EReaderTemplate.Model)
         </dd class>
     </dl>
     

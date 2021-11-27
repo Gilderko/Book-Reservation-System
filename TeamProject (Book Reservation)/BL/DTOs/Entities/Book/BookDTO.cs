@@ -33,7 +33,6 @@ namespace BL.DTOs.Entities.Book
         [Required]
         public LanguageDTO Language { get; set; }
 
-        [JsonIgnore]
         public ICollection<BookInstanceDTO> BookInstances { get; set; }
 
         public ICollection<ReviewDTO> Reviews { get; set; }

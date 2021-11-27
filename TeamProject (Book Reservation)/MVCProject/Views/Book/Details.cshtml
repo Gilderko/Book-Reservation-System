@@ -49,6 +49,83 @@
     </dl>
 </div>
 <div>
+    <h5>Reviews</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Author
+                </th>
+                <th>
+                    Stars
+                </th>
+                <th>
+                    Content
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Reviews)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StarsAmmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Content)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <h5>Books</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Owner
+                </th>
+                <th>
+                    Condition
+                </th>
+                <th>
+                    Free
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.BookInstances)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BookOwnerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Conditon)
+                    </td>
+                    <td>
+                        Date
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
     <a asp-action="Index">Back to List</a>
 </div>

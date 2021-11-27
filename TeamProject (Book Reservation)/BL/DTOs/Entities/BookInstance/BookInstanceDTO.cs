@@ -24,7 +24,6 @@ namespace BL.DTOs.Entities.BookInstance
 
         public BookDTO FromBookTemplate { get; set; }
 
-        [JsonIgnore]
         public ICollection<ReservationBookInstanceDTO> AllReservations { get; set; }
     }
 }

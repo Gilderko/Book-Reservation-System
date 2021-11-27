@@ -64,7 +64,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var book = await _bookFacade.Get((int)id);
+            var book = await _bookFacade.Get((int)id, collectToLoad: new[] { nameof(BookDTO.BookInstances), nameof(BookDTO.Reviews) });
             if (book == null)
             {
                 return NotFound();

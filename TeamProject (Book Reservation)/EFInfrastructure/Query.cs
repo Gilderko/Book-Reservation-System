@@ -162,14 +162,20 @@ namespace EFInfrastructure
 
             foreach (var entry in entities)
             {
-                foreach (string refToLoad in _refsToLoad)
+                if (_refsToLoad != null)
                 {
-                    await DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).LoadAsync();
+                    foreach (string refToLoad in _refsToLoad)
+                    {
+                        await DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).LoadAsync();
+                    }
                 }
 
-                foreach (string collectToLoad in _collectionsToLoad)
+                if (_collectionsToLoad != null)
                 {
-                    await DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).LoadAsync();
+                    foreach (string collectToLoad in _collectionsToLoad)
+                    {
+                        await DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).LoadAsync();
+                    }
                 }
             }
 
@@ -185,6 +191,8 @@ namespace EFInfrastructure
                 result.PageSize = _pageSize;
             }
 
+            ClearQuery();
+
             return result;
         }
 
@@ -196,6 +204,19 @@ namespace EFInfrastructure
         public void LoadExplicitCollections(params string[] collectionsToLoad)
         {
             _collectionsToLoad = collectionsToLoad;
+        }
+
+        private void ClearQuery()
+        {
+            _querySql = $"SELECT * FROM dbo.{DatabaseContext.Model.FindEntityType(typeof(TEntity)).GetTableName()} ";
+            _where = "";
+            _sortBy = "";
+            _page = "";
+            _refsToLoad = new string[0];
+            _collectionsToLoad = new string[0];
+            _pageSize = 0;
+            _pageNumber = 0;
+            _pagingEnabled = false;
         }
 
         public Query(IUnitOfWork unitOfWork)
