@@ -56,19 +56,19 @@ namespace BL.Facades
                 nameof(BookInstanceDTO.Owner)
             };
 
+            var bookInstance = await _bookInstService.GetByID(bookInstanceId, referencesToLoad);
+
+            if (bookInstance == null)
+            {
+                return;
+            }
+
             var reservations = await _service.GetReservationPrevsByBookInstance(bookInstanceId, reservation.DateFrom, reservation.DateTill);
 
             if (!CheckIsAvailable(reservations,reservation))
             {
                 return;
-            }
-
-            var bookInstance =  await _bookInstService.GetByID(bookInstanceId, referencesToLoad);
-
-            if (bookInstance == null)
-            {
-                return;                
-            }
+            }            
 
             ReservationBookInstanceDTO resBookInstance = new ReservationBookInstanceDTO()
             {
@@ -90,19 +90,19 @@ namespace BL.Facades
                 nameof(EReaderInstanceDTO.Owner),               
             };
 
-            var reservations = await _service.GetReservationPrevsByEReader(eReaderInstanceId, reservation.DateFrom, reservation.DateTill);
-
-            if (!CheckIsAvailable(reservations, reservation))
-            {
-                return;
-            }
-
             var eReaderInstance = await _EReaderInstanceService.GetByID(eReaderInstanceId, referencesToLoad);
 
             if (eReaderInstance == null)
             {
                 return;
             }
+
+            var reservations = await _service.GetReservationPrevsByEReader(eReaderInstanceId, reservation.DateFrom, reservation.DateTill);
+
+            if (!CheckIsAvailable(reservations, reservation))
+            {
+                return;
+            }            
 
             reservation.EReaderID = eReaderInstanceId;
             reservation.EReader = eReaderInstance;     

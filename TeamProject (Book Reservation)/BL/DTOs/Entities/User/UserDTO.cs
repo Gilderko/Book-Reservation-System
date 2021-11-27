@@ -31,19 +31,14 @@ namespace BL.DTOs.Entities.User
         [Required]
         public bool IsAdmin { get; set; }
 
-        [JsonIgnore]
         public ICollection<BookCollectionDTO> BookCollections { get; set; }
 
-        [JsonIgnore]
         public ICollection<ReservationDTO> Reservations { get; set; }
 
-        [JsonIgnore]
         public ICollection<ReviewDTO> Reviews { get; set; }
 
-        [JsonIgnore]
         public ICollection<BookInstanceDTO> MyBooks { get; set; }
 
-        [JsonIgnore]
         public ICollection<EReaderInstanceDTO> MyEReaders { get; set; }
     }
 }
