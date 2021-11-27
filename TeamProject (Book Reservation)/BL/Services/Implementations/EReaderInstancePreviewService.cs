@@ -13,13 +13,11 @@ namespace BL.Services.Implementations
     public class EReaderInstancePreviewService : CRUDService<EReaderInstancePrevDTO, EReaderInstance>, 
         IEReaderInstancePreviewService
     {
-        private QueryObject<EReaderInstancePrevDTO, EReaderInstance> _resQueryObject;
-
         public EReaderInstancePreviewService(IRepository<EReaderInstance> repo, 
                                              IMapper mapper,
-                                             QueryObject<EReaderInstancePrevDTO, EReaderInstance> resQueryObject) : base(repo, mapper)
+                                             QueryObject<EReaderInstancePrevDTO, EReaderInstance> resQueryObject) : base(repo, mapper, resQueryObject)
         {
-            _resQueryObject = resQueryObject;               
+           
         }
 
         public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancesByOwner(int ownerId)
@@ -31,7 +29,7 @@ namespace BL.Services.Implementations
                 SortAscending = true
             };
             
-            return (await _resQueryObject.ExecuteQuery(filter)).Items;
+            return (await FilterBy(filter));
         }
     }
 }

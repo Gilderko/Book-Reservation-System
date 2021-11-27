@@ -18,15 +18,13 @@ namespace BL.Services.Implementations
 {
     public class BookInstancePreviewService : CRUDService<BookInstancePrevDTO, BookInstance>, IBookInstancePreviewService
     {                                                                                                
-        private readonly QueryObject<BookInstancePrevDTO, BookInstance> _queryObject;
         private readonly QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> _reservationQueryObject;
         
         public BookInstancePreviewService(IRepository<BookInstance> repo, 
                                           IMapper mapper, 
                                           QueryObject<BookInstancePrevDTO, BookInstance> queryObject,
-                                          QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationQueryObject) : base(repo, mapper)
+                                          QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationQueryObject) : base(repo, mapper, queryObject)
         {
-            _queryObject = queryObject;
             _reservationQueryObject = reservationQueryObject;
         }
 
@@ -37,14 +35,12 @@ namespace BL.Services.Implementations
                 nameof(BookInstance.FromBookTemplate)
             };
 
-            _queryObject.LoadExplicitReferences(x => referencesToLoad);
-
             FilterDto filter = new FilterDto()
             {
                 Predicate = new PredicateDto(nameof(BookInstance.BookOwnerId), userId, ValueComparingOperator.Equal),
             };
 
-            return (await _queryObject.ExecuteQuery(filter)).Items;
+            return (await FilterBy(filter,referencesToLoad));
         }
 
         public async Task<IEnumerable<BookInstancePrevDTO>> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from, DateTime to, int pageNumber = 1, int pageSize = 20)
@@ -56,11 +52,11 @@ namespace BL.Services.Implementations
                 PageSize = pageSize
             };
             
-            var allInstances = (await _queryObject.ExecuteQuery(filter)).Items;
+            var allInstances = (await FilterBy(filter));
             
             await FilterAvailableInstances(allInstances.ToHashSet(), from, to);
 
-            return  (await _queryObject.ExecuteQuery(filter)).Items;
+            return allInstances;
         }
         
         private async Task FilterAvailableInstances(HashSet<BookInstancePrevDTO> bookInstances, DateTime from, DateTime to)

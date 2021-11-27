@@ -20,9 +20,10 @@ namespace BL.Services.Implementations
         private QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> _reservationBookInstanceQueryObject;
 
         public ReservationService(IRepository<Reservation> repo,
-                                  IMapper mapper, 
+                                  IMapper mapper,
+                                  QueryObject<ReservationDTO, Reservation> baseQueryObject,
                                   QueryObject<ReservationPrevDTO, Reservation> resQueryObject,
-                                  QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base (repo, mapper)
+                                  QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base (repo, mapper, baseQueryObject)
         {
             _resQueryObject = resQueryObject;
             _reservationBookInstanceQueryObject = reservationBookInstanceQueryObject;

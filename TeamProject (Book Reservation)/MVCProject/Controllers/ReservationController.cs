@@ -9,6 +9,7 @@ using DAL;
 using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.Reservation;
+using MVCProject.StateManager;
 
 namespace MVCProject.Controllers
 {
@@ -28,14 +29,21 @@ namespace MVCProject.Controllers
         }
 
         // GET: Reservation/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
+            var reservation = await _facade.Get((int)id);
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            var reservation = await _facade.Get((int)id);
+            return View(reservation);
+        }
+
+        public IActionResult DetailsCurrent()
+        {
+            var reservation = StateKeeper.Instance.GetReservationInSession(this);
+
             if (reservation == null)
             {
                 return NotFound();
@@ -55,14 +63,22 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation)
+        public IActionResult Create([Bind("DateFrom,DateTill,Id")] ReservationDTO reservation)
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            reservation.UserID = int.Parse(HttpContext.User.Identity.Name);
+
             if (ModelState.IsValid)
             {
-                await _facade.Create(reservation);
-                return RedirectToAction(nameof(Index));
+                StateKeeper.Instance.SetReservationInSession(this, reservation);
+                return RedirectToAction(nameof(this.DetailsCurrent));
             }
-            return View(reservation);
+
+            return RedirectToAction(nameof(this.Index));
         }
 
         // GET: Reservation/Edit/5

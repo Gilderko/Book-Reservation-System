@@ -21,8 +21,11 @@ namespace BL.Services.Implementations
         private const int PBKDF2SubkeyLength = 160 / 8;
         private const int saltSize = 128 / 8;
         
-        public UserService(IRepository<User> repo, IMapper mapper, QueryObject<UserShowDTO, User> query, 
-            QueryObject<UserEditDTO, User> queryEdit) : base (repo, mapper)
+        public UserService(IRepository<User> repo, 
+                            IMapper mapper,
+                            QueryObject<UserDTO,User> baseQuery,
+                            QueryObject<UserShowDTO, User> query, 
+                            QueryObject<UserEditDTO, User> queryEdit) : base (repo, mapper, baseQuery)
         {
             _resQueryObject = query;
             _resEditQueryObject = queryEdit;

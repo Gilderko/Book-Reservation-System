@@ -49,7 +49,7 @@ namespace BL.Facades
                 Reservation = reservation
             };
 
-            ((List<ReservationBookInstanceDTO>)reservation.BookInstances).Add(resBookInstance);
+            reservation.BookInstances.Add(resBookInstance);
             _unitOfWork.Commit();
         }
 
@@ -59,12 +59,51 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public void SubmitReservation(ReservationDTO newReservation)
+        public async Task<bool> SubmitReservation(ReservationDTO newReservation)
         {
-            // TODO
-            // check validity
+            if (newReservation.DateTill < newReservation.DateFrom)
+            {
+                return false;
+            }
+
+            foreach(var bookInst in newReservation.BookInstances)
+            {
+                var booksReservations = await _service.GetReservationPrevsByBookInstance(bookInst.BookInstanceID, 
+                    newReservation.DateFrom, newReservation.DateTill);
+                
+                if (!CheckIsAvailable(booksReservations,newReservation))
+                {
+                    return false;
+                }
+            }
+
+            var EReader = newReservation.EReader;
             
-            _service.Insert(newReservation);
+            if (EReader != null)
+            {
+                var EReaderReservations = await _service.GetReservationPrevsByEReader(EReader.Id, newReservation.DateFrom, newReservation.DateTill);
+
+                if (!CheckIsAvailable(EReaderReservations, newReservation))
+                {
+                    return false;
+                }
+            }
+
+            await _service.Insert(newReservation);
+            return true;
+        }
+
+        private bool CheckIsAvailable(IEnumerable<ReservationPrevDTO> reservations, ReservationDTO newReservation)
+        {
+            foreach (var reservation in reservations)
+            {
+                if (newReservation.DateFrom < reservation.DateTill)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
