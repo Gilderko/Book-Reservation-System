@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BL.DTOs.Entities.BookInstance;
+using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
 using System.Threading.Tasks;
@@ -8,7 +9,8 @@ namespace BL.Services.Implementations
 {
     public class BookInstanceService : CRUDService<BookInstanceDTO, BookInstance>, IBookInstanceService
     {
-        public BookInstanceService(IRepository<BookInstance> repo, IMapper mapper) : base(repo, mapper)
+        public BookInstanceService(IRepository<BookInstance> repo, IMapper mapper, 
+            QueryObject<BookInstanceDTO, BookInstance> queryObject) : base(repo, mapper, queryObject)
         {
         }
 

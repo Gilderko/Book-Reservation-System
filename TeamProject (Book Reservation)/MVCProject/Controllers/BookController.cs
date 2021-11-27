@@ -12,6 +12,7 @@ using BL.DTOs.Entities.Book;
 using MVCProject.StateManager;
 using BL.DTOs.Filters;
 using BL.DTOs.Enums;
+using BL.DTOs.Entities.BookInstance;
 
 namespace MVCProject.Controllers
 {
@@ -26,39 +27,33 @@ namespace MVCProject.Controllers
 
         // GET: Book
         [HttpGet]
-        public async Task<IActionResult> Index(string title,
-                                               string author,
-                                               LanguageDTO? language,
-                                               int pageFrom,
-                                               int pageTo,
-                                               DateTime releaseFrom,
-                                               DateTime releaseTo)
+        public async Task<IActionResult> Index()
         {
-            FilterDto filter = new FilterDto();
+            return View(_bookFacade.GetBookPreviews(null, null, null, null, null, null, null, null, null));
+        }
 
-            if (language is not null)
-            {
-                filter = new FilterDto()
-                {
-                    Predicate = new PredicateDto(nameof(Book.Language), (int)language, Infrastructure.Query.Operators.ValueComparingOperator.Equal)
-                };
-            }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(string title,
+                                               string authorName,
+                                               string authorSurname,
+                                               GenreTypeDTO[] genres,
+                                               LanguageDTO? language,
+                                               int? pageFrom,
+                                               int? pageTo,
+                                               DateTime? releaseFrom,
+                                               DateTime? releaseTo)
+        {
+            ViewData["bookTitle"] = title;
+            ViewData["authorName"] = authorName;
+            ViewData["authorSurname"] = authorSurname;
+            ViewData["language"] = language;
+            ViewData["pageFrom"] = pageFrom;
+            ViewData["pageTo"] = pageTo;
+            ViewData["releaseFrom"] = releaseFrom;
+            ViewData["releaseTo"] = releaseTo;
 
-
-            if (language is not null)
-            {
-                filter = new FilterDto()
-                {
-                    Predicate = new PredicateDto(nameof(Book.Language), (int)language, Infrastructure.Query.Operators.ValueComparingOperator.Equal)
-                };
-            }
-            else
-            {
-                filter = new FilterDto();
-            }
-
-
-            return View(_bookFacade.GetBookPreviews(filter).Result);
+            return View(_bookFacade.GetBookPreviews(title, authorName, authorSurname, genres, language, pageFrom, pageTo, releaseFrom, releaseTo).Result);
         }
 
         // GET: Book/Details/5

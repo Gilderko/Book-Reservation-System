@@ -1,13 +1,12 @@
-﻿using BL.Services;
+﻿using BL.DTOs.Entities.Book;
+using BL.DTOs.Enums;
+using BL.DTOs.Filters;
+using BL.Services;
 using DAL.Entities;
 using Infrastructure;
 using System;
 using System.Collections.Generic;
-using BL.DTOs.Entities.Book;
-using BL.DTOs.Entities.BookInstance;
 using System.Threading.Tasks;
-using BL.DTOs.Filters;
-using BL.DTOs.Enums;
 
 namespace BL.Facades
 {
@@ -15,19 +14,27 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private ICRUDService<BookDTO, Book> _service;
-        private IBookPreviewService _bookPrevService;
+        private ICRUDService<BookPrevDTO, Book> _bookPrevService;
+        private IAuthorService _authorService;
+        private IGenreService _genreService;
 
         public BookFacade(IUnitOfWork unitOfWork,
                           ICRUDService<BookDTO, Book> service,
-                          IBookPreviewService bookPrevService)
+                          ICRUDService<BookPrevDTO, Book> bookPrevService,
+                          IAuthorService authorService,
+                          IGenreService genreService)
         {
             _unitOfWork = unitOfWork;
             _service = service;
             _bookPrevService = bookPrevService;
+            _authorService = authorService;
+            _genreService = genreService;
         }
 
         public async Task<IEnumerable<BookPrevDTO>> GetBookPreviews(string title,
-                                                                    string author,
+                                                                    string authorName,
+                                                                    string authorSurname,
+                                                                    GenreTypeDTO[] genres,
                                                                     LanguageDTO? language,
                                                                     int? pageFrom,
                                                                     int? pageTo,
@@ -43,9 +50,16 @@ namespace BL.Facades
                 predicates.Add(new PredicateDto(nameof(Book.Title), title, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
             }
 
-            if (author is not null)
+            if (authorName is not null || authorSurname is not null)
             {
-                
+                var bookIds = await _authorService.GetAuthorsBooksIdsByName(authorName, authorSurname);
+                predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In));
+            }
+
+            if (genres is not null)
+            {
+                var bookIds = await _genreService.GetBookIdsByGenres(genres);
+                predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In));
             }
 
             if (language is not null)
@@ -63,9 +77,29 @@ namespace BL.Facades
                 predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageTo, Infrastructure.Query.Operators.ValueComparingOperator.LessThanOrEqual));
             }
 
+            if (releaseFrom is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(Book.DateOfRelease), releaseFrom, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThanOrEqual));
+            }
 
+            if (releaseTo is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(Book.DateOfRelease), releaseTo, Infrastructure.Query.Operators.ValueComparingOperator.LessThanOrEqual));
+            }
 
-            return await _bookPrevService.GetBookPreviewsByFilter(filter);
+            if (predicates.Count > 0)
+            {
+                filter.Predicate = new CompositePredicateDto(predicates, Infrastructure.Query.Operators.LogicalOperator.AND);
+            }
+
+            string[] collectionsToLoad = new string[] {
+                nameof(Book.Authors)
+            };
+
+            var previews = await _bookPrevService.FilterBy(filter, null, collectionsToLoad);
+            await _authorService.LoadAuthors(previews);
+
+            return previews;
         }
 
         public async Task Create(BookDTO book)
