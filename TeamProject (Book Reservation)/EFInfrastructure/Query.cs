@@ -162,14 +162,20 @@ namespace EFInfrastructure
 
             foreach (var entry in entities)
             {
-                foreach (string refToLoad in _refsToLoad)
+                if (_refsToLoad != null)
                 {
-                    await DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).LoadAsync();
+                    foreach (string refToLoad in _refsToLoad)
+                    {
+                        await DatabaseContext.Entry<TEntity>(entry).Reference(refToLoad).LoadAsync();
+                    }
                 }
 
-                foreach (string collectToLoad in _collectionsToLoad)
+                if (_collectionsToLoad != null)
                 {
-                    await DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).LoadAsync();
+                    foreach (string collectToLoad in _collectionsToLoad)
+                    {
+                        await DatabaseContext.Entry<TEntity>(entry).Collection(collectToLoad).LoadAsync();
+                    }
                 }
             }
 
