@@ -7,6 +7,7 @@ using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
 using System.Threading.Tasks;
 using BL.DTOs.Filters;
+using BL.DTOs.Enums;
 
 namespace BL.Facades
 {
@@ -25,8 +26,45 @@ namespace BL.Facades
             _bookPrevService = bookPrevService;
         }
 
-        public async Task<IEnumerable<BookPrevDTO>> GetBookPreviews(FilterDto filter)
+        public async Task<IEnumerable<BookPrevDTO>> GetBookPreviews(string title,
+                                                                    string author,
+                                                                    LanguageDTO? language,
+                                                                    int? pageFrom,
+                                                                    int? pageTo,
+                                                                    DateTime? releaseFrom,
+                                                                    DateTime? releaseTo)
         {
+            FilterDto filter = new FilterDto();
+
+            List<PredicateDto> predicates = new();
+
+            if (title is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(Book.Title), title, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
+            }
+
+            if (author is not null)
+            {
+                
+            }
+
+            if (language is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(Book.Language), (int)language, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
+            }
+
+            if (pageFrom is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageFrom, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThanOrEqual));
+            }
+
+            if (pageTo is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageTo, Infrastructure.Query.Operators.ValueComparingOperator.LessThanOrEqual));
+            }
+
+
+
             return await _bookPrevService.GetBookPreviewsByFilter(filter);
         }
 

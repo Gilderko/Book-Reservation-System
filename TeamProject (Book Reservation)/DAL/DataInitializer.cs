@@ -314,56 +314,56 @@ namespace DAL
                     Id = 1,
                     BookOwnerId = 1,
                     BookTemplateID = 1,
-                    Conditon = BookInstanceCondition.Fair,
+                    Condition = BookInstanceCondition.Fair,
                 },
                 new BookInstance
                 {
                     Id = 2,
                     BookOwnerId = 1,
                     BookTemplateID = 2,
-                    Conditon = BookInstanceCondition.Fair,
+                    Condition = BookInstanceCondition.Fair,
                 },
                 new BookInstance
                 {
                     Id = 3,
                     BookOwnerId = 2,
                     BookTemplateID = 3,
-                    Conditon = BookInstanceCondition.New,
+                    Condition = BookInstanceCondition.New,
                 },
                 new BookInstance
                 {
                     Id = 4,
                     BookOwnerId = 3,
                     BookTemplateID = 4,
-                    Conditon = BookInstanceCondition.New,
+                    Condition = BookInstanceCondition.New,
                 },
                 new BookInstance
                 {
                     Id = 5,
                     BookOwnerId = 4,
                     BookTemplateID = 5,
-                    Conditon = BookInstanceCondition.Good,
+                    Condition = BookInstanceCondition.Good,
                 },
                 new BookInstance
                 {
                     Id = 6,
                     BookOwnerId = 5,
                     BookTemplateID = 6,
-                    Conditon = BookInstanceCondition.VeryGood,
+                    Condition = BookInstanceCondition.VeryGood,
                 },
                 new BookInstance
                 {
                     Id = 7,
                     BookOwnerId = 5,
                     BookTemplateID = 7,
-                    Conditon = BookInstanceCondition.Good,
+                    Condition = BookInstanceCondition.Good,
                 },
                 new BookInstance
                 {
                     Id = 8,
                     BookOwnerId = 3,
                     BookTemplateID = 8,
-                    Conditon = BookInstanceCondition.Poor,
+                    Condition = BookInstanceCondition.Poor,
                 }
             );
 

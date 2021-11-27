@@ -8,21 +8,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BL.DTOs.Entities.BookInstance
 {
-    public class BookInstanceDTO : BaseEntityDTO
+    public class BookInstanceCreateDTO : BaseEntityDTO
     {
         [Required]
         public BookInstanceConditionDTO Condition { get; set; }
 
-        [Required]
         public int BookOwnerId { get; set; }
-
-        public UserDTO Owner { get; set; }
 
         [Required]
         public int BookTemplateID { get; set; }
-
-        public BookDTO FromBookTemplate { get; set; }
-
-        public ICollection<ReservationBookInstanceDTO> AllReservations { get; set; }
     }
 }

@@ -32,7 +32,6 @@ namespace MVCProject
 
             services.AddTransient<AuthorFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<AuthorFacade>());
             services.AddTransient<BookCollectionFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookCollectionFacade>());
-            services.AddTransient<BookCollectionPreviewsFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookCollectionPreviewsFacade>());
             services.AddTransient<BookFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookFacade>());
             services.AddTransient<BookInstanceFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookInstanceFacade>());
             services.AddTransient<EBookFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EBookFacade>());

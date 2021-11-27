@@ -153,7 +153,7 @@ namespace EFInfrastructure
 
             Console.WriteLine(_querySql);
 
-            var entities = await DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).AsNoTracking().ToListAsync();
+            var entities = await DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).ToListAsync();
 
 
             foreach (var entry in entities)

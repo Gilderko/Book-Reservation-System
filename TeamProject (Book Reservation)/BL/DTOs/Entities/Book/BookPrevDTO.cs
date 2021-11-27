@@ -1,5 +1,6 @@
 ﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Author;
+using BL.DTOs.Enums;
 using DAL.Enums;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +15,7 @@ namespace BL.DTOs.Entities.Book
         [StringLength(1024)]
         public string Description { get; set; }
 
-        public Language Language { get; set; }
+        public LanguageDTO Language { get; set; }
 
         // In map config add a custom mapping from Entity
 

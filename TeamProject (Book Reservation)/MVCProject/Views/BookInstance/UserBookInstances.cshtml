@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>My Books</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="UserCreateBookInstance">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.FromBookTemplate.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Conditon)
+                @Html.DisplayNameFor(model => model.Condition)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FromBookTemplate.PageCount)
@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.FromBookTemplate.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Conditon)
+                @Html.DisplayFor(modelItem => item.Condition)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FromBookTemplate.PageCount)

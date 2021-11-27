@@ -9,6 +9,9 @@ using DAL;
 using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.Book;
+using MVCProject.StateManager;
+using BL.DTOs.Filters;
+using BL.DTOs.Enums;
 
 namespace MVCProject.Controllers
 {
@@ -22,9 +25,40 @@ namespace MVCProject.Controllers
         }
 
         // GET: Book
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string title,
+                                               string author,
+                                               LanguageDTO? language,
+                                               int pageFrom,
+                                               int pageTo,
+                                               DateTime releaseFrom,
+                                               DateTime releaseTo)
         {
-            return View(_bookFacade.GetBookPreviews(new BL.DTOs.Filters.FilterDto()).Result);
+            FilterDto filter = new FilterDto();
+
+            if (language is not null)
+            {
+                filter = new FilterDto()
+                {
+                    Predicate = new PredicateDto(nameof(Book.Language), (int)language, Infrastructure.Query.Operators.ValueComparingOperator.Equal)
+                };
+            }
+
+
+            if (language is not null)
+            {
+                filter = new FilterDto()
+                {
+                    Predicate = new PredicateDto(nameof(Book.Language), (int)language, Infrastructure.Query.Operators.ValueComparingOperator.Equal)
+                };
+            }
+            else
+            {
+                filter = new FilterDto();
+            }
+
+
+            return View(_bookFacade.GetBookPreviews(filter).Result);
         }
 
         // GET: Book/Details/5

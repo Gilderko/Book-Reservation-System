@@ -14,43 +14,42 @@ namespace BL.Facades
     public class BookInstanceFacade
     {
         private IUnitOfWork _unitOfWork;
-        private ICRUDService<BookInstanceDTO,BookInstance> _service;
+        private IBookInstanceService _bookInstanceService;
         private ICRUDService<UserPrevDTO, User> _userPrevService;
         private IReservationService _reservationService;
         private IBookInstancePreviewService _bookInstancePreviewService;
 
         public BookInstanceFacade(IUnitOfWork unitOfWork,
-                                  ICRUDService<BookInstanceDTO, BookInstance> service,
+                                  IBookInstanceService bookInstanceService,
                                   IReservationService reservationService,
                                   IBookInstancePreviewService bookInstancePreviewService)
         {
             _unitOfWork = unitOfWork;
-            _service = service;
-            _userPrevService = userPrevService;
+            _bookInstanceService = bookInstanceService;
             _reservationService = reservationService;
             _bookInstancePreviewService = bookInstancePreviewService;
         }
         
         public async Task Create(BookInstanceDTO bookInstance)
         {
-            await _service.Insert(bookInstance);
+            await _bookInstanceService.Insert(bookInstance);
             _unitOfWork.Commit();
         }
 
         public async Task<BookInstanceDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
         {
-            return await _service.GetByID(id, refsToLoad, collectToLoad);
+            return await _bookInstanceService.GetByID(id, refsToLoad, collectToLoad);
         }
 
         public void Update(BookInstanceDTO bookInstance)
         {
-            _service.Update(bookInstance);
+            _bookInstanceService.Update(bookInstance);
             _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
-            _service.DeleteById(id);
+            _bookInstanceService.DeleteById(id);
             _unitOfWork.Commit();
         }
 
@@ -76,6 +75,11 @@ namespace BL.Facades
             DateTime to)
         {
             return await _bookInstancePreviewService.GetAvailableInstancePrevsByDate(book, from, to);
+        }
+
+        public async Task CreateUserBookInstance(int ownerId, BookInstanceCreateDTO bookInstance)
+        {
+            await _bookInstanceService.CreateBookInstance(ownerId, bookInstance);
         }
 
         public void Dispose()

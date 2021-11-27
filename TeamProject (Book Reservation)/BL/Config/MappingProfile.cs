@@ -12,9 +12,11 @@ using BL.DTOs.Entities.Genre;
 using BL.DTOs.Entities.Reservation;
 using BL.DTOs.Entities.Review;
 using BL.DTOs.Entities.User;
+using BL.DTOs.Enums;
 using BL.DTOs.Filters;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
+using DAL.Enums;
 using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
 
@@ -32,6 +34,7 @@ namespace BL.Config
             config.CreateMap<BookCollectionDTO, BookCollectionCreateDTO>().ReverseMap();
             config.CreateMap<Book, BookDTO>().ReverseMap();
             config.CreateMap<BookInstance, BookInstanceDTO>().ReverseMap();
+            config.CreateMap<BookInstanceDTO, BookInstanceCreateDTO>().ReverseMap();
             config.CreateMap<EBook, EBookDTO>().ReverseMap();
             config.CreateMap<EReader, EReaderDTO>().ReverseMap();
             config.CreateMap<EReaderInstance, EReaderInstanceDTO>().ReverseMap();
@@ -63,8 +66,13 @@ namespace BL.Config
             config.CreateMap<EReaderInstance, EReaderInstancePrevDTO>();
             config.CreateMap<ReservationDTO, ReservationPrevDTO>();
 
-            // Connection Tables maps
+            // Enums
+            config.CreateMap<BookInstanceConditionDTO, BookInstanceCondition>().ReverseMap();
+            config.CreateMap<EBookFormatDTO, EBookFormat>().ReverseMap();
+            config.CreateMap<GenreTypeDTO, GenreType>().ReverseMap();
+            config.CreateMap<LanguageDTO, Language>().ReverseMap();
 
+            // Connection Tables maps
             config.CreateMap<AuthorBook, AuthorBookDTO>().ReverseMap();
             config.CreateMap<BookGenre, BookGenreDTO>().ReverseMap();
             config.CreateMap<BookCollectionBook, BookCollectionBookDTO>().ReverseMap();

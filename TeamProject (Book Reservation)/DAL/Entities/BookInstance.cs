@@ -7,7 +7,7 @@ namespace DAL.Entities
 {
     public class BookInstance : BaseEntity
     {
-        public BookInstanceCondition Conditon { get; set; }
+        public BookInstanceCondition Condition { get; set; }
 
         public int BookOwnerId { get; set; }
 

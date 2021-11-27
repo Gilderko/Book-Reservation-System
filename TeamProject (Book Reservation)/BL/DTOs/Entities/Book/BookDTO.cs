@@ -1,6 +1,7 @@
 ﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.Review;
+using BL.DTOs.Enums;
 using DAL.Enums;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace BL.DTOs.Entities.Book
         public DateTime DateOfRelease { get; set; }
 
         [Required]
-        public Language Language { get; set; }
+        public LanguageDTO Language { get; set; }
 
         public ICollection<BookInstanceDTO> BookInstances { get; set; }
 

@@ -42,6 +42,35 @@ namespace MVCProject.Controllers
             return View(await _bookInstanceFacade.GetBookInstancePrevsByUser(userId));
         }
 
+        // GET: UserCreateBookInstance
+        public async Task<IActionResult> UserCreateBookInstance()
+        {
+            return View();
+        }
+
+        // POST: BookInstance/UserCreateBookInstance
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserCreateBookInstance([Bind("Conditon,BookTemplateID")] BookInstanceCreateDTO bookInstance)
+        {
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _bookInstanceFacade.CreateUserBookInstance(userId, bookInstance);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(bookInstance);
+        }
+
         // GET: BookInstance/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -56,7 +85,7 @@ namespace MVCProject.Controllers
                 nameof(BookInstanceDTO.FromBookTemplate)
             };
 
-            var bookInstance = await _facade.Get((int)id,references);
+            var bookInstance = await _bookInstanceFacade.Get((int)id,references);
             if (bookInstance == null)
             {
                 return NotFound();
@@ -79,8 +108,8 @@ namespace MVCProject.Controllers
                 nameof(BookInstanceDTO.FromBookTemplate)
             };
 
-            var bookInstance = await _facade.Get((int)id, references);
-            var resultQuery = await _facade.GetBookReservationPrevsByUser(id.Value, StartDate.Value, EndDate.Value);
+            var bookInstance = await _bookInstanceFacade.Get((int)id, references);
+            var resultQuery = await _bookInstanceFacade.GetBookReservationPrevsByUser(id.Value, StartDate.Value, EndDate.Value);
 
             ViewData.Add("queryResult", resultQuery);
 
