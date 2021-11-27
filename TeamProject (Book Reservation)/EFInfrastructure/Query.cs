@@ -94,13 +94,17 @@ namespace EFInfrastructure
                         varCompareString.Append(value);
                         varCompareString.Append('\'');
                         varCompareString.Append(',');
-
                     }
 
                     varCompareString.Remove(varCompareString.Length - 1, 1);
                     varCompareString.Append(')');
 
                     cmpValFormat = varCompareString.ToString();
+                }
+                else if (simplePred.ComparedValue is DateTime)
+                {
+                    var date = (DateTime) simplePred.ComparedValue;
+                    cmpValFormat = String.Format("'{0:0000}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}'", date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
                 }
                 else 
                 {
@@ -118,7 +122,7 @@ namespace EFInfrastructure
             foreach (var pred in predicates.Skip(1))
             {
                 string logOper = compositePredicate.Operator == LogicalOperator.AND ? "AND" : "OR";
-                result += $"{logOper} {PredicateToString(pred)}";
+                result += $" {logOper} {PredicateToString(pred)}";
             }
 
             return result;

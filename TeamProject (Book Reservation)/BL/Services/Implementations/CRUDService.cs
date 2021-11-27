@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using BL.DTOs;
+using BL.DTOs.Filters;
+using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
@@ -11,12 +14,22 @@ namespace BL.Services.Implementations
                                                                                       where TEntityDTO : class, IEntityDTO
     {
         private IRepository<TEntity> _repository;
+        private QueryObject<TEntityDTO, TEntity> _queryObject;
         protected IMapper Mapper { get; private set; }
 
-        public CRUDService(IRepository<TEntity> repo, IMapper mapper)
+        public CRUDService(IRepository<TEntity> repo, IMapper mapper, QueryObject<TEntityDTO, TEntity> queryObject)
         {
             _repository = repo;
+            _queryObject = queryObject;
             Mapper = mapper;
+        }
+
+        public async Task<IEnumerable<TEntityDTO>> FilterBy(FilterDto filter, string[] refsToLoad = null, string[] collectToLoad = null)
+        {
+            _queryObject.LoadExplicitReferences(x => refsToLoad);
+            _queryObject.LoadExplicitCollections(x => collectToLoad);
+
+            return (await _queryObject.ExecuteQuery(filter)).Items;
         }
 
         public async Task<TEntityDTO> GetByID(int id, string[] refsToLoad = null, string[] collectToLoad = null)

@@ -5,6 +5,7 @@ using BL.DTOs.Entities.Reservation;
 using BL.DTOs.Entities.Review;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BL.DTOs.Entities.User
 {
@@ -30,14 +31,19 @@ namespace BL.DTOs.Entities.User
         [Required]
         public bool IsAdmin { get; set; }
 
+        [JsonIgnore]
         public ICollection<BookCollectionDTO> BookCollections { get; set; }
 
+        [JsonIgnore]
         public ICollection<ReservationDTO> Reservations { get; set; }
 
+        [JsonIgnore]
         public ICollection<ReviewDTO> Reviews { get; set; }
 
+        [JsonIgnore]
         public ICollection<BookInstanceDTO> MyBooks { get; set; }
 
+        [JsonIgnore]
         public ICollection<EReaderInstanceDTO> MyEReaders { get; set; }
     }
 }

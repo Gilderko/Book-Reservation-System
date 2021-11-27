@@ -9,6 +9,8 @@ using DAL;
 using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.Reservation;
+using MVCProject.StateManager;
+using BL.DTOs.ConnectionTables;
 
 namespace MVCProject.Controllers
 {
@@ -28,20 +30,83 @@ namespace MVCProject.Controllers
         }
 
         // GET: Reservation/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
+            string[] refsToLoad = new string[]
             {
-                return NotFound();
-            }
+                nameof(ReservationDTO.User)
+            };
 
-            var reservation = await _facade.Get((int)id);
+            var reservation = await _facade.Get((int)id);           
+
             if (reservation == null)
             {
                 return NotFound();
             }
 
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            if (int.Parse(HttpContext.User.Identity.Name) != reservation.UserID)
+            {
+                return NotFound();
+            }
+
             return View(reservation);
+        }
+
+        public IActionResult DetailsCurrent()
+        {
+            var reservation = StateKeeper.Instance.GetReservationInSession(this);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            if (int.Parse(HttpContext.User.Identity.Name) != reservation.UserID)
+            {
+                return NotFound();
+            }
+
+            return View(reservation);
+        }
+
+        public async Task<IActionResult> AddedBookInstance(int id)
+        {
+            var reservation = StateKeeper.Instance.GetReservationInSession(this);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            await _facade.AddBookInstance(id, reservation);
+            StateKeeper.Instance.SetReservationInSession(this, reservation);
+
+            return RedirectToAction(nameof(this.DetailsCurrent));
+        }
+
+        public async Task<IActionResult> AddedEReaderInstance(int id)
+        {
+            var reservation = StateKeeper.Instance.GetReservationInSession(this);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            await _facade.AddEReaderInstance(id, reservation);
+            StateKeeper.Instance.SetReservationInSession(this, reservation);
+
+            return RedirectToAction(nameof(this.DetailsCurrent));
         }
 
         // GET: Reservation/Create
@@ -55,14 +120,23 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation)
+        public IActionResult Create([Bind("DateFrom,DateTill,Id")] ReservationDTO reservation)
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            reservation.BookInstances = new List<ReservationBookInstanceDTO>();
+            reservation.UserID = int.Parse(HttpContext.User.Identity.Name);
+
             if (ModelState.IsValid)
             {
-                await _facade.Create(reservation);
-                return RedirectToAction(nameof(Index));
+                StateKeeper.Instance.SetReservationInSession(this, reservation);
+                return RedirectToAction(nameof(this.DetailsCurrent));
             }
-            return View(reservation);
+
+            return RedirectToAction(nameof(this.Index));
         }
 
         // GET: Reservation/Edit/5
@@ -78,7 +152,47 @@ namespace MVCProject.Controllers
             {
                 return NotFound();
             }
+
             return View(reservation);
+        }
+
+        public async Task<IActionResult> SubmitReservation()
+        {
+            var reservation = StateKeeper.Instance.GetReservationInSession(this);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            if (int.Parse(HttpContext.User.Identity.Name) != reservation.UserID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var succeded = await _facade.SubmitReservation(reservation);
+                if (succeded)
+                {
+                    StateKeeper.Instance.SetReservationInSession(this, null);
+                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                }                
+            }
+
+            return RedirectToAction(nameof(this.DetailsCurrent));
+        }
+
+        public IActionResult DeleteInProgressReservation()
+        {
+            StateKeeper.Instance.SetReservationInSession(this, null);
+
+            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
         }
 
         // POST: Reservation/Edit/5

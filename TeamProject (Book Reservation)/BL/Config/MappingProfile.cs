@@ -19,6 +19,7 @@ using DAL.Entities.ConnectionTables;
 using DAL.Enums;
 using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
+using System.Linq;
 
 namespace BL.Config
 {
@@ -49,9 +50,6 @@ namespace BL.Config
             config.CreateMap<User, UserShowDTO>().ReverseMap();
             config.CreateMap<User, UserEditDTO>().ReverseMap();
 
-            config.CreateMap<CompositePredicate, CompositePredicateDto>().ReverseMap();
-            config.CreateMap<IPredicate, IPredicateDto>().ReverseMap();
-            config.CreateMap<SimplePredicate, PredicateDto>().ReverseMap();
             config.CreateMap(typeof(QueryResult<>), typeof(QueryResultDTO<>)).ReverseMap();
 
             config.CreateMap<Author, AuthorPrevDTO>().ReverseMap();
@@ -78,6 +76,20 @@ namespace BL.Config
             config.CreateMap<BookCollectionBook, BookCollectionBookDTO>().ReverseMap();
             config.CreateMap<ReservationBookInstance, ReservationBookInstanceDTO>().ReverseMap();
             config.CreateMap<EBookEReaderInstance, EBookEReaderInstanceDTO>().ReverseMap();
+        }
+
+        public static IPredicate ConvertPredicate(IPredicateDto predDto)
+        {
+            if (predDto is PredicateDto)
+            {
+                var pred = predDto as PredicateDto;
+                return new SimplePredicate(pred.TargetPropertyName, pred.ComparedValue, pred.ValueComparingOperator);
+            }
+            else
+            {
+                var pred = predDto as CompositePredicateDto;
+                return new CompositePredicate(pred.Predicates.Select(x => ConvertPredicate(x)), pred.Operator);
+            }
         }
     }
 }

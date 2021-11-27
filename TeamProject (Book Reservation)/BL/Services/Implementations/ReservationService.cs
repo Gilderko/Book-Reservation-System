@@ -20,9 +20,10 @@ namespace BL.Services.Implementations
         private QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> _reservationBookInstanceQueryObject;
 
         public ReservationService(IRepository<Reservation> repo,
-                                  IMapper mapper, 
+                                  IMapper mapper,
+                                  QueryObject<ReservationDTO, Reservation> baseQueryObject,
                                   QueryObject<ReservationPrevDTO, Reservation> resQueryObject,
-                                  QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base (repo, mapper)
+                                  QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base (repo, mapper, baseQueryObject)
         {
             _resQueryObject = resQueryObject;
             _reservationBookInstanceQueryObject = reservationBookInstanceQueryObject;
@@ -33,8 +34,8 @@ namespace BL.Services.Implementations
             List<PredicateDto> predicates = new List<PredicateDto>
             {
                 new PredicateDto(nameof(Reservation.UserID), userId, ValueComparingOperator.Equal),
-                new PredicateDto(nameof(Reservation.DateFrom), from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
-                new PredicateDto(nameof(Reservation.DateTill), to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
+                new PredicateDto(nameof(Reservation.DateFrom), from, ValueComparingOperator.GreaterThanOrEqual),
+                new PredicateDto(nameof(Reservation.DateTill), to, ValueComparingOperator.LessThanOrEqual)
             };
 
             CompositePredicateDto compositePredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
@@ -54,8 +55,8 @@ namespace BL.Services.Implementations
             List<PredicateDto> predicates = new List<PredicateDto>
             {
                 new PredicateDto(nameof(Reservation.EReaderID), eReaderId, ValueComparingOperator.Equal),
-                new PredicateDto(nameof(Reservation.DateFrom), from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
-                new PredicateDto(nameof(Reservation.DateTill), to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
+                new PredicateDto(nameof(Reservation.DateFrom), from, ValueComparingOperator.GreaterThanOrEqual),
+                new PredicateDto(nameof(Reservation.DateTill), to, ValueComparingOperator.LessThanOrEqual)
             };
 
             CompositePredicateDto compositePredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);

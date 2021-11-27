@@ -12,13 +12,11 @@ namespace BL.Services.Implementations
 {
     public class BookPreviewService : CRUDService<BookPrevDTO, Book>, IBookPreviewService
     {
-        private QueryObject<BookPrevDTO, Book> _resQueryObject;
-
         public BookPreviewService(IRepository<Book> repo, 
             IMapper mapper, 
-            QueryObject<BookPrevDTO, Book> resQueryObject) : base(repo, mapper)
+            QueryObject<BookPrevDTO, Book> resQueryObject) : base(repo, mapper, resQueryObject)
         {
-            _resQueryObject = resQueryObject;
+
         }
 
         public async Task<IEnumerable<BookPrevDTO>> GetBookPreviewsByFilter(FilterDto filter)
@@ -28,8 +26,7 @@ namespace BL.Services.Implementations
                 nameof(Book.Authors)
             };
 
-            _resQueryObject.LoadExplicitCollections(x => collectionsToLoad);
-            return (await _resQueryObject.ExecuteQuery(filter)).Items;
+            return (await FilterBy(filter,null,collectionsToLoad));
         }
     }
 }

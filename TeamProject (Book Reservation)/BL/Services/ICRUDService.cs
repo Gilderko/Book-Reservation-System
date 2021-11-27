@@ -1,6 +1,8 @@
 ﻿using BL.DTOs;
+using BL.DTOs.Filters;
 using DAL.Entities;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BL.Services
@@ -20,5 +22,7 @@ namespace BL.Services
         public void Delete(TEntityDTO DTOToDelete);
 
         public void Update(TEntityDTO DTOToUpdate);
+
+        Task<IEnumerable<TEntityDTO>> FilterBy(FilterDto filter, string[] refsToLoad = null, string[] collectToLoad = null);
     }
 }

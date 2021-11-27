@@ -14,18 +14,17 @@ namespace BL.Services.Implementations
     public class EBookPreviewService : CRUDService<EBookPrevDTO, EBook>, 
         IEBookPreviewService
     {
-        private QueryObject<EBookPrevDTO, EBook> _resQueryObject;
-        
+       
         public EBookPreviewService(IRepository<EBook> repo, 
                                    IMapper mapper, 
-                                   QueryObject<EBookPrevDTO, EBook> resQueryObject) : base(repo, mapper)
+                                   QueryObject<EBookPrevDTO, EBook> resQueryObject) : base(repo, mapper, resQueryObject)
         {
-            _resQueryObject = resQueryObject;
+
         }
 
         public async Task<IEnumerable<BookPrevDTO>> GetEBookPrevsByFilter(FilterDto filter)
         {
-            return (await _resQueryObject.ExecuteQuery(filter)).Items;
+            return (await FilterBy(filter));
         }
     }
 }
