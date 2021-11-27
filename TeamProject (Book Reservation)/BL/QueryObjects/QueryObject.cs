@@ -1,4 +1,5 @@
 using AutoMapper;
+using BL.Config;
 using BL.DTOs;
 using BL.DTOs.Filters;
 using DAL.Entities;
@@ -36,11 +37,11 @@ namespace BL.QueryObjects
         {
             if (filter.Predicate is PredicateDto)
             {
-                _myQuery.Where(_mapper.Map<SimplePredicate>(filter.Predicate));
+                _myQuery.Where(MappingProfile.ConvertPredicate(filter.Predicate));
             }
-            else if (filter.Predicate is CompositePredicate)
+            else if (filter.Predicate is CompositePredicateDto)
             {
-                _myQuery.Where(_mapper.Map<CompositePredicate>(filter.Predicate));
+                _myQuery.Where(MappingProfile.ConvertPredicate(filter.Predicate));
             }
 
             if (!string.IsNullOrWhiteSpace(filter.SortCriteria))

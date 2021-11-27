@@ -34,8 +34,8 @@ namespace BL.Services.Implementations
             List<PredicateDto> predicates = new List<PredicateDto>
             {
                 new PredicateDto(nameof(Reservation.UserID), userId, ValueComparingOperator.Equal),
-                new PredicateDto(nameof(Reservation.DateFrom), from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
-                new PredicateDto(nameof(Reservation.DateTill), to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
+                new PredicateDto(nameof(Reservation.DateFrom), from, ValueComparingOperator.GreaterThanOrEqual),
+                new PredicateDto(nameof(Reservation.DateTill), to, ValueComparingOperator.LessThanOrEqual)
             };
 
             CompositePredicateDto compositePredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
@@ -55,8 +55,8 @@ namespace BL.Services.Implementations
             List<PredicateDto> predicates = new List<PredicateDto>
             {
                 new PredicateDto(nameof(Reservation.EReaderID), eReaderId, ValueComparingOperator.Equal),
-                new PredicateDto(nameof(Reservation.DateFrom), from.ToString("YYYY-MM-DD"), ValueComparingOperator.GreaterThanOrEqual),
-                new PredicateDto(nameof(Reservation.DateTill), to.ToString("YYYY-MM-DD"), ValueComparingOperator.LessThanOrEqual)
+                new PredicateDto(nameof(Reservation.DateFrom), from, ValueComparingOperator.GreaterThanOrEqual),
+                new PredicateDto(nameof(Reservation.DateTill), to, ValueComparingOperator.LessThanOrEqual)
             };
 
             CompositePredicateDto compositePredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);

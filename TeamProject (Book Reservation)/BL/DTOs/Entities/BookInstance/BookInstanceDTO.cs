@@ -4,6 +4,7 @@ using BL.DTOs.Entities.User;
 using DAL.Enums;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BL.DTOs.Entities.BookInstance
 {
@@ -22,6 +23,7 @@ namespace BL.DTOs.Entities.BookInstance
 
         public BookDTO FromBookTemplate { get; set; }
 
+        [JsonIgnore]
         public ICollection<ReservationBookInstanceDTO> AllReservations { get; set; }
     }
 }
