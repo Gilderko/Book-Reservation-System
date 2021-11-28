@@ -78,7 +78,15 @@ namespace EFInfrastructure
                         varCompareString.Append(',');
                     }
 
-                    varCompareString.Remove(varCompareString.Length - 1, 1);
+                    if (varCompareString[varCompareString.Length - 1] == '(')
+                    {
+                        varCompareString.Append("NULL");
+                    }
+                    else
+                    {
+                        varCompareString.Remove(varCompareString.Length - 1, 1);
+                    }
+
                     varCompareString.Append(')');
 
                     cmpValFormat = varCompareString.ToString();
@@ -96,7 +104,15 @@ namespace EFInfrastructure
                         varCompareString.Append(',');
                     }
 
-                    varCompareString.Remove(varCompareString.Length - 1, 1);
+                    if (varCompareString[varCompareString.Length - 1] == '(')
+                    {
+                        varCompareString.Append("NULL");
+                    }
+                    else
+                    {
+                        varCompareString.Remove(varCompareString.Length - 1, 1);
+                    }
+
                     varCompareString.Append(')');
 
                     cmpValFormat = varCompareString.ToString();

@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
-using BL.Facades;
-using BL.DTOs.Entities.Book;
-using MVCProject.StateManager;
-using BL.DTOs.Filters;
+﻿using BL.DTOs.Entities.Book;
 using BL.DTOs.Enums;
-using BL.DTOs.Entities.BookInstance;
+using BL.Facades;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
@@ -29,7 +21,7 @@ namespace MVCProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View(_bookFacade.GetBookPreviews(null, null, null, null, null, null, null, null, null));
+            return View(await _bookFacade.GetBookPreviews(null, null, null, null, null, null, null, null, null));
         }
 
         [HttpPost]
@@ -47,13 +39,14 @@ namespace MVCProject.Controllers
             ViewData["bookTitle"] = title;
             ViewData["authorName"] = authorName;
             ViewData["authorSurname"] = authorSurname;
+            ViewData["genres"] = genres;
             ViewData["language"] = language;
             ViewData["pageFrom"] = pageFrom;
             ViewData["pageTo"] = pageTo;
             ViewData["releaseFrom"] = releaseFrom;
             ViewData["releaseTo"] = releaseTo;
 
-            return View(_bookFacade.GetBookPreviews(title, authorName, authorSurname, genres, language, pageFrom, pageTo, releaseFrom, releaseTo).Result);
+            return View(await _bookFacade.GetBookPreviews(title, authorName, authorSurname, genres, language, pageFrom, pageTo, releaseFrom, releaseTo));
         }
 
         // GET: Book/Details/5

@@ -1,5 +1,5 @@
 ﻿using BL.DTOs.Entities.Book;
-using BL.DTOs.Enums;
+using BL.DTOs.Entities.Genre;
 
 namespace BL.DTOs.ConnectionTables
 {
@@ -11,6 +11,6 @@ namespace BL.DTOs.ConnectionTables
 
         public int GenreID { get; set; }
 
-        public GenreTypeDTO Genre { get; set; }
+        public GenreDTO Genre { get; set; }
     }
 }

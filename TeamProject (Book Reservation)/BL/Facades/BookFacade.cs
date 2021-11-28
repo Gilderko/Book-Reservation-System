@@ -6,6 +6,7 @@ using DAL.Entities;
 using Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BL.Facades
@@ -56,7 +57,7 @@ namespace BL.Facades
                 predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In));
             }
 
-            if (genres is not null)
+            if (genres is not null && genres.Length > 0)
             {
                 var bookIds = await _genreService.GetBookIdsByGenres(genres);
                 predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In));

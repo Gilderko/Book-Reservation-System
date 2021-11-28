@@ -12,7 +12,14 @@
             <h5 class="control-label">Genre</h5>
             @foreach (var genre in Enum.GetValues(typeof(BL.DTOs.Enums.GenreTypeDTO)))
             {
-                <input type="checkbox" id="@genre" name="genres" value=@genre>
+                @if (ViewData["genres"] != null && Array.IndexOf((BL.DTOs.Enums.GenreTypeDTO[])ViewData["genres"], genre) != -1)
+                {
+                    <input type="checkbox" checked id="@genre" name="genres" value=@genre>
+                }
+                else
+                {
+                    <input type="checkbox" id="@genre" name="genres" value=@genre>
+                }
                 <label for="@genre">@((BL.DTOs.Enums.GenreTypeDTO)genre)</label>
             }
         </div>

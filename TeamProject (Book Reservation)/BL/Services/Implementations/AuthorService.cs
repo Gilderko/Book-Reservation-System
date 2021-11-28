@@ -33,11 +33,17 @@ namespace BL.Services.Implementations
 
         public async Task<IEnumerable<int>> GetAuthorsBooksIdsByName(string name, string surname)
         {
-            List<PredicateDto> predicates = new()
+            List<PredicateDto> predicates = new();
+
+            if (name is not null)
             {
-                new PredicateDto(nameof(Author.Name), name, Infrastructure.Query.Operators.ValueComparingOperator.Contains),
-                new PredicateDto(nameof(Author.Surname), surname, Infrastructure.Query.Operators.ValueComparingOperator.Contains),
-            };
+                predicates.Add(new PredicateDto(nameof(Author.Name), name, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
+            }
+
+            if (surname is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(Author.Surname), surname, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
+            }
 
             FilterDto filter = new()
             {
