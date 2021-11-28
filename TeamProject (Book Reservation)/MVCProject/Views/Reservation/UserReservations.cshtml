@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<BL.DTOs.Entities.Reservation.ReservationDTO>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "UserReservations";
 }
 
-<h1>Index</h1>
+<h1>Your reservations</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -19,10 +19,10 @@
                 @Html.DisplayNameFor(model => model.DateTill)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model.EReader)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EReader)
+                @Html.DisplayNameFor(model => model.BookInstances)
             </th>
             <th></th>
         </tr>
@@ -37,13 +37,13 @@
                 @Html.DisplayFor(modelItem => item.DateTill)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @Html.DisplayFor(modelItem => item.EReader.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EReader.Id)
+                @Html.Raw($"Book ammount: { item.BookInstances.Count}")
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>
 }

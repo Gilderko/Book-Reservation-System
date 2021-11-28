@@ -1,7 +1,7 @@
 ﻿@model BL.DTOs.Entities.Reservation.ReservationDTO
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "DetailsCurrent";
 }
 
 <h1>Details</h1>
@@ -67,7 +67,9 @@
 </div>
 <div>
     <input type="button" class="btn btn-primary" value="AddBookInstance" onclick="location.href='@Url.Action("Index","BookInstance")'" />
-    <input type="button" class="btn btn-primary" value="AddEReaderInstance" onclick="location.href='@Url.Action("Index","EReaderInstance")'" />
-    <input type="button" class="btn btn-primary" value="Delete reservation" onclick="location.href='@Url.Action("DeleteInProgressReservation")'" />
+    <input type="button" class="btn btn-primary" value="AddEReaderInstance" onclick="location.href='@Url.Action("Index","EReaderInstance")'" />    
+</div>
+<div>
     <input type="button" class="btn btn-primary" value="Submit reservation" onclick="location.href='@Url.Action("SubmitReservation")'" />
+    <input type="button" class="btn btn-primary" value="Delete reservation" onclick="location.href='@Url.Action("DeleteInProgressReservation")'" />
 </div>

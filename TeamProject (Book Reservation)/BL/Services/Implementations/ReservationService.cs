@@ -16,6 +16,7 @@ namespace BL.Services.Implementations
 {
     public class ReservationService : CRUDService<ReservationDTO, Reservation>, IReservationService
     {
+        private QueryObject<ReservationDTO, Reservation> _baseResQueryObject;
         private QueryObject<ReservationPrevDTO, Reservation> _resQueryObject;
         private QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> _reservationBookInstanceQueryObject;
 
@@ -25,6 +26,7 @@ namespace BL.Services.Implementations
                                   QueryObject<ReservationPrevDTO, Reservation> resQueryObject,
                                   QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base (repo, mapper, baseQueryObject)
         {
+            _baseResQueryObject = baseQueryObject;
             _resQueryObject = resQueryObject;
             _reservationBookInstanceQueryObject = reservationBookInstanceQueryObject;
         }
@@ -49,7 +51,7 @@ namespace BL.Services.Implementations
 
             return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
-        
+
         public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByEReader(int eReaderId, DateTime from, DateTime to)
         {
             List<PredicateDto> predicates = new List<PredicateDto>

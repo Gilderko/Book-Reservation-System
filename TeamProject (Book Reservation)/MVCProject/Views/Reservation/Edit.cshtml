@@ -9,32 +9,47 @@
 <h4>Reservation</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="DateFrom" class="control-label"></label>
-                <input asp-for="DateFrom" class="form-control" />
-                <span asp-validation-for="DateFrom" class="text-danger"></span>
+                <input type="hidden" asp-for="DateFrom" class="form-control" />
+                <h5 class="control-label">@Model.DateFrom</h5>
             </div>
             <div class="form-group">
                 <label asp-for="DateTill" class="control-label"></label>
-                <input asp-for="DateTill" class="form-control" />
-                <span asp-validation-for="DateTill" class="text-danger"></span>
+                <input type="hidden" asp-for="DateTill" class="form-control" />
+                <h5 class="control-label">@Model.DateTill</h5>
             </div>
             <div class="form-group">
-                <label asp-for="UserID" class="control-label"></label>
-                <select asp-for="UserID" class="form-control" asp-items="ViewBag.UserID"></select>
-                <span asp-validation-for="UserID" class="text-danger"></span>
+                <input type="hidden" asp-for="UserID" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="EReaderID" class="control-label"></label>
-                <select asp-for="EReaderID" class="form-control" asp-items="ViewBag.EReaderID"></select>
-                <span asp-validation-for="EReaderID" class="text-danger"></span>
+                <input type="hidden" asp-for="EReaderID" class="form-control" />
             </div>
+            <div>
+                @foreach (var bookInst in Model.BookInstances)
+                {
+                    <div class="form-group">
+                        <h5 class="control-label">Title name: @bookInst.BookInstance.FromBookTemplate.Title</h5>
+                        <h5 class="control-label">Condition: @bookInst.BookInstance.Condition"</h5>
+                        <h5 class="control-label">Description: @bookInst.BookInstance.FromBookTemplate.Description"</h5>
+                        <input type="checkbox" id="@bookInst.BookInstanceID" name="booksToDelete" value=@bookInst.BookInstanceID>
+                    </div>
+                }
+            </div>
+            @if (Model.EReaderID.HasValue)
+            {
+                <div class="form-group">
+                    <h5 class="control-label">Title name: Borrowed EReader</h5>
+                    <h5 class="control-label">Description: @Model.EReader.Description"</h5>
+                    <input type="checkbox" id="@Model.EReaderID" name="eReaderInstanceDelete" value=@Model.EReaderID>
+                </div>
+            }
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Delete Selected" class="btn btn-primary" />
             </div>
         </form>
     </div>

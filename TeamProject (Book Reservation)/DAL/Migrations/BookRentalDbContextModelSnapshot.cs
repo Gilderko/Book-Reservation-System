@@ -301,7 +301,7 @@ namespace DAL.Migrations
                     b.Property<int>("BookTemplateID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Conditon")
+                    b.Property<int>("Condition")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -318,56 +318,56 @@ namespace DAL.Migrations
                             Id = 1,
                             BookOwnerId = 1,
                             BookTemplateID = 1,
-                            Conditon = 4
+                            Condition = 4
                         },
                         new
                         {
                             Id = 2,
                             BookOwnerId = 1,
                             BookTemplateID = 2,
-                            Conditon = 4
+                            Condition = 4
                         },
                         new
                         {
                             Id = 3,
                             BookOwnerId = 2,
                             BookTemplateID = 3,
-                            Conditon = 0
+                            Condition = 0
                         },
                         new
                         {
                             Id = 4,
                             BookOwnerId = 3,
                             BookTemplateID = 4,
-                            Conditon = 0
+                            Condition = 0
                         },
                         new
                         {
                             Id = 5,
                             BookOwnerId = 4,
                             BookTemplateID = 5,
-                            Conditon = 3
+                            Condition = 3
                         },
                         new
                         {
                             Id = 6,
                             BookOwnerId = 5,
                             BookTemplateID = 6,
-                            Conditon = 2
+                            Condition = 2
                         },
                         new
                         {
                             Id = 7,
                             BookOwnerId = 5,
                             BookTemplateID = 7,
-                            Conditon = 3
+                            Condition = 3
                         },
                         new
                         {
                             Id = 8,
                             BookOwnerId = 3,
                             BookTemplateID = 8,
-                            Conditon = 5
+                            Condition = 5
                         });
                 });
 
@@ -1202,7 +1202,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Review", b =>
                 {
-                    b.HasOne("DAL.Entities.Book", "ReserveredBook")
+                    b.HasOne("DAL.Entities.Book", "ReservedBook")
                         .WithMany("Reviews")
                         .HasForeignKey("BookTemplateID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1214,7 +1214,7 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ReserveredBook");
+                    b.Navigation("ReservedBook");
 
                     b.Navigation("User");
                 });

@@ -163,7 +163,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Conditon = table.Column<int>(type: "int", nullable: false),
+                    Condition = table.Column<int>(type: "int", nullable: false),
                     BookOwnerId = table.Column<int>(type: "int", nullable: false),
                     BookTemplateID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -441,7 +441,7 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "BookInstances",
-                columns: new[] { "Id", "BookOwnerId", "BookTemplateID", "Conditon" },
+                columns: new[] { "Id", "BookOwnerId", "BookTemplateID", "Condition" },
                 values: new object[,]
                 {
                     { 2, 1, 2, 4 },

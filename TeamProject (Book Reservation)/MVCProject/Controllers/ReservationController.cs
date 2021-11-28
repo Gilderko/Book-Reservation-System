@@ -11,6 +11,7 @@ using BL.Facades;
 using BL.DTOs.Entities.Reservation;
 using MVCProject.StateManager;
 using BL.DTOs.ConnectionTables;
+using MVCProject.Config;
 
 namespace MVCProject.Controllers
 {
@@ -26,18 +27,34 @@ namespace MVCProject.Controllers
         // GET: Reservation
         public async Task<IActionResult> Index()
         {
-            return View();
+            if (!HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            return View(await _facade.Index());
+        }
+
+        public async Task<IActionResult> UserReservations()
+        {
+            int id;
+
+            if (User.Identity.Name is not null)
+            {
+                id = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(await _facade.GetReservationsByUserId(id));
         }
 
         // GET: Reservation/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            string[] refsToLoad = new string[]
-            {
-                nameof(ReservationDTO.User)
-            };
-
-            var reservation = await _facade.Get((int)id);           
+            var reservation = await _facade.GetDetailWithLoadedBooks(id);
 
             if (reservation == null)
             {
@@ -49,7 +66,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (int.Parse(HttpContext.User.Identity.Name) != reservation.UserID)
+            if (int.Parse(HttpContext.User.Identity.Name) != reservation.UserID ^ HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -139,23 +156,6 @@ namespace MVCProject.Controllers
             return RedirectToAction(nameof(this.Index));
         }
 
-        // GET: Reservation/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reservation = await _facade.Get((int)id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return View(reservation);
-        }
-
         public async Task<IActionResult> SubmitReservation()
         {
             var reservation = StateKeeper.Instance.GetReservationInSession(this);
@@ -181,8 +181,8 @@ namespace MVCProject.Controllers
                 if (succeded)
                 {
                     StateKeeper.Instance.SetReservationInSession(this, null);
-                    return RedirectToAction(nameof(HomeController.Index), "Home");
-                }                
+                    return RedirectToAction(nameof(this.UserReservations));
+                }
             }
 
             return RedirectToAction(nameof(this.DetailsCurrent));
@@ -195,23 +195,39 @@ namespace MVCProject.Controllers
             return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
         }
 
+        // GET: Reservation/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var reservation = await _facade.GetDetailWithLoadedBooks(id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            return View(reservation);
+        }        
+
         // POST: Reservation/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation)
+        public async Task<IActionResult> Edit([Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation, int[] booksToDelete, int? eReaderInstanceDelete)
         {
-            if (id != reservation.Id)
+            var collectToLoad = new string[]
             {
-                return NotFound();
-            }
+                nameof(ReservationDTO.BookInstances)
+            };          
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _facade.Update(reservation);
+                    _facade.RemoveBookInstances(reservation, booksToDelete);
+                    if (eReaderInstanceDelete.HasValue)
+                    {
+                        _facade.RemoveEReaderInstance(reservation);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -224,7 +240,7 @@ namespace MVCProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = reservation.Id } );
             }
             return View(reservation);
         }
@@ -252,7 +268,7 @@ namespace MVCProject.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             _facade.Delete(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(UserReservations));
         }
 
         private async Task<bool> ReservationExists(int id)

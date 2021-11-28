@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVCProject.Config;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -299,12 +300,12 @@ namespace MVCProject.Controllers
             
             if (user.IsAdmin)
             {
-                claims.Add(new Claim(ClaimTypes.Role, "User"));
-                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                claims.Add(new Claim(ClaimTypes.Role, GlobalConstants.UserRoleName));
+                claims.Add(new Claim(ClaimTypes.Role, GlobalConstants.AdminRoleName));
             }
             else
             {
-                claims.Add(new Claim(ClaimTypes.Role, "User"));
+                claims.Add(new Claim(ClaimTypes.Role, GlobalConstants.UserRoleName));
             }
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
