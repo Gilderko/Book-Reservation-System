@@ -18,16 +18,19 @@ namespace BL.Facades
         private ICRUDService<UserPrevDTO, User> _userPrevService;
         private IReservationService _reservationService;
         private IBookInstancePreviewService _bookInstancePreviewService;
+        private IAuthorService _authorService;
 
         public BookInstanceFacade(IUnitOfWork unitOfWork,
                                   IBookInstanceService bookInstanceService,
                                   IReservationService reservationService,
-                                  IBookInstancePreviewService bookInstancePreviewService)
+                                  IBookInstancePreviewService bookInstancePreviewService,
+                                  IAuthorService authorService)
         {
             _unitOfWork = unitOfWork;
             _bookInstanceService = bookInstanceService;
             _reservationService = reservationService;
             _bookInstancePreviewService = bookInstancePreviewService;
+            _authorService = authorService;
         }
         
         public async Task Create(BookInstanceDTO bookInstance)
@@ -68,7 +71,10 @@ namespace BL.Facades
 
         public async Task<IEnumerable<BookInstancePrevDTO>> GetBookInstancePrevsByUser(int userId)
         {
-            return await _bookInstancePreviewService.GetBookInstancePrevsByUser(userId);
+            var prevs = await _bookInstancePreviewService.GetBookInstancePrevsByUser(userId);
+            await _authorService.LoadAuthors(prevs);
+
+            return prevs;
         }
 
         public async Task<IEnumerable<BookInstancePrevDTO>> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from,
@@ -77,9 +83,11 @@ namespace BL.Facades
             return await _bookInstancePreviewService.GetAvailableInstancePrevsByDate(book, from, to);
         }
 
-        public async Task CreateUserBookInstance(int ownerId, BookInstanceCreateDTO bookInstance)
+        public async Task CreateUserBookInstance(int ownerId, int bookTemplateId, BookInstanceCreateDTO bookInstance)
         {
-            await _bookInstanceService.CreateBookInstance(ownerId, bookInstance);
+            await _bookInstanceService.CreateBookInstance(ownerId, bookTemplateId, bookInstance);
+            _unitOfWork.Commit();
+
         }
 
         public void Dispose()

@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="UserCreateBookInstance">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -18,10 +18,6 @@
                 <select asp-for="Condition" class="form-control" asp-items="Html.GetEnumSelectList<BL.DTOs.Enums.BookInstanceConditionDTO>()">
                     <option selected="selected" value="">Please select</option>
                 </select>
-            </div>
-            <div class="form-group">
-                <label asp-for="BookTemplateID" class="control-label"></label>
-                <select asp-for="BookTemplateID" class="form-control" asp-items="ViewBag.BookTemplateID"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

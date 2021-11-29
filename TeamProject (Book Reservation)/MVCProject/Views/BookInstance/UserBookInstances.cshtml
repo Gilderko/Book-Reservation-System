@@ -7,13 +7,16 @@
 <h1>My Books</h1>
 
 <p>
-    <a asp-action="UserCreateBookInstance">Create New</a>
+    <a asp-controller="Book" asp-action="Index">Add New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.FromBookTemplate.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FromBookTemplate.Authors)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Condition)
@@ -31,13 +34,15 @@
                 @Html.DisplayFor(modelItem => item.FromBookTemplate.Title)
             </td>
             <td>
+                @String.Join(", ", item.FromBookTemplate.Authors.Select(x => x.Author.Name + " " + x.Author.Surname))
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Condition)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FromBookTemplate.PageCount)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>

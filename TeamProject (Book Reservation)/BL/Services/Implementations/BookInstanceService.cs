@@ -14,9 +14,10 @@ namespace BL.Services.Implementations
         {
         }
 
-        public async Task CreateBookInstance(int ownerId, BookInstanceCreateDTO createBookInstance)
+        public async Task CreateBookInstance(int ownerId, int bookTemplateId, BookInstanceCreateDTO createBookInstance)
         {
             createBookInstance.BookOwnerId = ownerId;
+            createBookInstance.BookTemplateID = bookTemplateId;
             BookInstanceDTO newBook = Mapper.Map<BookInstanceDTO>(createBookInstance);
             await Insert(newBook);
         }

@@ -1,7 +1,9 @@
 ﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookCollection;
+using BL.DTOs.Filters;
 using BL.Services;
+using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
 using System.Collections.Generic;
@@ -14,14 +16,20 @@ namespace BL.Facades
         private IUnitOfWork _unitOfWork;
         private IBookCollectionService _bookCollectionService;
         private ICRUDService<BookCollectionBookDTO, BookCollectionBook> _bookCollectionBookService;
+        private IAuthorService _authorService;
+        private ICRUDService<BookPrevDTO, Book> _bookPrevService;
 
         public BookCollectionFacade(IUnitOfWork unitOfWork,
                                     IBookCollectionService bookCollectionService,
-                                    ICRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService)
+                                    ICRUDService<BookCollectionBookDTO, BookCollectionBook> bookCollectionBookService,
+                                    IAuthorService authorService,
+                                    ICRUDService<BookPrevDTO, Book> bookPrevService)
         {
             _unitOfWork = unitOfWork;
             _bookCollectionService = bookCollectionService;
             _bookCollectionBookService = bookCollectionBookService;
+            _authorService = authorService;
+            _bookPrevService = bookPrevService;
         }
 
         public async Task Create(BookCollectionDTO bookCollection)
@@ -82,6 +90,42 @@ namespace BL.Facades
         {
             await _bookCollectionService.CreateUserCollection(bookCollection, userId);
             _unitOfWork.Commit();
+        }
+
+        public async Task<BookCollectionDTO> GetBookCollectionWithBooksAndOwner(int bookCollectionId)
+        {
+            string[] collectionsToLoad = new string[]
+            {
+                nameof(BookCollectionDTO.Books)
+            };
+
+            string[] refsToLoad = new string[]
+{
+                nameof(BookCollectionDTO.OwnerUser)
+            };
+
+            return await _bookCollectionService.GetByID(bookCollectionId, refsToLoad, collectionsToLoad);
+        }
+
+        public async Task<IEnumerable<BookPrevDTO>> GetBookPreviewsWithAuthorsForCollection(BookCollectionDTO bookCollection)
+        {
+            HashSet<int> bookIds = new();
+
+            foreach (var book in bookCollection.Books)
+            {
+                bookIds.Add(book.BookID);
+            }
+
+            FilterDto filter = new FilterDto()
+            {
+                Predicate = new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In)
+            };
+
+            var books = await _bookPrevService.FilterBy(filter);
+
+            await _authorService.LoadAuthors(books);
+
+            return books;
         }
 
         public void Dispose()

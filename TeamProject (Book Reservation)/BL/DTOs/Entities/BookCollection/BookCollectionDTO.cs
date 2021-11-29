@@ -16,6 +16,8 @@ namespace BL.DTOs.Entities.BookCollection
         public string Description { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "Created on")]
         public DateTime CreationDate { get; set; }
 
         [Required]

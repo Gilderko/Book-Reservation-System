@@ -15,7 +15,6 @@ namespace BL.DTOs.Entities.BookInstance
 
         public int BookOwnerId { get; set; }
 
-        [Required]
         public int BookTemplateID { get; set; }
     }
 }

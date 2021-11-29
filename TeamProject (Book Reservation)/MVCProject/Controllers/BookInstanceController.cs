@@ -39,20 +39,30 @@ namespace MVCProject.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+
             return View(await _bookInstanceFacade.GetBookInstancePrevsByUser(userId));
         }
 
         // GET: UserCreateBookInstance
-        public async Task<IActionResult> UserCreateBookInstance()
+        public async Task<IActionResult> UserCreateBookInstance(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             return View();
         }
 
         // POST: BookInstance/UserCreateBookInstance
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UserCreateBookInstance([Bind("Conditon,BookTemplateID")] BookInstanceCreateDTO bookInstance)
+        public async Task<IActionResult> UserCreateBookInstance(int? id, [Bind("Conditon,BookTemplateID")] BookInstanceCreateDTO bookInstance)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             int userId;
             if (User.Identity.Name is not null)
             {
@@ -63,10 +73,11 @@ namespace MVCProject.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+
             if (ModelState.IsValid)
             {
-                await _bookInstanceFacade.CreateUserBookInstance(userId, bookInstance);
-                return RedirectToAction(nameof(Index));
+                await _bookInstanceFacade.CreateUserBookInstance(userId, (int)id, bookInstance);
+                return RedirectToAction(nameof(UserBookInstances));
             }
             return View(bookInstance);
         }

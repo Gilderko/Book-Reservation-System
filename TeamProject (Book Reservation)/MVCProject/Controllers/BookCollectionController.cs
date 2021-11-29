@@ -30,18 +30,18 @@ namespace MVCProject.Controllers
         // GET: BookCollection/UserCollections
         public async Task<IActionResult> UserCollections()
         {
-            int id;
+            int userId;
 
             if (User.Identity.Name is not null)
             {
-                id = int.Parse(User.Identity.Name);
+                userId = int.Parse(User.Identity.Name);
             }
             else
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(await _bookCollectionFacade.GetBookCollectionPrevsByUser(id));
+            return View(await _bookCollectionFacade.GetBookCollectionPrevsByUser(userId));
         }
 
         // GET: BookCollection/Details/5
@@ -52,11 +52,13 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _bookCollectionFacade.Get((int)id);
+            var bookCollection = await _bookCollectionFacade.GetBookCollectionWithBooksAndOwner((int)id);
             if (bookCollection == null)
             {
                 return NotFound();
             }
+
+            ViewData["books"] = await _bookCollectionFacade.GetBookPreviewsWithAuthorsForCollection(bookCollection);
 
             return View(bookCollection);
         }
@@ -114,13 +116,24 @@ namespace MVCProject.Controllers
         // GET: BookCollection/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
 
             var bookCollection = await _bookCollectionFacade.Get((int)id);
-            if (bookCollection == null)
+
+            if (bookCollection == null || (bookCollection.UserId != userId && User.Claims.FirstOrDefault(x => x.Value == "Admin") != null))
             {
                 return NotFound();
             }
@@ -184,7 +197,8 @@ namespace MVCProject.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             _bookCollectionFacade.Delete(id);
-            return RedirectToAction(nameof(Index));
+
+            return RedirectToAction(nameof(UserCollections));
         }
 
         private async Task<bool> BookCollectionExists(int id)
