@@ -14,17 +14,36 @@ namespace MVCProject.Controllers
 {
     public class EReaderInstanceController : Controller
     {
-        private readonly EReaderInstanceFacade _facade;
+        private readonly EReaderInstanceFacade _eReaderInstanceFacade;
 
         public EReaderInstanceController(EReaderInstanceFacade facade)
         {
-            _facade = facade;
+            _eReaderInstanceFacade = facade;
         }
 
         // GET: EReaderInstance
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _eReaderInstanceFacade.GetEReaderInstancePrevsBy(null, null, null, null, null));
+        }
+
+        // POST: EReaderInstance
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(string description,
+                                               string company,
+                                               string model,
+                                               int? memoryFrom,
+                                               int? memoryTo)
+        {
+            ViewData["description"] = description;
+            ViewData["company"] = company;
+            ViewData["model"] = model;
+            ViewData["memoryFrom"] = memoryFrom;
+            ViewData["memoryTo"] = memoryTo;
+ 
+            return View(await _eReaderInstanceFacade.GetEReaderInstancePrevsBy(description, company, model, memoryFrom, memoryTo));
         }
 
         // GET: EReaderInstance/Details/5
@@ -59,7 +78,7 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _facade.Create(eReaderInstance);
+                await _eReaderInstanceFacade.Create(eReaderInstance);
                 return RedirectToAction(nameof(Index));
             }
             return View(eReaderInstance);
@@ -97,7 +116,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _facade.Update(eReaderInstance);
+                    _eReaderInstanceFacade.Update(eReaderInstance);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -137,13 +156,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            _facade.Delete(id);
+            _eReaderInstanceFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> EReaderInstanceExists(int id)
         {
-            var eReaderInstance = await _facade.Get(id);
+            var eReaderInstance = await _eReaderInstanceFacade.Get(id);
             return eReaderInstance != null;
         }
 
@@ -155,7 +174,7 @@ namespace MVCProject.Controllers
                 nameof(EReaderInstanceDTO.Owner)
             };
 
-            var review = await _facade.Get(id, referencesToLoad);
+            var review = await _eReaderInstanceFacade.Get(id, referencesToLoad);
             return review;
         }
     }

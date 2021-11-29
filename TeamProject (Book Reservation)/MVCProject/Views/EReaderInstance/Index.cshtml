@@ -1,47 +1,91 @@
-﻿@model IEnumerable<BL.DTOs.Entities.EReaderInstance.EReaderInstanceDTO>
+﻿@model IEnumerable<BL.DTOs.Entities.EReaderInstance.EReaderInstancePrevDTO>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>E-Readers</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Owner)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EReaderTemplate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Owner.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EReaderTemplate.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div>
+    <div class="float-child-filter">
+        <form asp-action="Index" method="post">
+            <div class="form-group">
+                <h5 class="control-label">Description search</h5>
+                <input type="text" name="description" value="@(ViewData["description"])" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <h5 class="control-label">E-Reader manufacturer</h5>
+                <input type="text" name="company" value="@(ViewData["company"])" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <h5 class="control-label">Model</h5>
+                <input type="text" name="model" value="@(ViewData["model"])" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <h5 class="control-label">Memory size</h5>
+
+                <label class="control-label">From</label>
+                <input type="number" name="memoryFrom" value="@(ViewData["memoryFrom"])" class="form-control" />
+
+                <label class="control-label">To</label>
+                <input type="number" name="memoryTo" value="@(ViewData["memoryTo"])" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Filter" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+    <div class="float-child-content">
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EReaderTemplate.CompanyMake)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EReaderTemplate.Model)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EReaderTemplate.MemoryInMB)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EReaderTemplate.CompanyMake)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EReaderTemplate.Model)
+                    </td>
+                    <td>
+                        @String.Format(item.EReaderTemplate.MemoryInMB + " MB")
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

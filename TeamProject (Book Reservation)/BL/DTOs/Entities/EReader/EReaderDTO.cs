@@ -10,9 +10,12 @@ namespace BL.DTOs.Entities.EReader
 
         [Required]
         [StringLength(64)]
+        [Display(Name = "Manufacturer")]
         public string CompanyMake { get; set; }
 
         [Required]
+        [StringLength(64)]
+        [Display(Name = "Memory size")]
         public int MemoryInMB { get; set; }
     }
 }

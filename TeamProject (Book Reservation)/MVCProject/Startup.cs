@@ -34,7 +34,6 @@ namespace MVCProject
             services.AddTransient<EReaderFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderFacade>());
             services.AddTransient<EReaderFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderFacade>());
             services.AddTransient<EReaderInstanceFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderInstanceFacade>());
-            services.AddTransient<EReaderInstancePreviewFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderInstancePreviewFacade>());
             services.AddTransient<ReservationFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<ReservationFacade>());
             services.AddTransient<ReviewFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<ReviewFacade>());
             services.AddTransient<UserFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<UserFacade>());

@@ -10,8 +10,7 @@ using Infrastructure.Query.Operators;
 
 namespace BL.Services.Implementations
 {    
-    public class EReaderInstancePreviewService : CRUDService<EReaderInstancePrevDTO, EReaderInstance>, 
-        IEReaderInstancePreviewService
+    public class EReaderInstancePreviewService : CRUDService<EReaderInstancePrevDTO, EReaderInstance>, IEReaderInstancePreviewService
     {
         public EReaderInstancePreviewService(IRepository<EReaderInstance> repo, 
                                              IMapper mapper,
@@ -28,8 +27,13 @@ namespace BL.Services.Implementations
                 SortCriteria = "Id",
                 SortAscending = true
             };
+
+            string[] collectionsToLoad = new string[]
+            {
+                nameof(EReaderInstance.EReaderTemplate)
+            };
             
-            return (await FilterBy(filter));
+            return (await FilterBy(filter, null, collectionsToLoad));
         }
     }
 }
