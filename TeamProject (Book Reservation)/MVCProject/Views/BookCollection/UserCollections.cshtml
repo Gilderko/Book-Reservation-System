@@ -4,11 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>My collections</h1>
-
-<p>
-    <input type="button" class="btn btn-primary" value="Create" onclick="location.href='@Url.Action("UserCreateCollection", "BookCollection")'" />
-</p>
+<h1>My Book Collections</h1>
 <table class="table">
     <thead>
         <tr>
@@ -36,3 +32,6 @@
 }
     </tbody>
 </table>
+<p>
+    <input type="button" class="btn btn-primary" value="Create" onclick="location.href='@Url.Action("UserCreateCollection", "BookCollection")'" />
+</p>

@@ -28,12 +28,12 @@ namespace BL.Services.Implementations
                 SortAscending = true
             };
 
-            string[] collectionsToLoad = new string[]
+            string[] refsToLoad = new string[]
             {
                 nameof(EReaderInstance.EReaderTemplate)
             };
             
-            return (await FilterBy(filter, null, collectionsToLoad));
+            return (await FilterBy(filter, refsToLoad, null));
         }
     }
 }

@@ -9,7 +9,6 @@ namespace MVCProject.StateManager
     {
         EReaderInstanceDTOId,
         BookCollectionDTOId,
-        BookInstanceDTOId,
-        ActionId
+        BookInstanceDTOId
     }
 }

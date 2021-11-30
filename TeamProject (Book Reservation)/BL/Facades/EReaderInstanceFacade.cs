@@ -19,7 +19,7 @@ namespace BL.Facades
     public class EReaderInstanceFacade
     {
         private IUnitOfWork _unitOfWork;
-        private ICRUDService<EReaderInstanceDTO, EReaderInstance> _eReaderInstanceService;
+        private IEReaderInstanceService _eReaderInstanceService;
         private ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> _eBookEReaderInstanceService;
         private ICRUDService<EReaderPrevDTO, EReader> _eReaderPrevService;
         private ICRUDService<EReaderInstancePrevDTO, EReaderInstance> _eReaderInstancePrevDTO;
@@ -27,7 +27,7 @@ namespace BL.Facades
         private IEReaderInstancePreviewService _eReaderInstancePrevService;
 
         public EReaderInstanceFacade(IUnitOfWork unitOfWork,
-                                     ICRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceService,
+                                     IEReaderInstanceService eReaderInstanceService,
                                      ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> eBookEReaderInstanceService,
                                      IReservationService reservationService,
                                      IEReaderInstancePreviewService eReaderInstancePrevService,
@@ -41,17 +41,17 @@ namespace BL.Facades
             _eReaderInstancePrevService = eReaderInstancePrevService;
             _eReaderPrevService = eReaderPrevService;
             _eReaderInstancePrevDTO = eReaderInstancePrevDTO;
-    }
+        }
 
         public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancesByOwner(int ownerId)
         {
             return await _eReaderInstancePrevService.GetEReaderInstancesByOwner(ownerId);
         }
 
-        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancePrevsBy(string description, 
-                                                                                         string company, 
-                                                                                         string model, 
-                                                                                         int? memorySizeFrom, 
+        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancePrevsBy(string description,
+                                                                                         string company,
+                                                                                         string model,
+                                                                                         int? memorySizeFrom,
                                                                                          int? memorySizeTo)
         {
             FilterDto eReaderFilter = new FilterDto();
@@ -128,7 +128,7 @@ namespace BL.Facades
             _eReaderInstanceService.DeleteById(id);
             _unitOfWork.Commit();
         }
-        
+
         public async Task AddEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
         {
             await _eBookEReaderInstanceService.Insert(new EBookEReaderInstanceDTO
@@ -141,7 +141,7 @@ namespace BL.Facades
             });
             _unitOfWork.Commit();
         }
-        
+
         public void DeleteEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
         {
             _eBookEReaderInstanceService.Delete(new EBookEReaderInstanceDTO
@@ -153,6 +153,23 @@ namespace BL.Facades
                 EBookID = eBook.Id
             });
             _unitOfWork.Commit();
+        }
+
+        public async Task AddNewEReaderToUser(EReaderInstanceCreateDTO eReader, int userId)
+        {
+            await _eReaderInstanceService.AddEReaderInstanceToUser(eReader, userId);
+            _unitOfWork.Commit();
+        }
+
+        public async Task<IEnumerable<EReaderPrevDTO>> GetEReaderTemplates()
+        {
+            FilterDto filter = new()
+            {
+                SortAscending = true,
+                SortCriteria = nameof(EReader.CompanyMake)
+            };
+
+            return await _eReaderPrevService.FilterBy(filter);
         }
 
         public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByDate(EReaderInstanceDTO eReader, DateTime from, DateTime to)

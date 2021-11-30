@@ -46,6 +46,53 @@ namespace MVCProject.Controllers
             return View(await _eReaderInstanceFacade.GetEReaderInstancePrevsBy(description, company, model, memoryFrom, memoryTo));
         }
 
+        // GET: UserEReaders
+        [HttpGet]
+        public async Task<IActionResult> UserEReaders()
+        {
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(await _eReaderInstanceFacade.GetEReaderInstancesByOwner(userId));
+        }
+
+        // GET: EReaderInstance/UserCreateEReader
+        public IActionResult UserCreateEReader()
+        {
+            ViewData["eReaderTemplates"] = _eReaderInstanceFacade.GetEReaderTemplates().Result;
+            return View();
+        }
+
+        // POST: EReaderInstance/UserCreateEReader
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserCreateEReader([Bind("Description, EReaderTemplateID")] EReaderInstanceCreateDTO eReaderInstance)
+        {
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _eReaderInstanceFacade.AddNewEReaderToUser(eReaderInstance, userId);
+                return RedirectToAction(nameof(UserEReaders));
+            }
+            return View(eReaderInstance);
+        }
+
         // GET: EReaderInstance/Details/5
         public async Task<IActionResult> Details(int? id)
         {

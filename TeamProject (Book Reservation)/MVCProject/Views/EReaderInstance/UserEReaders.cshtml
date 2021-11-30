@@ -1,0 +1,54 @@
+﻿@model IEnumerable<BL.DTOs.Entities.EReaderInstance.EReaderInstancePrevDTO>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>My E-Readers</h1>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EReaderTemplate.CompanyMake)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EReaderTemplate.Model)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EReaderTemplate.MemoryInMB)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EReaderTemplate.CompanyMake)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EReaderTemplate.Model)
+                    </td>
+                    <td>
+                        @String.Format(item.EReaderTemplate.MemoryInMB + " MB")
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<p>
+    <a type="button" class="btn btn-primary" asp-action="UserCreateEReader">Add new E-Reader</a>
+</p>
