@@ -56,7 +56,7 @@ namespace MVCProject.Controllers
         // POST: BookInstance/UserCreateBookInstance
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UserCreateBookInstance(int? id, [Bind("Conditon,BookTemplateID")] BookInstanceCreateDTO bookInstance)
+        public async Task<IActionResult> UserCreateBookInstance(int? id, [Bind("Condition,BookTemplateID")] BookInstanceCreateDTO bookInstance)
         {
             if (id == null)
             {
