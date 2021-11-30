@@ -9,6 +9,7 @@ using DAL;
 using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.BookInstance;
+using MVCProject.Config;
 
 namespace MVCProject.Controllers
 {
@@ -23,8 +24,18 @@ namespace MVCProject.Controllers
 
         // GET: BookInstance
         public async Task<IActionResult> Index()
-        {            
-            return View();
+        {     
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            if (!HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            return View(await _bookInstanceFacade.GetAllBookInstances());
         }
 
         // GET: UserBookInstances
