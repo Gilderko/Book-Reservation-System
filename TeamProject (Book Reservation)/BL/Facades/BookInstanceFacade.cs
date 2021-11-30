@@ -5,9 +5,11 @@ using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.Reservation;
 using BL.DTOs.Entities.User;
+using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
+using Infrastructure.Query.Operators;
 
 namespace BL.Facades
 {
@@ -31,6 +33,27 @@ namespace BL.Facades
             _reservationService = reservationService;
             _bookInstancePreviewService = bookInstancePreviewService;
             _authorService = authorService;
+        }
+
+        public async Task<IEnumerable<BookInstancePrevDTO>> GetAllBookInstances()
+        {
+            var predicate = new PredicateDto(nameof(BookInstanceDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);
+
+            var filter = new FilterDto()
+            {
+                Predicate = predicate,
+                SortAscending = true
+            };
+
+            string[] refsToLoad = new string[]
+            {
+                nameof(BookInstancePrevDTO.FromBookTemplate),
+            };
+
+            var result = await _bookInstancePreviewService.FilterBy(filter, refsToLoad);
+            await _authorService.LoadAuthors(result);
+
+            return result;
         }
         
         public async Task Create(BookInstanceDTO bookInstance)
@@ -87,7 +110,6 @@ namespace BL.Facades
         {
             await _bookInstanceService.CreateBookInstance(ownerId, bookTemplateId, bookInstance);
             _unitOfWork.Commit();
-
         }
 
         public void Dispose()
