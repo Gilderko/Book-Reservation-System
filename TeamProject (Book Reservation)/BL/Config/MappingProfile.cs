@@ -76,6 +76,7 @@ namespace BL.Config
             config.CreateMap<AuthorBook, AuthorBookDTO>().ReverseMap();
             config.CreateMap<BookGenre, BookGenreDTO>().ReverseMap();
             config.CreateMap<BookCollectionBook, BookCollectionBookDTO>().ReverseMap();
+            config.CreateMap<BookCollectionBook, AddBookInCollectionDTO>().ReverseMap();
             config.CreateMap<ReservationBookInstance, ReservationBookInstanceDTO>().ReverseMap();
             config.CreateMap<EBookEReaderInstance, EBookEReaderInstanceDTO>().ReverseMap();
         }

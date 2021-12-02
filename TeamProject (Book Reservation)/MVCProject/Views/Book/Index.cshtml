@@ -91,7 +91,8 @@
             <a asp-action="Create">Create New</a>
         </p>
 
-        <table class="table">
+        <table class="table" style="width:1100px; ">
+
             <thead>
                 <tr>
                     <th>
@@ -106,10 +107,10 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Language)
                     </th>
-                    <th></th>
+                    <th width="300px"></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody >
                 @foreach (var item in Model)
                 {
                     <tr>
@@ -125,18 +126,23 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Language)
                         </td>
-                        <td>
+                        <td >
                             <div>
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                <br />
                                 <a asp-controller="BookInstance" asp-action="UserCreateBookInstance" asp-route-id="@item.Id">Offer this book</a>
+                                <br />
+                                <a asp-controller="BookCollection" asp-action="UserAddBookInCollection" asp-route-id="@item.Id">Add in collection</a>
+                                <br />
                             </div>
 
                             @if (User.HasClaim(x => x.Value == "Admin"))
                             {
-                                <div>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                </div>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <br />
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </div>
                             }
                         </td>
                     </tr>

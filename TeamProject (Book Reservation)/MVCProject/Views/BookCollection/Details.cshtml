@@ -45,30 +45,49 @@
         </dd>
     </dl>
 
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+        <a asp-action="UserCollections">Back to List</a>
+    </div>
+
+    <br />
+
     <h5>Books</h5>
-    <hr />
-    @foreach (var item in (IEnumerable<BL.DTOs.Entities.Book.BookPrevDTO>)ViewData["books"])
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(item => item.Title)
-            </td>
-            <td>
-                @String.Join(", ", item.Authors.Select(x => x.Author.Name + " " + x.Author.Surname))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Language)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-    }
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
-    <a asp-action="UserCollections">Back to List</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @String.Format("Title")
+                </th>
+                <th>
+                    @String.Format("Authors")
+                </th>
+                <th>
+                    @String.Format("Language")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in (IEnumerable<BL.DTOs.Entities.Book.BookPrevDTO>)ViewData["books"])
+            {
+                <tr>
+                    <td>
+                        @book.Title
+                    </td>
+                    <td>
+                        @String.Join(", ", book.Authors.Select(x => x.Author.Name + " " + x.Author.Surname))
+                    </td>
+                    <td>
+                        @book.Language
+                    </td>
+                    <td>
+                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id">Details</a> |
+                        <a asp-action="UserDeleteBookFromCollection" asp-route-id="@book.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

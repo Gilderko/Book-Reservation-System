@@ -6,6 +6,7 @@ using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -60,16 +61,32 @@ namespace BL.Facades
             return await _bookCollectionService.GetBookCollectionPrevsByUser(id);
         }
 
-        public async Task AddBookToCollection(BookCollectionDTO bookCollection, BookDTO book)
+        public async Task AddBookToCollection(AddBookInCollectionDTO bookCollectionDTO)
         {
+            try
+            {
+                await _bookPrevService.GetByID(bookCollectionDTO.BookID);
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException("Invalid book id");
+            }
+
+            try
+            {
+                await _bookCollectionService.GetByID(bookCollectionDTO.BookCollectionID);
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException("Invalid book collection id");
+            }
+
             await _bookCollectionBookService.Insert(new BookCollectionBookDTO
             {
-                BookCollect = bookCollection,
-                BookCollectionID = bookCollection.Id,
+                BookCollectionID = bookCollectionDTO.BookCollectionID,
+                BookID = bookCollectionDTO.BookID
+            });
 
-                Book = book,
-                BookID = book.Id
-            }) ;
             _unitOfWork.Commit();
         }
 
@@ -100,7 +117,7 @@ namespace BL.Facades
             };
 
             string[] refsToLoad = new string[]
-{
+            {
                 nameof(BookCollectionDTO.OwnerUser)
             };
 
@@ -116,12 +133,17 @@ namespace BL.Facades
                 bookIds.Add(book.BookID);
             }
 
+            string[] collectionsToLoad = new string[]
+            {
+                nameof(Book.Authors)
+            };
+
             FilterDto filter = new FilterDto()
             {
                 Predicate = new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In)
             };
 
-            var books = await _bookPrevService.FilterBy(filter);
+            var books = await _bookPrevService.FilterBy(filter, null, collectionsToLoad);
 
             await _authorService.LoadAuthors(books);
 

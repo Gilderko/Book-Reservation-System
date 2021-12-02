@@ -9,6 +9,7 @@ using DAL;
 using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.BookCollection;
+using BL.DTOs.ConnectionTables;
 
 namespace MVCProject.Controllers
 {
@@ -44,6 +45,7 @@ namespace MVCProject.Controllers
             return View(await _bookCollectionFacade.GetBookCollectionPrevsByUser(userId));
         }
 
+
         // GET: BookCollection/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -64,9 +66,49 @@ namespace MVCProject.Controllers
         }
 
         // GET: BookCollection/UserCreateCollection
-        public IActionResult UserCreateCollection()
+        [HttpGet]
+        public IActionResult UserCreateCollection(int? id)
         {
             return View();
+        }
+
+        // GET: BookCollection/Create
+        public IActionResult UserAddBookInCollection()
+        {
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var collectionPrevs = _bookCollectionFacade.GetBookCollectionPrevsByUser(userId).Result;
+
+            ViewData["collections"] = collectionPrevs;
+            return View();
+        }
+
+        // POST: BookCollection/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserAddBookInCollection(int? id, [Bind("BookCollectionID")] AddBookInCollectionDTO bookCollectionBook)
+        {
+            if (id is null)
+            {
+                return NotFound();
+            }
+
+            bookCollectionBook.BookID = (int)id;
+
+            if (ModelState.IsValid)
+            {
+                await _bookCollectionFacade.AddBookToCollection(bookCollectionBook);
+                return RedirectToAction(nameof(Details), new { id = bookCollectionBook.BookCollectionID });
+            }
+            return View(bookCollectionBook);
         }
 
         // POST: BookCollection/UserCreateCollection
