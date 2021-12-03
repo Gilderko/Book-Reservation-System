@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Filters;
 using BL.QueryObjects;
