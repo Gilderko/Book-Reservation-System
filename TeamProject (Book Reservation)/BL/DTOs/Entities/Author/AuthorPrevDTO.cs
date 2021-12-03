@@ -9,5 +9,8 @@ namespace BL.DTOs.Entities.Author
 
         [StringLength(32)]
         public string Surname { get; set; }
+
+        [StringLength(1024)]
+        public string Description { get; set; }
     }
 }
