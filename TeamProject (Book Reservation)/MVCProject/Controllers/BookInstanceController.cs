@@ -55,7 +55,7 @@ namespace MVCProject.Controllers
         }
 
         // GET: UserCreateBookInstance
-        public async Task<IActionResult> UserCreateBookInstance(int? id)
+        public IActionResult UserCreateBookInstance(int? id)
         {
             if (id == null)
             {
@@ -143,27 +143,6 @@ namespace MVCProject.Controllers
             return View(bookInstance);
         }
 
-        // GET: BookInstance/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: BookInstance/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Conditon,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
-        {
-            if (ModelState.IsValid)
-            {
-                await _bookInstanceFacade.Create(bookInstance);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(bookInstance);
-        }
-
         // GET: BookInstance/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -185,7 +164,7 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Conditon,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
+        public async Task<IActionResult> Edit(int id, [Bind("Condition,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
         {
             if (id != bookInstance.Id)
             {
