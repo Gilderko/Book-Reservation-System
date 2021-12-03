@@ -1,5 +1,6 @@
 ﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.EReader;
+using BL.DTOs.Entities.Reservation;
 using BL.DTOs.Entities.User;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,13 +16,15 @@ namespace BL.DTOs.Entities.EReaderInstance
         [Required]
         public int EReaderTemplateID { get; set; }
 
-        public int EreaderOwnerId { get; set; }
-
         [Required]
+        public int EreaderOwnerId { get; set; }        
+
         public UserDTO Owner { get; set; }
 
         public EReaderDTO EReaderTemplate { get; set; }
 
         public ICollection<EBookEReaderInstanceDTO> BooksIncluded { get; set; }
+
+        public ICollection<ReservationDTO> Reservations { get; set; }
     }
 }
