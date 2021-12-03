@@ -152,10 +152,12 @@ namespace MVCProject.Controllers
             }
 
             var bookInstance = await _bookInstanceFacade.Get((int)id);
+            
             if (bookInstance == null)
             {
                 return NotFound();
             }
+
             return View(bookInstance);
         }
 
@@ -188,8 +190,9 @@ namespace MVCProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(UserBookInstances));
             }
+
             return View(bookInstance);
         }
 
@@ -202,6 +205,7 @@ namespace MVCProject.Controllers
             }
 
             var bookInstance = await _bookInstanceFacade.Get((int)id);
+
             if (bookInstance == null)
             {
                 return NotFound();
@@ -216,7 +220,7 @@ namespace MVCProject.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             _bookInstanceFacade.Delete(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(UserBookInstances));
         }
 
         private async Task<bool> BookInstanceExists(int id)
