@@ -24,7 +24,17 @@ namespace MVCProject.Controllers
         // GET: Author
         public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _facade.GetAuthorPreviews());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(string name, string surname)
+        {
+            ViewData["name"] = name;
+            ViewData["surname"] = surname;
+
+            return View(await _facade.GetAuthorPreviews(name, surname));
         }
 
         // GET: Author/Details/5
@@ -35,11 +45,13 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var author = await _facade.Get((int)id, collectToLoad: new[] { nameof(AuthorDTO.AuthorsBooks) });
+            var author = await _facade.Get((int)id);
             if (author == null)
             {
                 return NotFound();
             }
+
+            author.AuthorsBooks = await _facade.GetAuthorBooksByAuthor((int)id);
 
             return View(author);
         }

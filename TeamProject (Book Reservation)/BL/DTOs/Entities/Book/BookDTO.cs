@@ -5,6 +5,7 @@ using BL.DTOs.Enums;
 using DAL.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -25,15 +26,17 @@ namespace BL.DTOs.Entities.Book
 
         [Required]
         [Range(1, 10000)]
+        [DisplayName("Page count")]
         public int PageCount { get; set; }
 
         [Required]
+        [DisplayName("Date of release")]
         public DateTime DateOfRelease { get; set; }
 
         [Required]
         public LanguageDTO Language { get; set; }
 
-        public ICollection<BookInstanceDTO> BookInstances { get; set; }
+        public IEnumerable<BookInstanceDTO> BookInstances { get; set; }
 
         public ICollection<ReviewDTO> Reviews { get; set; }
 
@@ -41,7 +44,7 @@ namespace BL.DTOs.Entities.Book
 
         public ICollection<BookCollectionBookDTO> BookCollections { get; set; }
 
-        public ICollection<AuthorBookDTO> Authors { get; set; }
+        public IEnumerable<AuthorBookDTO> Authors { get; set; }
 
         public ICollection<BookGenreDTO> Genres { get; set; }
     }

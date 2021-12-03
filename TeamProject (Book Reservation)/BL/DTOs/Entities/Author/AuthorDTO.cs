@@ -18,6 +18,6 @@ namespace BL.DTOs.Entities.Author
 
         // Many to many relationships
 
-        public ICollection<AuthorBookDTO> AuthorsBooks { get; set; }
+        public IEnumerable<AuthorBookDTO> AuthorsBooks { get; set; }
     }
 }

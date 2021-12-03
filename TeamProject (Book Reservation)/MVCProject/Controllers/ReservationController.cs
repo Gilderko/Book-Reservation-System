@@ -27,6 +27,11 @@ namespace MVCProject.Controllers
         // GET: Reservation
         public async Task<IActionResult> Index()
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
             if (!HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
@@ -66,7 +71,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (int.Parse(HttpContext.User.Identity.Name) != reservation.UserID ^ HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
+            if (!(int.Parse(HttpContext.User.Identity.Name) == reservation.UserID || HttpContext.User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -192,14 +197,20 @@ namespace MVCProject.Controllers
         {
             StateKeeper.Instance.SetReservationInSession(this, null);
 
-            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         // GET: Reservation/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var reservation = await _facade.GetDetailWithLoadedBooks(id);
+
             if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            if (!(int.Parse(HttpContext.User.Identity.Name) == reservation.UserID || HttpContext.User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -214,6 +225,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation, int[] booksToDelete, int? eReaderInstanceDelete)
         {
+            if (!(int.Parse(HttpContext.User.Identity.Name) == reservation.UserID || HttpContext.User.IsInRole(GlobalConstants.AdminRoleName)))
+            {
+                return NotFound();
+            }
+
             var collectToLoad = new string[]
             {
                 nameof(ReservationDTO.BookInstances)
@@ -243,7 +259,7 @@ namespace MVCProject.Controllers
                 return RedirectToAction(nameof(Details), new { id = reservation.Id } );
             }
             return View(reservation);
-        }
+        }       
 
         // GET: Reservation/Delete/5
         public async Task<IActionResult> Delete(int? id)

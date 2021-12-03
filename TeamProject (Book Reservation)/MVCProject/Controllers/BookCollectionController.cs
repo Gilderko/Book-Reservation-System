@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.ConnectionTables;
@@ -63,6 +61,15 @@ namespace MVCProject.Controllers
             ViewData["books"] = await _bookCollectionFacade.GetBookPreviewsWithAuthorsForCollection(bookCollection);
 
             return View(bookCollection);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details(int bookCollectionId, int bookToDeleteId)
+        {
+            _bookCollectionFacade.DeleteBookFromCollection(bookCollectionId,bookToDeleteId);           
+
+            return RedirectToAction("Details",new { id = bookCollectionId });
         }
 
         // GET: BookCollection/UserCreateCollection

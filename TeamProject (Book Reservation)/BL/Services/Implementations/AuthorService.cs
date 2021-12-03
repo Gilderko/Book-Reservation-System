@@ -9,6 +9,7 @@ using BL.QueryObjects;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using Infrastructure.Query.Operators;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,9 +57,9 @@ namespace BL.Services.Implementations
             {
                 FilterDto filter = new()
                 {
-                    Predicate = new PredicateDto(nameof(AuthorBook.BookID), prev.FromBookTemplate.Id, Infrastructure.Query.Operators.ValueComparingOperator.Equal)
+                    Predicate = new PredicateDto(nameof(AuthorBook.BookID), prev.FromBookTemplate.Id, ValueComparingOperator.Equal)
                 };
-                prev.FromBookTemplate.Authors = (ICollection<AuthorBookDTO>)_queryObjectBookAuthor.ExecuteQuery(filter).Result.Items;
+                prev.FromBookTemplate.Authors = _queryObjectBookAuthor.ExecuteQuery(filter).Result.Items;
 
                 foreach (var authorBook in prev.FromBookTemplate.Authors)
                 {
@@ -73,17 +74,17 @@ namespace BL.Services.Implementations
 
             if (name is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Author.Name), name, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
+                predicates.Add(new PredicateDto(nameof(Author.Name), name, ValueComparingOperator.Contains));
             }
 
             if (surname is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Author.Surname), surname, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
+                predicates.Add(new PredicateDto(nameof(Author.Surname), surname, ValueComparingOperator.Contains));
             }
 
             FilterDto filter = new()
             {
-                Predicate = new CompositePredicateDto(predicates, Infrastructure.Query.Operators.LogicalOperator.AND)
+                Predicate = new CompositePredicateDto(predicates, LogicalOperator.AND)
             };
 
             string[] collectionsToLoad = new string[] {
