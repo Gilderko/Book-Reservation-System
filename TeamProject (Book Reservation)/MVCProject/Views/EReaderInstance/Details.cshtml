@@ -1,4 +1,5 @@
 ﻿@model BL.DTOs.Entities.EReaderInstance.EReaderInstanceDTO
+@using MVCProject.StateManager
 
 @{
     ViewData["Title"] = "Details";
@@ -33,6 +34,26 @@
     </dl>
 </div>
 <div>
+    @{
+        var currentReservation = StateKeeper.Instance.GetReservationInSession(ViewContext.HttpContext.Session);
+        @if (currentReservation != null)
+        {
+            bool shouldDisplay = true;
+            foreach (var reservation in Model.Reservations)
+            {
+                if (currentReservation.DateTill < reservation.DateTill)
+                {
+                    shouldDisplay = false;
+                    break;
+                }
+            }
+
+            if (shouldDisplay)
+            {
+                <a asp-controller="Reservation" asp-action="AddedEReaderInstance" asp-route-id="@Model.Id">Reserve |</a>
+            }
+        }
+    }
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
     <a asp-action="Index">Back to List</a>

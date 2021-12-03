@@ -218,10 +218,15 @@ namespace MVCProject.Controllers
             string[] referencesToLoad = new[]
             {
                 nameof(EReaderInstanceDTO.EReaderTemplate),
-                nameof(EReaderInstanceDTO.Owner)
+                nameof(EReaderInstanceDTO.Owner),                
             };
 
-            var review = await _eReaderInstanceFacade.Get(id, referencesToLoad);
+            string[] collectionsToLoad = new[]
+            {
+                nameof(EReaderInstanceDTO.Reservations)
+            };
+
+            var review = await _eReaderInstanceFacade.Get(id, referencesToLoad, collectionsToLoad);
             return review;
         }
     }

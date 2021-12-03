@@ -103,6 +103,17 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
+        public void DeleteBookFromCollection(int bookCollectionId, int bookId)
+        {
+            _bookCollectionBookService.Delete(new BookCollectionBookDTO
+            {
+                BookCollectionID = bookCollectionId,
+
+                BookID = bookId
+            });
+            _unitOfWork.Commit();
+        }
+
         public async Task CreateUserCollection(BookCollectionCreateDTO bookCollection, int userId)
         {
             await _bookCollectionService.CreateUserCollection(bookCollection, userId);

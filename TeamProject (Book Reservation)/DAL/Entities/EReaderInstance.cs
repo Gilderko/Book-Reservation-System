@@ -21,5 +21,7 @@ namespace DAL.Entities
         public EReader EReaderTemplate { get; set; }
 
         public ICollection<EBookEReaderInstance> BooksIncluded { get; set; }
+
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }
