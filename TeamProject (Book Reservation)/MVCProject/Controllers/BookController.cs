@@ -57,11 +57,15 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var book = await _bookFacade.Get((int)id, collectToLoad: new[] { nameof(BookDTO.BookInstances), nameof(BookDTO.Reviews) });
+            var collectToLoad = new[] { nameof(BookDTO.BookInstances), nameof(BookDTO.Reviews), nameof(BookDTO.Genres) };
+
+            var book = await _bookFacade.Get((int)id, collectToLoad: collectToLoad);
             if (book == null)
             {
                 return NotFound();
             }
+
+            book.Authors = await _bookFacade.GetAuthorBooksByBook((int)id);
 
             return View(book);
         }
@@ -145,11 +149,15 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var book = await _bookFacade.Get((int)id);
+            var collectToLoad = new[] { nameof(BookDTO.BookInstances), nameof(BookDTO.Reviews), nameof(BookDTO.Genres) };
+
+            var book = await _bookFacade.Get((int)id, collectToLoad: collectToLoad);
             if (book == null)
             {
                 return NotFound();
             }
+
+            book.Authors = await _bookFacade.GetAuthorBooksByBook((int)id);
 
             return View(book);
         }

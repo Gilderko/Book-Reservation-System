@@ -2,10 +2,12 @@
 using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
+using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using Infrastructure.Query.Operators;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,14 +18,17 @@ namespace BL.Facades
         private IUnitOfWork _unitOfWork;
         private ICRUDService<AuthorDTO, Author> _authorService;
         private ICRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
+        private ICRUDService<AuthorPrevDTO, Author> _authorPrevService;
 
         public AuthorFacade(IUnitOfWork unitOfWork,
                             ICRUDService<AuthorDTO, Author> authorService,
-                            ICRUDService<AuthorBookDTO, AuthorBook> authorBookService) 
+                            ICRUDService<AuthorBookDTO, AuthorBook> authorBookService,
+                            ICRUDService<AuthorPrevDTO, Author> authorPrevService) 
         {
             _unitOfWork = unitOfWork;
             _authorService = authorService;
             _authorBookService = authorBookService;
+            _authorPrevService = authorPrevService;
         }
 
         public async Task Create(AuthorDTO author)
@@ -62,6 +67,45 @@ namespace BL.Facades
                 BookID = book.Id
             });
             _unitOfWork.Commit();
+        }
+
+        public async Task<IEnumerable<AuthorPrevDTO>> GetAuthorPreviews(string name = null, string surname = null)
+        {
+            var filter = new FilterDto();
+
+            List<PredicateDto> predicates = new();
+
+            if (name is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(AuthorDTO.Name), name, ValueComparingOperator.Contains));
+            }
+
+            if (surname is not null)
+            {
+                predicates.Add(new PredicateDto(nameof(AuthorDTO.Surname), surname, ValueComparingOperator.Contains));
+            }
+
+            if (predicates.Count > 0)
+            {
+                filter.Predicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
+            }
+
+            var previews = await _authorPrevService.FilterBy(filter);
+            return previews;
+        }
+
+        public async Task<IEnumerable<AuthorBookDTO>> GetAuthorBooksByAuthor(int id)
+        {
+            var filter = new FilterDto();
+            filter.Predicate = new PredicateDto(nameof(AuthorBookDTO.AuthorID), id, ValueComparingOperator.Equal);
+
+            var refsToLoad = new[]
+            {
+                nameof(AuthorBookDTO.Book)
+            };
+
+            var result = await _authorBookService.FilterBy(filter, refsToLoad);
+            return result;
         }
     }
 }

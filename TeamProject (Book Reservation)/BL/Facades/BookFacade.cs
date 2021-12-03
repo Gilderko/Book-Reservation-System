@@ -1,9 +1,13 @@
-﻿using BL.DTOs.Entities.Book;
+﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.Book;
+using BL.DTOs.Entities.User;
 using BL.DTOs.Enums;
 using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
+using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using Infrastructure.Query.Operators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,22 +18,74 @@ namespace BL.Facades
     public class BookFacade
     {
         private IUnitOfWork _unitOfWork;
-        private ICRUDService<BookDTO, Book> _service;
+        private ICRUDService<BookDTO, Book> _bookService;
         private ICRUDService<BookPrevDTO, Book> _bookPrevService;
+        private ICRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
+        private ICRUDService<UserDTO, User> _userService;
         private IAuthorService _authorService;
         private IGenreService _genreService;
 
         public BookFacade(IUnitOfWork unitOfWork,
-                          ICRUDService<BookDTO, Book> service,
+                          ICRUDService<BookDTO, Book> bookService,
                           ICRUDService<BookPrevDTO, Book> bookPrevService,
+                          ICRUDService<AuthorBookDTO, AuthorBook> authorBookService,
+                          ICRUDService<UserDTO, User> userService,
                           IAuthorService authorService,
                           IGenreService genreService)
         {
             _unitOfWork = unitOfWork;
-            _service = service;
+            _bookService = bookService;
             _bookPrevService = bookPrevService;
+            _authorBookService = authorBookService;
+            _userService =userService;
             _authorService = authorService;
             _genreService = genreService;
+        }
+
+        public async Task Create(BookDTO book)
+        {
+            await _bookService.Insert(book);
+            _unitOfWork.Commit();
+        }
+
+        public async Task<BookDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
+        {
+            var book = await _bookService.GetByID(id, refsToLoad, collectToLoad);
+
+            if (collectToLoad is not null && collectToLoad.Contains(nameof(BookDTO.Reviews)))
+            {
+                foreach (var review in book.Reviews)
+                {
+                    review.User = await _userService.GetByID(review.UserID);
+                }
+            }
+
+            if (collectToLoad is not null && collectToLoad.Contains(nameof(BookDTO.BookInstances)))
+            {
+                foreach (var bookInstance in book.BookInstances)
+                {
+                    bookInstance.Owner = await _userService.GetByID(bookInstance.BookOwnerId);
+                }
+            }
+
+            return book;
+        }
+
+        public void Update(BookDTO book)
+        {
+            _bookService.Update(book);
+            _unitOfWork.Commit();
+        }
+
+        public void Delete(int id)
+        {
+            _bookService.DeleteById(id);
+            _unitOfWork.Commit();
+        }
+        
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
         }
 
         public async Task<IEnumerable<BookPrevDTO>> GetBookPreviews(string title,
@@ -48,49 +104,49 @@ namespace BL.Facades
 
             if (title is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.Title), title, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
+                predicates.Add(new PredicateDto(nameof(Book.Title), title, ValueComparingOperator.Contains));
             }
 
             if (authorName is not null || authorSurname is not null)
             {
                 var bookIds = await _authorService.GetAuthorsBooksIdsByName(authorName, authorSurname);
-                predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In));
+                predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, ValueComparingOperator.In));
             }
 
             if (genres is not null && genres.Length > 0)
             {
                 var bookIds = await _genreService.GetBookIdsByGenres(genres);
-                predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In));
+                predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, ValueComparingOperator.In));
             }
 
             if (language is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.Language), (int)language, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
+                predicates.Add(new PredicateDto(nameof(Book.Language), (int)language, ValueComparingOperator.Contains));
             }
 
             if (pageFrom is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageFrom, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageFrom, ValueComparingOperator.GreaterThanOrEqual));
             }
 
             if (pageTo is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageTo, Infrastructure.Query.Operators.ValueComparingOperator.LessThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageTo, ValueComparingOperator.LessThanOrEqual));
             }
 
             if (releaseFrom is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.DateOfRelease), releaseFrom, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(Book.DateOfRelease), releaseFrom, ValueComparingOperator.GreaterThanOrEqual));
             }
 
             if (releaseTo is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.DateOfRelease), releaseTo, Infrastructure.Query.Operators.ValueComparingOperator.LessThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(Book.DateOfRelease), releaseTo, ValueComparingOperator.LessThanOrEqual));
             }
 
             if (predicates.Count > 0)
             {
-                filter.Predicate = new CompositePredicateDto(predicates, Infrastructure.Query.Operators.LogicalOperator.AND);
+                filter.Predicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
             }
 
             string[] collectionsToLoad = new string[] {
@@ -103,32 +159,18 @@ namespace BL.Facades
             return previews;
         }
 
-        public async Task Create(BookDTO book)
+        public async Task<IEnumerable<AuthorBookDTO>> GetAuthorBooksByBook(int id)
         {
-            await _service.Insert(book);
-            _unitOfWork.Commit();
-        }
+            var filter = new FilterDto();
+            filter.Predicate = new PredicateDto(nameof(AuthorBookDTO.BookID), id, ValueComparingOperator.Equal);
 
-        public async Task<BookDTO> Get(int id, string[] refsToLoad = null, string[] collectToLoad = null)
-        {
-            return await _service.GetByID(id, refsToLoad, collectToLoad);
-        }
+            var refsToLoad = new[]
+            {
+                nameof(AuthorBookDTO.Author)
+            };
 
-        public void Update(BookDTO book)
-        {
-            _service.Update(book);
-            _unitOfWork.Commit();
-        }
-
-        public void Delete(int id)
-        {
-            _service.DeleteById(id);
-            _unitOfWork.Commit();
-        }
-        
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
+            var result = await _authorBookService.FilterBy(filter, refsToLoad);
+            return result;
         }
     }
 }

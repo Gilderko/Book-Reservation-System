@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BL.DTOs.Entities.Author.AuthorDTO>
+﻿@model IEnumerable<BL.DTOs.Entities.Author.AuthorPrevDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,42 +6,69 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Surname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="float-container">
+    <div class="float-child-filter">
+        <form asp-action="Index" method="post">
+            <div class="form-group">
+                <h5 class="control-label">Name</h5>
+                <input type="text" name="name" value="@(ViewData["name"])" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <h5 class="control-label">Surname</h5>
+                <input type="text" name="surname" value="@(ViewData["surname"])" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Filter" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="float-child-content">
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Surname)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Surname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @if (User.HasClaim(x => x.Value == "Admin"))
+                            {
+                                <div>
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                </div>
+                            }
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
