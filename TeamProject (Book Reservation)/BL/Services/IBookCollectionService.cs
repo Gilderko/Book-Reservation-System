@@ -14,5 +14,9 @@ namespace BL.Services
         public Task<IEnumerable<BookCollectionPrevDTO>> GetBookCollectionPrevsByUser(int userId);
 
         public Task CreateUserCollection(BookCollectionCreateDTO bookCollection, int userId);
+
+        public Task<BookCollectionCreateDTO> GetUserCollectionToEdit(int id);
+
+        public void EditUserCollection(BookCollectionCreateDTO collection);
     }
 }

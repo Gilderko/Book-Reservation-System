@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
+using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Filters;
 using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
 using Infrastructure.Query.Operators;
-using System.Collections.Generic;
-using BL.DTOs.Entities.BookCollection;
-using BL.DTOs.Entities.User;
-using System.Threading.Tasks;
-using BL.DTOs.Entities.Book;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
 {
@@ -42,6 +40,17 @@ namespace BL.Services.Implementations
 
             BookCollectionDTO fullBookCollection = Mapper.Map<BookCollectionDTO>(bookCollection);
             await Insert(fullBookCollection);
+        }
+
+        public async Task<BookCollectionCreateDTO> GetUserCollectionToEdit(int id)
+        {
+            var collection = await GetById(id);
+            return Mapper.Map<BookCollectionCreateDTO>(collection);
+        }
+
+        public void EditUserCollection(BookCollectionCreateDTO collection)
+        {
+            Update(Mapper.Map<BookCollectionDTO>(collection));
         }
     }
 }

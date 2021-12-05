@@ -56,6 +56,17 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
+        public async Task<BookCollectionCreateDTO> GetUserCollectionToEdit(int id)
+        {
+            return await _bookCollectionService.GetUserCollectionToEdit(id);
+        }
+
+        public void UserEditCollection(BookCollectionCreateDTO collection)
+        {
+            _bookCollectionService.EditUserCollection(collection);
+            _unitOfWork.Commit();
+        }
+
         public async Task<IEnumerable<BookCollectionPrevDTO>> GetBookCollectionPrevsByUser(int id)
         {
             return await _bookCollectionService.GetBookCollectionPrevsByUser(id);

@@ -40,7 +40,12 @@
                             @Html.DisplayFor(modelItem => item.Title)
                         </td>
                         <td>
-                            @String.Join(", ", item.Authors.Select(x => x.Author.Name + " " + x.Author.Surname))
+                            @foreach (var author in item.Authors)
+                            {
+                                <a asp-controller="Author" asp-action="Details" asp-route-id="@author.AuthorID">
+                                    @Html.DisplayFor(modelItem => author.Author.Name) @Html.DisplayFor(modelItem => author.Author.Surname)
+                                </a>
+                            }
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Description)

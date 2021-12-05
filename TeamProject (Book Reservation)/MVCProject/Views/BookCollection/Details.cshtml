@@ -46,10 +46,12 @@
     </dl>
 
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+        @if(int.Parse(User.Identity.Name) == Model.OwnerUser.Id)
+        {
+                <a asp-action="UserEditCollection" asp-route-id="@Model.Id">Edit</a> <label>|</label>
+                <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> <label>|</label>
+        }
         <a asp-action="UserCollections">Back to List</a>
-    </div>
 
     <br />
 
