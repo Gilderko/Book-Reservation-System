@@ -1,4 +1,5 @@
 ﻿@model BL.DTOs.Entities.EReaderInstance.EReaderInstanceDTO
+@using MVCProject.Config;
 
 @{
     ViewData["Title"] = "Details";
@@ -33,7 +34,44 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+    <h5>EBooks</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Description
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.BooksIncluded)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EBook.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EBook.Description)
+                    </td>
+                    <td>
+                        <a asp-controller="EBook" asp-action="Details" asp-route-id="@item.EBookID">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    @if ((User.Identity.Name != null && int.Parse(User.Identity.Name) == Model.EreaderOwnerId) || User.IsInRole(GlobalConstants.AdminRoleName))
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        </div>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

@@ -1,5 +1,6 @@
 ﻿@model BL.DTOs.Entities.Book.BookDTO
 @using BL.DTOs.Enums;
+@using MVCProject.Config;
 
 @{
     ViewData["Title"] = "Details";
@@ -120,9 +121,6 @@
                 <th>
                     Condition
                 </th>
-                <th>
-                    Free
-                </th>
                 <th></th>
             </tr>
         </thead>
@@ -139,9 +137,6 @@
                         @Html.DisplayFor(modelItem => item.Condition)
                     </td>
                     <td>
-                        Date
-                    </td>
-                    <td>
                         <a asp-controller="BookInstance" asp-action="Details" asp-route-id="@item.Id">Details</a>
                     </td>
                 </tr>
@@ -150,7 +145,12 @@
     </table>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+    @if (User.IsInRole(GlobalConstants.AdminRoleName)) 
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        </div>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

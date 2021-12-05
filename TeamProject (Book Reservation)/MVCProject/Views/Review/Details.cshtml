@@ -1,4 +1,5 @@
 ﻿@model BL.DTOs.Entities.Review.ReviewDTO
+@using MVCProject.Config;
 
 @{
     ViewData["Title"] = "Details";
@@ -47,7 +48,12 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+    @if ((User.Identity.Name != null && int.Parse(User.Identity.Name) == Model.UserID) || User.IsInRole(GlobalConstants.AdminRoleName))
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        </div>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

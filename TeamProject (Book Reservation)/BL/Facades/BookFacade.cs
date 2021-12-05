@@ -161,8 +161,10 @@ namespace BL.Facades
 
         public async Task<IEnumerable<AuthorBookDTO>> GetAuthorBooksByBook(int id)
         {
-            var filter = new FilterDto();
-            filter.Predicate = new PredicateDto(nameof(AuthorBookDTO.BookID), id, ValueComparingOperator.Equal);
+            var filter = new FilterDto
+            {
+                Predicate = new PredicateDto(nameof(AuthorBookDTO.BookID), id, ValueComparingOperator.Equal)
+            };
 
             var refsToLoad = new[]
             {
