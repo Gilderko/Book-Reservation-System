@@ -9,84 +9,7 @@
 <h1>Books</h1>
 
 <div class="float-container">
-    <div class="float-child-filter">
-        <form asp-action="Index" method="post">
-            <div class="form-group" name="genre">
-                <h5 class="control-label">Genre</h5>
-                @foreach (var genre in Enum.GetValues(typeof(GenreTypeDTO)))
-                {
-                    @if (ViewData["genres"] != null && Array.IndexOf((GenreTypeDTO[])ViewData["genres"], genre) != -1)
-                    {
-                        <input type="checkbox" checked id="@genre" name="genres" value=@genre>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="@genre" name="genres" value=@genre>
-                    }
-                    <label for="@genre">@((GenreTypeDTO)genre)</label>
-                    <br>
-                }
-            </div>
-
-            <div class="form-group">
-                <h5 class="control-label">Title</h5>
-                <input type="text" name="title" value="@(ViewData["bookTitle"])" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <h5 class="control-label">Author Name</h5>
-                <input type="text" name="authorName" value="@(ViewData["authorName"])" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <h5 class="control-label">Author Surname</h5>
-                <input type="text" name="authorSurname" value="@(ViewData["authorSurname"])" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <h5 class="control-label">Language</h5>
-                <select class="form-control" name="language">
-                    <option value="">Please select</option>
-
-                    @foreach (var lang in Enum.GetValues(typeof(LanguageDTO)))
-                    {
-                        @if (ViewData["language"] is not null && (int)lang == (int)ViewData["language"])
-                        {
-                            <option selected="selected" value=@(lang)>"@(lang)"</option>
-                        }
-                        else
-                        {
-                            <option value=@(lang)>"@(lang)"</option>
-                        }
-                    }
-                </select>
-            </div>
-
-            <div class="form-group">
-                <h5 class="control-label">Pages</h5>
-
-                <label class="control-label">From</label>
-                <input type="number" name="pageFrom" value="@(ViewData["pageFrom"])" class="form-control" />
-
-                <label class="control-label">To</label>
-                <input type="number" name="pageTo" value="@(ViewData["pageTo"])" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <h5 class="control-label">Release date</h5>
-
-                <label class="control-label">From</label>
-                <input type="date" name="releaseFrom" value="@(ViewData["releaseFrom"] != null ? ((DateTime)ViewData["releaseFrom"]).ToString("yyyy-MM-dd") : null)" class="form-control" />
-
-                <label class="control-label">To</label>
-                <input type="date" name="releaseTo" value="@(ViewData["releaseFrom"] != null ? ((DateTime)ViewData["releaseTo"]).ToString("yyyy-MM-dd") : null)" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Filter" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+    @await Html.PartialAsync("~/Views/BookFilter/_PartialBookFilter.cshtml")
 
     <div class="float-child-content">
         @if (User.IsInRole(GlobalConstants.AdminRoleName))
@@ -122,7 +45,12 @@
                             @Html.DisplayFor(modelItem => item.Title)
                         </td>
                         <td>
-                            @String.Join(", ", item.Authors.Select(x => x.Author.Name + " " + x.Author.Surname))
+                            @foreach (var author in item.Authors)
+                            {
+                                <a asp-controller="Author" asp-action="Details" asp-route-id="@author.AuthorID">
+                                    @Html.DisplayFor(modelItem => author.Author.Name) @Html.DisplayFor(modelItem => author.Author.Surname)
+                                </a>
+                            }
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Description)

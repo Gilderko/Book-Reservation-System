@@ -23,9 +23,11 @@ namespace MVCProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            ViewData["eBook"] = false;
             return View(await _bookFacade.GetBookPreviews(null, null, null, null, null, null, null, null, null));
         }
 
+        // POST: Book
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(string title,
@@ -38,6 +40,7 @@ namespace MVCProject.Controllers
                                                DateTime? releaseFrom,
                                                DateTime? releaseTo)
         {
+            ViewData["eBook"] = false;
             ViewData["bookTitle"] = title;
             ViewData["authorName"] = authorName;
             ViewData["authorSurname"] = authorSurname;

@@ -46,10 +46,12 @@
     </dl>
 
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+        @if(int.Parse(User.Identity.Name) == Model.OwnerUser.Id)
+        {
+                <a asp-action="UserEditCollection" asp-route-id="@Model.Id">Edit</a> <label>|</label>
+                <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> <label>|</label>
+        }
         <a asp-action="UserCollections">Back to List</a>
-    </div>
 
     <br />
 
@@ -83,8 +85,12 @@
                         @book.Language
                     </td>
                     <td>
-                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id">Details</a> |
-                        <a asp-action="UserDeleteBookFromCollection" asp-route-id="@book.Id">Delete</a>
+                        <form asp-action="Details">                            
+                            <input type="hidden" name="bookCollectionId" value=@Model.Id>
+                            <input type="hidden" name="bookToDeleteId" value=@book.Id>
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id">Details</a>
                     </td>
                 </tr>
             }

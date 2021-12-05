@@ -30,6 +30,12 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FromBookTemplate.Title)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Condition)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Condition)
+        </dd>
     </dl>
 
     @using (Html.BeginForm("Details", "BookInstance", FormMethod.Post))
@@ -39,14 +45,14 @@
                 <th colspan="2" align="center">Reservations filter:</th>
             </tr>
             <tr>
-                <td>PersonId: </td>
+                <td>Reservation start date: </td>
                 <td>
                     @Html.TextBox("StartDate", string.Empty, new { @class = "datepicker", @type = "date" })
 
                 </td>
             </tr>
             <tr>
-                <td>Name: </td>
+                <td>Reservation end date: </td>
                 <td>
                     @Html.TextBox("EndDate", string.Empty, new { @class = "datepicker", @type = "date" })
                 </td>

@@ -25,6 +25,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="EBook" asp-action="Index">E-Books</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="EReaderInstance" asp-action="Index">E-Readers</a>
                         </li>
                     </ul>
@@ -45,6 +48,9 @@
                         <ul class="navbar-nav flex-grow-0" style="text-align:right;">
                             <li style="text-align:right;">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="MyAccount">My Account</a>
+                            </li>
+                            <li style="text-align:right;">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reservation" asp-action="DetailsCurrent">Active reservation</a>
                             </li>
                             <li style="text-align:right;">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>

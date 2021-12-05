@@ -3,6 +3,7 @@ using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
+using BL.DTOs.Entities.EBook;
 using BL.DTOs.Filters;
 using BL.QueryObjects;
 using DAL.Entities;
@@ -29,6 +30,17 @@ namespace BL.Services.Implementations
         }
 
         public async Task LoadAuthors(IEnumerable<BookPrevDTO> previews)
+        {
+            foreach (var prev in previews)
+            {
+                foreach (var authorBook in prev.Authors)
+                {
+                    authorBook.Author = await GetByID(authorBook.AuthorID);
+                }
+            }
+        }
+
+        public async Task LoadAuthors(IEnumerable<EBookPrevDTO> previews)
         {
             foreach (var prev in previews)
             {

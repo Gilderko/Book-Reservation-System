@@ -10,7 +10,7 @@ using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.EReaderInstance;
 using MVCProject.Config;
-using Microsoft.AspNetCore.Authorization;
+using BL.DTOs.ConnectionTables;
 
 namespace MVCProject.Controllers
 {
@@ -63,6 +63,45 @@ namespace MVCProject.Controllers
             }
 
             return View(await _eReaderInstanceFacade.GetEReaderInstancesByOwner(userId));
+        }
+
+        // GET: EReaderInstance/UserAddEBookInEReader
+        public IActionResult UserAddEBookInEReader()
+        {
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var eReaders = _eReaderInstanceFacade.GetEReaderInstancesByOwner(userId).Result;
+
+            ViewData["eReaders"] = eReaders;
+            return View();
+        }
+
+        // POST: EReaderInstance/UserAddEBookInEReader
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserAddEBookInEReader(int? id, [Bind("EReaderInstanceID")] AddEBookInEReaderInstanceDTO eReaderEbook)
+        {
+            if (id is null)
+            {
+                return NotFound();
+            }
+
+            eReaderEbook.EBookID = (int)id;
+
+            if (ModelState.IsValid)
+            {
+                await _eReaderInstanceFacade.AddEBook(eReaderEbook);
+                return RedirectToAction(nameof(Details), new { id = eReaderEbook.EReaderInstanceID });
+            }
+            return View(eReaderEbook);
         }
 
         // GET: EReaderInstance/UserCreateEReader
@@ -253,10 +292,15 @@ namespace MVCProject.Controllers
             string[] referencesToLoad = new[]
             {
                 nameof(EReaderInstanceDTO.EReaderTemplate),
-                nameof(EReaderInstanceDTO.Owner)
+                nameof(EReaderInstanceDTO.Owner),                
             };
 
-            var review = await _eReaderInstanceFacade.Get(id, referencesToLoad);
+            string[] collectionsToLoad = new[]
+            {
+                nameof(EReaderInstanceDTO.Reservations)
+            };
+
+            var review = await _eReaderInstanceFacade.Get(id, referencesToLoad, collectionsToLoad);
             return review;
         }
     }

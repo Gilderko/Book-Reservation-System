@@ -1,5 +1,6 @@
 ﻿@model BL.DTOs.Entities.EReaderInstance.EReaderInstanceDTO
 @using MVCProject.Config;
+@using MVCProject.StateManager;
 
 @{
     ViewData["Title"] = "Details";
@@ -34,38 +35,26 @@
     </dl>
 </div>
 <div>
-    <h5>EBooks</h5>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Description
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.BooksIncluded)
+    @{
+        var currentReservation = StateKeeper.Instance.GetReservationInSession(ViewContext.HttpContext.Session);
+        @if (currentReservation != null)
+        {
+            bool shouldDisplay = true;
+            foreach (var reservation in Model.Reservations)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EBook.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EBook.Description)
-                    </td>
-                    <td>
-                        <a asp-controller="EBook" asp-action="Details" asp-route-id="@item.EBookID">Details</a>
-                    </td>
-                </tr>
+                if (currentReservation.DateTill < reservation.DateTill)
+                {
+                    shouldDisplay = false;
+                    break;
+                }
             }
-        </tbody>
-    </table>
-</div>
-<div>
+
+            if (shouldDisplay)
+            {
+                <a asp-controller="Reservation" asp-action="AddedEReaderInstance" asp-route-id="@Model.Id">Reserve |</a>
+            }
+        }
+    }
     @if ((User.Identity.Name != null && int.Parse(User.Identity.Name) == Model.EreaderOwnerId) || User.IsInRole(GlobalConstants.AdminRoleName))
     {
         <div>

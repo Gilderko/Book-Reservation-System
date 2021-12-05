@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.ConnectionTables;
@@ -63,6 +61,15 @@ namespace MVCProject.Controllers
             ViewData["books"] = await _bookCollectionFacade.GetBookPreviewsWithAuthorsForCollection(bookCollection);
 
             return View(bookCollection);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details(int bookCollectionId, int bookToDeleteId)
+        {
+            _bookCollectionFacade.DeleteBookFromCollection(bookCollectionId,bookToDeleteId);           
+
+            return RedirectToAction("Details",new { id = bookCollectionId });
         }
 
         // GET: BookCollection/UserCreateCollection
@@ -129,6 +136,66 @@ namespace MVCProject.Controllers
                 }
 
                 await _bookCollectionFacade.CreateUserCollection(bookCollection, userId);
+                return RedirectToAction(nameof(UserCollections));
+            }
+            return View(bookCollection);
+        }
+
+        // GET: BookCollection/UserEditCollection/5
+        public async Task<IActionResult> UserEditCollection(int? id)
+        {
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var bookCollection = await _bookCollectionFacade.GetUserCollectionToEdit((int)id);
+
+            if (bookCollection == null || (bookCollection.UserId != userId))
+            {
+                return NotFound();
+            }
+
+            return View(bookCollection);
+        }
+
+        // POST: BookCollection/UserEditCollection/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserEditCollection(int? id, [Bind("Title,Description,Id,UserId,CreationDate")] BookCollectionCreateDTO bookCollection)
+        {
+            if (id != bookCollection.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _bookCollectionFacade.UserEditCollection(bookCollection);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await BookCollectionExists(bookCollection.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(UserCollections));
             }
             return View(bookCollection);

@@ -1,5 +1,6 @@
 ﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Book;
+using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.User;
 using BL.DTOs.Enums;
 using BL.DTOs.Filters;
@@ -22,6 +23,7 @@ namespace BL.Facades
         private ICRUDService<BookPrevDTO, Book> _bookPrevService;
         private ICRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
         private ICRUDService<UserDTO, User> _userService;
+        private ICRUDService<ReservationBookInstanceDTO, ReservationBookInstance> _reserveBookInstance;
         private IAuthorService _authorService;
         private IGenreService _genreService;
 
@@ -30,6 +32,7 @@ namespace BL.Facades
                           ICRUDService<BookPrevDTO, Book> bookPrevService,
                           ICRUDService<AuthorBookDTO, AuthorBook> authorBookService,
                           ICRUDService<UserDTO, User> userService,
+                          ICRUDService<ReservationBookInstanceDTO, ReservationBookInstance> reserveBookInstance,
                           IAuthorService authorService,
                           IGenreService genreService)
         {
@@ -37,7 +40,8 @@ namespace BL.Facades
             _bookService = bookService;
             _bookPrevService = bookPrevService;
             _authorBookService = authorBookService;
-            _userService =userService;
+            _userService = userService;
+            _reserveBookInstance = reserveBookInstance;
             _authorService = authorService;
             _genreService = genreService;
         }
@@ -62,9 +66,22 @@ namespace BL.Facades
 
             if (collectToLoad is not null && collectToLoad.Contains(nameof(BookDTO.BookInstances)))
             {
-                foreach (var bookInstance in book.BookInstances)
+                var refsReservBookInstanceToLoad = new string[]
                 {
+                    nameof(ReservationBookInstance.Reservation)
+                };
+
+                foreach (var bookInstance in book.BookInstances)
+                {   
                     bookInstance.Owner = await _userService.GetByID(bookInstance.BookOwnerId);
+
+                    var predicate = new PredicateDto(nameof(ReservationBookInstanceDTO.BookInstanceID), bookInstance.Id, ValueComparingOperator.Equal);
+                    var filter = new FilterDto()
+                    {
+                        Predicate = predicate
+                    };
+
+                    bookInstance.AllReservations = (await _reserveBookInstance.FilterBy(filter, refsReservBookInstanceToLoad)).ToList();
                 }
             }
 

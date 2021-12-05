@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using BL.DTOs.Entities.EBook;
+﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.EReader;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Entities.Reservation;
-using BL.DTOs.ConnectionTables;
+using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
-using Infrastructure;
 using DAL.Entities.ConnectionTables;
-using System.Threading.Tasks;
-using BL.DTOs.Filters;
-using BL.DTOs;
+using Infrastructure;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using BL.DTOs.Entities.EReader;
 using Infrastructure.Query.Operators;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -21,15 +20,14 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private IEReaderInstanceService _eReaderInstanceService;
-        private ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> _eBookEReaderInstanceService;
+        private ICRUDService<AddEBookInEReaderInstanceDTO, EBookEReaderInstance> _eBookEReaderInstanceService;
         private ICRUDService<EReaderPrevDTO, EReader> _eReaderPrevService;
-        private ICRUDService<EReaderInstancePrevDTO, EReaderInstance> _eReaderInstancePrevDTO;
         private IReservationService _reservationService;
         private IEReaderInstancePreviewService _eReaderInstancePrevService;
 
         public EReaderInstanceFacade(IUnitOfWork unitOfWork,
                                      IEReaderInstanceService eReaderInstanceService,
-                                     ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> eBookEReaderInstanceService,
+                                     ICRUDService<AddEBookInEReaderInstanceDTO, EBookEReaderInstance> eBookEReaderInstanceService,
                                      IReservationService reservationService,
                                      IEReaderInstancePreviewService eReaderInstancePrevService,
                                      ICRUDService<EReaderPrevDTO, EReader> eReaderPrevService,
@@ -41,7 +39,6 @@ namespace BL.Facades
             _reservationService = reservationService;
             _eReaderInstancePrevService = eReaderInstancePrevService;
             _eReaderPrevService = eReaderPrevService;
-            _eReaderInstancePrevDTO = eReaderInstancePrevDTO;
         }
 
         public async Task Create(EReaderInstanceDTO eReaderInstance)
@@ -67,28 +64,18 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task AddEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
+        public async Task AddEBook(AddEBookInEReaderInstanceDTO eBookEReader)
         {
-            await _eBookEReaderInstanceService.Insert(new EBookEReaderInstanceDTO
-            {
-                EReaderInstance = eReaderInstance,
-                EReaderInstanceID = eReaderInstance.Id,
-
-                EBook = eBook,
-                EBookID = eBook.Id
-            });
+            await _eBookEReaderInstanceService.Insert(eBookEReader);
             _unitOfWork.Commit();
         }
 
-        public void DeleteEBook(EReaderInstanceDTO eReaderInstance, EBookDTO eBook)
+        public void DeleteEBook(int eReaderId, int eBookId)
         {
-            _eBookEReaderInstanceService.Delete(new EBookEReaderInstanceDTO
+            _eBookEReaderInstanceService.Delete(new AddEBookInEReaderInstanceDTO
             {
-                EReaderInstance = eReaderInstance,
-                EReaderInstanceID = eReaderInstance.Id,
-
-                EBook = eBook,
-                EBookID = eBook.Id
+                EReaderInstanceID = eReaderId,
+                EBookID = eBookId
             });
             _unitOfWork.Commit();
         }

@@ -1,30 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
+﻿using BL.DTOs.Entities.EBook;
+using BL.DTOs.Enums;
 using BL.Facades;
-using BL.DTOs.Entities.EBook;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
     public class EBookController : Controller
     {
-        private readonly EBookFacade _facade;
+        private readonly EBookFacade _eBookFacade;
 
         public EBookController(EBookFacade facade)
         {
-            _facade = facade;
+            _eBookFacade = facade;
         }
 
         // GET: EBook
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View();
+            ViewData["eBook"] = true;
+            return View(await _eBookFacade.GetBookPreviews(null, null, null, null, null, null, null, null, null, null));
+        }
+
+        // POST: EBook
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(string title,
+                                               string authorName,
+                                               string authorSurname,
+                                               GenreTypeDTO[] genres,
+                                               LanguageDTO? language,
+                                               int? pageFrom,
+                                               int? pageTo,
+                                               DateTime? releaseFrom,
+                                               DateTime? releaseTo,
+                                               EBookFormatDTO? format)
+        {
+            ViewData["eBook"] = true;
+            ViewData["bookTitle"] = title;
+            ViewData["authorName"] = authorName;
+            ViewData["authorSurname"] = authorSurname;
+            ViewData["genres"] = genres;
+            ViewData["language"] = language;
+            ViewData["pageFrom"] = pageFrom;
+            ViewData["pageTo"] = pageTo;
+            ViewData["releaseFrom"] = releaseFrom;
+            ViewData["releaseTo"] = releaseTo;
+            ViewData["format"] = format;
+
+            return View(await _eBookFacade.GetBookPreviews(title, authorName, authorSurname, genres, language, pageFrom, pageTo, releaseFrom, releaseTo, format));
         }
 
         // GET: EBook/Details/5
@@ -35,7 +62,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _facade.Get((int)id);
+            var eBook = await _eBookFacade.Get((int)id);
             if (eBook == null)
             {
                 return NotFound();
@@ -59,7 +86,7 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _facade.Create(eBook);
+                await _eBookFacade.Create(eBook);
                 return RedirectToAction(nameof(Index));
             }
             return View(eBook);
@@ -73,7 +100,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _facade.Get((int)id);
+            var eBook = await _eBookFacade.Get((int)id);
             if (eBook == null)
             {
                 return NotFound();
@@ -97,7 +124,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    _facade.Update(eBook);
+                    _eBookFacade.Update(eBook);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,7 +150,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _facade.Get((int)id);
+            var eBook = await _eBookFacade.Get((int)id);
             if (eBook == null)
             {
                 return NotFound();
@@ -137,13 +164,13 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            _facade.Delete(id);
+            _eBookFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> EBookExists(int id)
         {
-            var eBook = await _facade.Get(id);
+            var eBook = await _eBookFacade.Get(id);
             return eBook != null;
         }
     }
