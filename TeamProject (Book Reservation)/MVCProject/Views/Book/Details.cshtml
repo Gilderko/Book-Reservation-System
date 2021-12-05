@@ -1,6 +1,7 @@
 ﻿@model BL.DTOs.Entities.Book.BookDTO
 @using BL.DTOs.Enums;
-@using MVCProject.StateManager
+@using MVCProject.Config;
+@using MVCProject.StateManager;
 
 @{
     ViewData["Title"] = "Details";
@@ -121,9 +122,6 @@
                 <th>
                     Condition
                 </th>
-                <th>
-                    Free
-                </th>
                 <th></th>
             </tr>
         </thead>
@@ -176,7 +174,12 @@
     </table>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+    @if (User.IsInRole(GlobalConstants.AdminRoleName)) 
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        </div>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

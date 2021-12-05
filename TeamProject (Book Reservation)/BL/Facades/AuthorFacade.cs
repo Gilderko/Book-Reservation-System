@@ -69,6 +69,20 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
+        public void DeleteBookFromAuthor(AuthorDTO author, BookDTO book)
+        {
+            _authorBookService.Delete(new AuthorBookDTO
+            {
+                Author = author,
+                AuthorID = author.Id,
+
+
+                Book = book,
+                BookID = book.Id
+            });
+            _unitOfWork.Commit();
+        }
+
         public async Task<IEnumerable<AuthorPrevDTO>> GetAuthorPreviews(string name = null, string surname = null)
         {
             var filter = new FilterDto();
@@ -96,12 +110,15 @@ namespace BL.Facades
 
         public async Task<IEnumerable<AuthorBookDTO>> GetAuthorBooksByAuthor(int id)
         {
-            var filter = new FilterDto();
-            filter.Predicate = new PredicateDto(nameof(AuthorBookDTO.AuthorID), id, ValueComparingOperator.Equal);
+            var filter = new FilterDto
+            {
+                Predicate = new PredicateDto(nameof(AuthorBookDTO.AuthorID), id, ValueComparingOperator.Equal)
+            };
 
             var refsToLoad = new[]
             {
-                nameof(AuthorBookDTO.Book)
+                nameof(AuthorBookDTO.Book),
+                nameof(AuthorBookDTO.Author)
             };
 
             var result = await _authorBookService.FilterBy(filter, refsToLoad);

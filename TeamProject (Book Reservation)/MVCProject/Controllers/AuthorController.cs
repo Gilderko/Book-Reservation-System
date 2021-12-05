@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.Author;
+using BL.DTOs.Entities.Book;
+using MVCProject.Config;
 
 namespace MVCProject.Controllers
 {
@@ -59,6 +55,11 @@ namespace MVCProject.Controllers
         // GET: Author/Create
         public IActionResult Create()
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -69,18 +70,24 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AuthorDTO author)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _facade.Create(author);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = author.Id });
             }
+
             return View(author);
         }
 
         // GET: Author/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -90,6 +97,8 @@ namespace MVCProject.Controllers
             {
                 return NotFound();
             }
+
+            author.AuthorsBooks = await _facade.GetAuthorBooksByAuthor((int)id);
 
             return View(author);
         }
@@ -101,7 +110,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Name,Surname,Description,Id")] AuthorDTO author)
         {
-            if (id != author.Id)
+            if (id != author.Id || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -131,7 +140,7 @@ namespace MVCProject.Controllers
         // GET: Authors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -150,6 +159,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
@@ -159,5 +173,17 @@ namespace MVCProject.Controllers
             var author = await _facade.Get(id);
             return author != null;
         }
+
+        /* public async Task<IActionResult> AddBookToAuthor(AuthorDTO author, BookDTO book)
+        {
+            await _facade.AddBookToAuthor(author, book);
+            return RedirectToAction(nameof(Edit), new { id = book.Id });
+        }
+
+        public IActionResult DeleteBookFromAuthor(AuthorDTO author, BookDTO book)
+        {
+            _facade.DeleteBookFromAuthor(author, book);
+            return RedirectToAction(nameof(Edit), new { id = book.Id });
+        }*/
     }
 }

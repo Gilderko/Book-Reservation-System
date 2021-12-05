@@ -1,5 +1,6 @@
 ﻿@model BL.DTOs.Entities.EReaderInstance.EReaderInstanceDTO
-@using MVCProject.StateManager
+@using MVCProject.Config;
+@using MVCProject.StateManager;
 
 @{
     ViewData["Title"] = "Details";
@@ -54,7 +55,12 @@
             }
         }
     }
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+    @if ((User.Identity.Name != null && int.Parse(User.Identity.Name) == Model.EreaderOwnerId) || User.IsInRole(GlobalConstants.AdminRoleName))
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        </div>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<BL.DTOs.Entities.Book.BookPrevDTO>
+@using BL.DTOs.Enums;
+@using MVCProject.Config;
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -9,10 +12,12 @@
     @await Html.PartialAsync("~/Views/BookFilter/_PartialBookFilter.cshtml")
 
     <div class="float-child-content">
-        <p>
-            <a asp-action="Create">Create New</a>
-        </p>
-
+        @if (User.IsInRole(GlobalConstants.AdminRoleName))
+        {
+            <p>
+                <a asp-action="Create">Create New</a>
+            </p>
+        }
         <table class="table" style="width:1100px; ">
 
             <thead>
@@ -56,21 +61,23 @@
                         <td>
                             <div>
                                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                                <br />
-                                <a asp-controller="BookInstance" asp-action="UserCreateBookInstance" asp-route-id="@item.Id">Offer this book</a>
-                                <br />
-                                <a asp-controller="BookCollection" asp-action="UserAddBookInCollection" asp-route-id="@item.Id">Add in collection</a>
-                                <br />
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <div>
+                                        <a asp-controller="BookInstance" asp-action="UserCreateBookInstance" asp-route-id="@item.Id">Offer this book</a>
+                                        <br />
+                                        <a asp-controller="BookCollection" asp-action="UserAddBookInCollection" asp-route-id="@item.Id">Add in collection</a>
+                                    </div>
+                                }
+                                @if (User.IsInRole(GlobalConstants.AdminRoleName))
+                                {
+                                    <div>
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                        <br />
+                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    </div>
+                                }
                             </div>
-
-                            @if (User.HasClaim(x => x.Value == "Admin"))
-                            {
-                                <div>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                    <br />
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                </div>
-                            }
                         </td>
                     </tr>
                 }

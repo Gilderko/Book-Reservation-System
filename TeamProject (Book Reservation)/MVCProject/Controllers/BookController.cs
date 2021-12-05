@@ -1,8 +1,10 @@
 ﻿using BL.DTOs.Entities.Book;
 using BL.DTOs.Enums;
 using BL.Facades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVCProject.Config;
 using System;
 using System.Threading.Tasks;
 
@@ -76,6 +78,11 @@ namespace MVCProject.Controllers
         // GET: Book/Create
         public IActionResult Create()
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -86,18 +93,24 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] BookDTO book)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _bookFacade.Create(book);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = book.Id });
             }
+
             return View(book);
         }
 
         // GET: Book/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -117,7 +130,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] BookDTO book)
         {
-            if (id != book.Id)
+            if (id != book.Id || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -147,7 +160,7 @@ namespace MVCProject.Controllers
         // GET: Book/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -170,6 +183,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             _bookFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }

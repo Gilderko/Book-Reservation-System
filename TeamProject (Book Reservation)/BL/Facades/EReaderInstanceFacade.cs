@@ -10,6 +10,8 @@ using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BL.DTOs.Entities.EReader;
+using Infrastructure.Query.Operators;
 using System.Threading.Tasks;
 
 namespace BL.Facades
@@ -37,69 +39,6 @@ namespace BL.Facades
             _reservationService = reservationService;
             _eReaderInstancePrevService = eReaderInstancePrevService;
             _eReaderPrevService = eReaderPrevService;
-        }
-
-        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancesByOwner(int ownerId)
-        {
-            return await _eReaderInstancePrevService.GetEReaderInstancesByOwner(ownerId);
-        }
-
-        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancePrevsBy(string description,
-                                                                                         string company,
-                                                                                         string model,
-                                                                                         int? memorySizeFrom,
-                                                                                         int? memorySizeTo)
-        {
-            FilterDto eReaderFilter = new FilterDto();
-            List<PredicateDto> eReaderPredicates = new List<PredicateDto>();
-
-            FilterDto instancesFilter = new FilterDto();
-            List<PredicateDto> instancesPredicates = new List<PredicateDto>();
-
-            if (company is not null)
-            {
-                eReaderPredicates.Add(new PredicateDto(nameof(EReader.CompanyMake), company, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
-            }
-
-            if (model is not null)
-            {
-                eReaderPredicates.Add(new PredicateDto(nameof(EReader.Model), model, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
-            }
-
-            if (memorySizeFrom is not null)
-            {
-                eReaderPredicates.Add(new PredicateDto(nameof(EReader.MemoryInMB), memorySizeFrom, Infrastructure.Query.Operators.ValueComparingOperator.GreaterThanOrEqual));
-            }
-
-            if (memorySizeTo is not null)
-            {
-                eReaderPredicates.Add(new PredicateDto(nameof(EReader.MemoryInMB), memorySizeTo, Infrastructure.Query.Operators.ValueComparingOperator.LessThanOrEqual));
-            }
-
-            if (eReaderPredicates.Count > 0)
-            {
-                eReaderFilter.Predicate = new CompositePredicateDto(eReaderPredicates, Infrastructure.Query.Operators.LogicalOperator.AND);
-                List<int> eReaders = (await _eReaderPrevService.FilterBy(eReaderFilter)).Select(x => x.Id).ToList();
-
-                instancesPredicates.Add(new PredicateDto(nameof(EReaderInstance.EReaderTemplateID), eReaders, Infrastructure.Query.Operators.ValueComparingOperator.In));
-            }
-
-            if (description is not null)
-            {
-                instancesPredicates.Add(new PredicateDto(nameof(EReaderInstance.Description), description, Infrastructure.Query.Operators.ValueComparingOperator.Contains));
-            }
-
-            string[] refsToLoad = new string[]
-            {
-                nameof(EReaderInstance.EReaderTemplate)
-            };
-
-            if (instancesPredicates.Count > 0)
-            {
-                instancesFilter.Predicate = new CompositePredicateDto(instancesPredicates, Infrastructure.Query.Operators.LogicalOperator.AND);
-            }
-
-            return await _eReaderInstancePrevService.FilterBy(instancesFilter, refsToLoad, null);
         }
 
         public async Task Create(EReaderInstanceDTO eReaderInstance)
@@ -147,6 +86,69 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
+        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancesByOwner(int ownerId)
+        {
+            return await _eReaderInstancePrevService.GetEReaderInstancesByOwner(ownerId);
+        }
+
+        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancePrevsBy(string description,
+                                                                                         string company,
+                                                                                         string model,
+                                                                                         int? memorySizeFrom,
+                                                                                         int? memorySizeTo)
+        {
+            FilterDto eReaderFilter = new FilterDto();
+            List<PredicateDto> eReaderPredicates = new List<PredicateDto>();
+
+            FilterDto instancesFilter = new FilterDto();
+            List<PredicateDto> instancesPredicates = new List<PredicateDto>();
+
+            if (company is not null)
+            {
+                eReaderPredicates.Add(new PredicateDto(nameof(EReader.CompanyMake), company, ValueComparingOperator.Contains));
+            }
+
+            if (model is not null)
+            {
+                eReaderPredicates.Add(new PredicateDto(nameof(EReader.Model), model, ValueComparingOperator.Contains));
+            }
+
+            if (memorySizeFrom is not null)
+            {
+                eReaderPredicates.Add(new PredicateDto(nameof(EReader.MemoryInMB), memorySizeFrom, ValueComparingOperator.GreaterThanOrEqual));
+            }
+
+            if (memorySizeTo is not null)
+            {
+                eReaderPredicates.Add(new PredicateDto(nameof(EReader.MemoryInMB), memorySizeTo, ValueComparingOperator.LessThanOrEqual));
+            }
+
+            if (eReaderPredicates.Count > 0)
+            {
+                eReaderFilter.Predicate = new CompositePredicateDto(eReaderPredicates, LogicalOperator.AND);
+                List<int> eReaders = (await _eReaderPrevService.FilterBy(eReaderFilter)).Select(x => x.Id).ToList();
+
+                instancesPredicates.Add(new PredicateDto(nameof(EReaderInstance.EReaderTemplateID), eReaders, ValueComparingOperator.In));
+            }
+
+            if (description is not null)
+            {
+                instancesPredicates.Add(new PredicateDto(nameof(EReaderInstance.Description), description, ValueComparingOperator.Contains));
+            }
+
+            string[] refsToLoad = new string[]
+            {
+                nameof(EReaderInstance.EReaderTemplate)
+            };
+
+            if (instancesPredicates.Count > 0)
+            {
+                instancesFilter.Predicate = new CompositePredicateDto(instancesPredicates, LogicalOperator.AND);
+            }
+
+            return await _eReaderInstancePrevDTO.FilterBy(instancesFilter, refsToLoad, null);
+        }
+
         public async Task<IEnumerable<EReaderPrevDTO>> GetEReaderTemplates()
         {
             FilterDto filter = new()
@@ -162,7 +164,23 @@ namespace BL.Facades
         {
             return await _reservationService.GetReservationPrevsByEReader(eReader.Id, from, to);
         }
-        
+
+        public async Task<IEnumerable<EBookEReaderInstanceDTO>> GetEBookEReaderInstancesByEReaderInstance(int id)
+        {
+            var filter = new FilterDto
+            {
+                Predicate = new PredicateDto(nameof(EBookEReaderInstanceDTO.EReaderInstanceID), id, ValueComparingOperator.Equal)
+            };
+
+            var refsToLoad = new[]
+            {
+                nameof(EBookEReaderInstanceDTO.EBook)
+            };
+
+            var result = await _eBookEReaderInstanceService.FilterBy(filter, refsToLoad);
+            return result;
+        }
+
         public void Dispose()
         {
             _unitOfWork.Dispose();

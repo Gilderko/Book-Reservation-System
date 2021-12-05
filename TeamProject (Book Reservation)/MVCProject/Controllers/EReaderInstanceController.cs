@@ -9,6 +9,7 @@ using DAL;
 using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.EReaderInstance;
+using MVCProject.Config;
 using BL.DTOs.ConnectionTables;
 
 namespace MVCProject.Controllers
@@ -58,7 +59,7 @@ namespace MVCProject.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
 
             return View(await _eReaderInstanceFacade.GetEReaderInstancesByOwner(userId));
@@ -106,6 +107,11 @@ namespace MVCProject.Controllers
         // GET: EReaderInstance/UserCreateEReader
         public IActionResult UserCreateEReader()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
             ViewData["eReaderTemplates"] = _eReaderInstanceFacade.GetEReaderTemplates().Result;
             return View();
         }
@@ -122,7 +128,7 @@ namespace MVCProject.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
 
             if (ModelState.IsValid)
@@ -147,12 +153,19 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
+            eReaderInstance.BooksIncluded = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance((int)id);
+
             return View(eReaderInstance);
         }
 
         // GET: EReaderInstance/Create
         public IActionResult Create()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -163,27 +176,36 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstanceDTO eReaderInstance)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _eReaderInstanceFacade.Create(eReaderInstance);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(eReaderInstance);
         }
 
         // GET: EReaderInstance/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null || !User.Identity.IsAuthenticated || User.Identity.Name == null)
             {
                 return NotFound();
             }
 
             var eReaderInstance = await GetWithReferences((int)id);
-            if (eReaderInstance == null)
+            if (eReaderInstance == null || (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
+
+            eReaderInstance.BooksIncluded = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance((int)id);
+
             return View(eReaderInstance);
         }
 
@@ -194,7 +216,8 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstanceDTO eReaderInstance)
         {
-            if (id != eReaderInstance.Id)
+            if (id != eReaderInstance.Id || !User.Identity.IsAuthenticated || User.Identity.Name == null || 
+                (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -224,13 +247,13 @@ namespace MVCProject.Controllers
         // GET: EReaderInstance/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || !User.Identity.IsAuthenticated || User.Identity.Name == null)
             {
                 return NotFound();
             }
 
             var eReaderInstance = await GetWithReferences((int)id);
-            if (eReaderInstance == null)
+            if (eReaderInstance == null || (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -241,8 +264,19 @@ namespace MVCProject.Controllers
         // POST: EReaderInstance/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!User.Identity.IsAuthenticated || User.Identity.Name == null)
+            {
+                return NotFound();
+            }
+            
+            var eReaderInstance = await _eReaderInstanceFacade.Get(id);
+            if (eReaderInstance == null || (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId && !User.IsInRole(GlobalConstants.AdminRoleName)))
+            {
+                return NotFound();
+            }
+
             _eReaderInstanceFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }

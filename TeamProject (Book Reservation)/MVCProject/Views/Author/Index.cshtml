@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<BL.DTOs.Entities.Author.AuthorPrevDTO>
+@using MVCProject.Config;
 
 @{
     ViewData["Title"] = "Index";
@@ -25,9 +26,12 @@
         </form>
     </div>
     <div class="float-child-content">
-        <p>
-            <a asp-action="Create">Create New</a>
-        </p>
+        @if (User.IsInRole(GlobalConstants.AdminRoleName))
+        {
+            <p>
+                <a asp-action="Create">Create New</a>
+            </p>
+        }
         <table class="table">
             <thead>
                 <tr>
@@ -57,10 +61,11 @@
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td>
-                            @if (User.HasClaim(x => x.Value == "Admin"))
+                            @if (User.IsInRole(GlobalConstants.AdminRoleName))
                             {
                                 <div>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                    <br />
                                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                                 </div>
                             }
