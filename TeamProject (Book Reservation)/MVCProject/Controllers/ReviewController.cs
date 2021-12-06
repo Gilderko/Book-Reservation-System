@@ -11,6 +11,7 @@ using BL.Facades;
 using BL.DTOs.Entities.Review;
 using Microsoft.AspNetCore.Authorization;
 using MVCProject.Config;
+using MVCProject.StateManager;
 
 namespace MVCProject.Controllers
 {
@@ -46,55 +47,35 @@ namespace MVCProject.Controllers
             return View(review);
         }
 
-        // GET: Review/Create
-        public IActionResult Create()
+        public IActionResult CreateReview(int? id)
         {
-            return View();
-        }
-
-        // POST: Review/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CreationDate,Content,StarsAmmount,BookTemplateID,UserID,Id")] ReviewDTO review)
-        {
-            if (ModelState.IsValid)
-            {
-                await _facade.Create(review);
-                return RedirectToAction(nameof(Details), nameof(Book), new { id = review.BookTemplateID });
-            }
-            return View(review);
-        }
-
-        public IActionResult CreateReview(int? bookId)
-        {
-            if (bookId == null || !User.Identity.IsAuthenticated) 
+            if (id == null || !User.Identity.IsAuthenticated) 
             {
                 return NotFound();
             }
+
+            StateKeeper.Instance.AddTillNextRequest(this, TempDataKeys.BookDTOId, id.Value);
+
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateReview(int? bookId, [Bind("CreationDate,Content,StarsAmmount,BookTemplateID,UserID,Id")] ReviewDTO review)
+        public async Task<IActionResult> CreateReview(int? id, [Bind("Content,StarsAmmount,BookTemplateID,UserID")] ReviewDTO review)
         {
-            if (bookId == null || User.Identity.Name == null)
+            StateKeeper.Instance.SaveSpecificObjectForNextRequest(this, TempDataKeys.BookDTOId);
+
+            if (id == null || User.Identity.Name == null)
             {
                 return NotFound();
             }
-
-            int userId = int.Parse(User.Identity.Name);
 
             review.CreationDate = DateTime.Now;
-            review.UserID = userId;
-            review.BookTemplateID = (int)bookId;
 
             if (ModelState.IsValid)
             {
                 await _facade.Create(review);
-                return RedirectToAction(nameof(Details), nameof(Book), new { id = bookId });
+                return RedirectToAction(nameof(Details), nameof(Book), new { id = id.Value });
             }
 
             return View(review);

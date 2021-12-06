@@ -10,7 +10,6 @@ using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BL.DTOs.Entities.EReader;
 using Infrastructure.Query.Operators;
 using System.Threading.Tasks;
 
@@ -20,25 +19,28 @@ namespace BL.Facades
     {
         private IUnitOfWork _unitOfWork;
         private IEReaderInstanceService _eReaderInstanceService;
-        private ICRUDService<AddEBookInEReaderInstanceDTO, EBookEReaderInstance> _eBookEReaderInstanceService;
+        private ICRUDService<AddEBookInEReaderInstanceDTO, EBookEReaderInstance> _addeBookEReaderInstanceService;
+        private ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> _eBookEReaderInstanceService;
         private ICRUDService<EReaderPrevDTO, EReader> _eReaderPrevService;
         private IReservationService _reservationService;
         private IEReaderInstancePreviewService _eReaderInstancePrevService;
 
         public EReaderInstanceFacade(IUnitOfWork unitOfWork,
                                      IEReaderInstanceService eReaderInstanceService,
-                                     ICRUDService<AddEBookInEReaderInstanceDTO, EBookEReaderInstance> eBookEReaderInstanceService,
+                                     ICRUDService<AddEBookInEReaderInstanceDTO, EBookEReaderInstance> addeBookEReaderInstanceService,
                                      IReservationService reservationService,
                                      IEReaderInstancePreviewService eReaderInstancePrevService,
                                      ICRUDService<EReaderPrevDTO, EReader> eReaderPrevService,
+                                     ICRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance> eBookEReaderInstanceService,
                                      ICRUDService<EReaderInstancePrevDTO, EReaderInstance> eReaderInstancePrevDTO)
         {
             _unitOfWork = unitOfWork;
             _eReaderInstanceService = eReaderInstanceService;
-            _eBookEReaderInstanceService = eBookEReaderInstanceService;
+            _addeBookEReaderInstanceService = addeBookEReaderInstanceService;
             _reservationService = reservationService;
             _eReaderInstancePrevService = eReaderInstancePrevService;
             _eReaderPrevService = eReaderPrevService;
+            _eBookEReaderInstanceService = eBookEReaderInstanceService;
         }
 
         public async Task Create(EReaderInstanceDTO eReaderInstance)
@@ -66,13 +68,13 @@ namespace BL.Facades
 
         public async Task AddEBook(AddEBookInEReaderInstanceDTO eBookEReader)
         {
-            await _eBookEReaderInstanceService.Insert(eBookEReader);
+            await _addeBookEReaderInstanceService.Insert(eBookEReader);
             _unitOfWork.Commit();
         }
 
         public void DeleteEBook(int eReaderId, int eBookId)
         {
-            _eBookEReaderInstanceService.Delete(new AddEBookInEReaderInstanceDTO
+            _addeBookEReaderInstanceService.Delete(new AddEBookInEReaderInstanceDTO
             {
                 EReaderInstanceID = eReaderId,
                 EBookID = eBookId
@@ -146,7 +148,7 @@ namespace BL.Facades
                 instancesFilter.Predicate = new CompositePredicateDto(instancesPredicates, LogicalOperator.AND);
             }
 
-            return await _eReaderInstancePrevDTO.FilterBy(instancesFilter, refsToLoad, null);
+            return await _eReaderInstancePrevService.FilterBy(instancesFilter, refsToLoad, null);
         }
 
         public async Task<IEnumerable<EReaderPrevDTO>> GetEReaderTemplates()

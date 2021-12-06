@@ -1,4 +1,5 @@
 ﻿@model BL.DTOs.Entities.Review.ReviewDTO
+@using MVCProject.StateManager
 
 @{
     ViewData["Title"] = "Create";
@@ -10,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="CreateReview">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CreationDate" />
             <div class="form-group">
@@ -23,8 +24,8 @@
                 <input asp-for="StarsAmmount" class="form-control" />
                 <span asp-validation-for="StarsAmmount" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="BookTemplateID" />
-            <input type="hidden" asp-for="UserID" />
+            <input type="hidden" asp-for="BookTemplateID" value=@int.Parse(StateKeeper.Instance.ReadDataFromLastRequest(TempData,TempDataKeys.BookDTOId).ToString())/>
+            <input type="hidden" asp-for="UserID" value=@int.Parse(User.Identity.Name) />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

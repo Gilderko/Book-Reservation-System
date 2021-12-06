@@ -55,12 +55,12 @@ namespace MVCProject.StateManager
         /// <param name="controller"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public object ReadAndDestroyForNextRequest(Controller controller, TempDataKeys key)
+        public object ReadDataFromLastRequest(Controller controller, TempDataKeys key)
         {
             return controller.TempData.Peek(key.ToString());
         }
 
-        public object ReadAndDestroyForNextRequest(ITempDataDictionary tempData, TempDataKeys key)
+        public object ReadDataFromLastRequest(ITempDataDictionary tempData, TempDataKeys key)
         {
             return tempData.Peek(key.ToString());
         }
