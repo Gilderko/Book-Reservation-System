@@ -106,6 +106,11 @@ namespace BL.Facades
 
         public async Task AddBookInstance(int bookInstanceId, ReservationDTO reservation)
         {
+            if (reservation.BookInstances.Any(entry => entry.BookInstanceID == bookInstanceId))
+            {
+                return;
+            }
+
             var referencesToLoad = new string[]
             {
                 nameof(BookInstanceDTO.FromBookTemplate),

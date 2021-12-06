@@ -82,6 +82,18 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
+        public async Task<bool> CheckIfAlreadyHasBook(int ereaderId,int bookdId)
+        {
+            var collsToLoad = new string[]
+            {
+                nameof(EReaderInstance.BooksIncluded)
+            };
+
+            var eReader = await _eReaderInstanceService.GetByID(ereaderId, null, collsToLoad);
+            return eReader.BooksIncluded.Any(entry => entry.EBookID == bookdId);
+
+        }
+
         public async Task AddNewEReaderToUser(EReaderInstanceCreateDTO eReader, int userId)
         {
             await _eReaderInstanceService.AddEReaderInstanceToUser(eReader, userId);

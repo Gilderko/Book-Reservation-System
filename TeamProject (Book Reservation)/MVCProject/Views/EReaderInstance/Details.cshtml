@@ -1,6 +1,7 @@
 ﻿@model BL.DTOs.Entities.EReaderInstance.EReaderInstanceDTO
 @using MVCProject.Config;
 @using MVCProject.StateManager;
+@using BL.DTOs.Entities.EBook;
 
 @{
     ViewData["Title"] = "Details";
@@ -33,6 +34,50 @@
             @Html.DisplayFor(model => model.EReaderTemplate.Model)
         </dd>
     </dl>
+</div>
+<div>
+    <h5>BookIncluded</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Format
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in (IEnumerable<EBookDTO>)ViewData["eBooks"])
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="EBook" asp-action="Details" asp-route-id="@item.Id">
+                           @Html.DisplayFor(modelItem => item.Title)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Format)
+                    </td>
+                    <td>
+                        <form asp-action="Details">
+                            <input type="hidden" name="eReaderToModifyId" value=@Model.Id>
+                            <input type="hidden" name="eBookToDeleteId" value=@item.Id>
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     @{
