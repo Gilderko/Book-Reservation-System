@@ -98,7 +98,7 @@ namespace MVCProject.Controllers
             eReaderEbook.EBookID = (int)id;
             if (await _eReaderInstanceFacade.CheckIfAlreadyHasBook(eReaderEbook.EReaderInstanceID, id.Value))
             {
-                return NotFound();
+                return RedirectToAction(nameof(Details), new { id = eReaderEbook.EReaderInstanceID });
             }
 
             if (ModelState.IsValid)
