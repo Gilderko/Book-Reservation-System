@@ -1,10 +1,12 @@
-﻿using BL.DTOs.Entities.Book;
+﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.Book;
 using BL.DTOs.Enums;
 using BL.Facades;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCProject.Config;
+using MVCProject.StateManager;
 using System;
 using System.Threading.Tasks;
 
@@ -57,6 +59,11 @@ namespace MVCProject.Controllers
         // GET: Book/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -73,6 +80,32 @@ namespace MVCProject.Controllers
             book.Authors = await _bookFacade.GetAuthorBooksByBook((int)id);
 
             return View(book);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details(int? bookId, int? genreId, int? authorId)
+        {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            if (bookId == null)
+            {
+                return View();
+            }
+
+            if (genreId != null)
+            {
+                _bookFacade.RemoveGenreFromBook(bookId.Value, genreId.Value);
+            }
+            else if (authorId != null)
+            {
+                _bookFacade.RemoveAuthorFromBook(bookId.Value, authorId.Value);
+            }                        
+
+            return RedirectToAction(nameof(Details), new { id = bookId });
         }
 
         // GET: Book/Create
@@ -105,6 +138,85 @@ namespace MVCProject.Controllers
             }
 
             return View(book);
+        }
+
+        public IActionResult AddGenreToBook(int? id)
+        {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            StateKeeper.Instance.AddTillNextRequest(this, TempDataKeys.BookDTOId, id.Value);
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddGenreToBook([Bind("GenreID,BookID")] BookGenreDTO newBookGenreEntry)
+        {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            StateKeeper.Instance.SaveSpecificObjectForNextRequest(this, TempDataKeys.BookDTOId);
+
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            await _bookFacade.AddGenreToBook(newBookGenreEntry);
+
+            return RedirectToAction(nameof(Details), new { id = newBookGenreEntry.BookID });
+        }
+
+        public async Task<IActionResult> AddAuthorToBook(int? id)
+        {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Put all ids
+            ViewData["authors"] = await _bookFacade.GetAllAuthors();
+
+            StateKeeper.Instance.AddTillNextRequest(this, TempDataKeys.BookDTOId, id.Value);
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddAuthorToBook([Bind("AuthorID,BookID")] AuthorBookDTO newBookGenreEntry)
+        {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            StateKeeper.Instance.SaveSpecificObjectForNextRequest(this, TempDataKeys.BookDTOId);
+
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            await _bookFacade.AddAuthorToBook(newBookGenreEntry);
+
+            return RedirectToAction(nameof(Details), new { id = newBookGenreEntry.BookID });
         }
 
         // GET: Book/Edit/5

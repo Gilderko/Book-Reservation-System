@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.Review;
 using Microsoft.AspNetCore.Authorization;
@@ -75,7 +73,7 @@ namespace MVCProject.Controllers
             if (ModelState.IsValid)
             {
                 await _facade.Create(review);
-                return RedirectToAction(nameof(Details), nameof(Book), new { id = id.Value });
+                return RedirectToAction(nameof(Details), "Book", new { id = id.Value });
             }
 
             return View(review);
@@ -126,7 +124,7 @@ namespace MVCProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Details), nameof(Book), new { id = review.BookTemplateID });
+                return RedirectToAction(nameof(Details), "Book", new { id = review.BookTemplateID });
             }
             return View(review);
         }
@@ -165,7 +163,7 @@ namespace MVCProject.Controllers
             }
 
             _facade.Delete(id);
-            return RedirectToAction(nameof(Details), nameof(Book), new { id = id });
+            return RedirectToAction(nameof(Details), "Book", new { id = review.BookTemplateID });
         }
 
         private async Task<bool> ReviewExists(int id)

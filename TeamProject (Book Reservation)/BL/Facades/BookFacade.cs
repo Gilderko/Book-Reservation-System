@@ -1,4 +1,5 @@
 ﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.User;
@@ -24,6 +25,7 @@ namespace BL.Facades
         private ICRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
         private ICRUDService<UserDTO, User> _userService;
         private ICRUDService<ReservationBookInstanceDTO, ReservationBookInstance> _reserveBookInstance;
+        private ICRUDService<BookGenreDTO, BookGenre> _bookGenreService;
         private IAuthorService _authorService;
         private IGenreService _genreService;
 
@@ -33,6 +35,7 @@ namespace BL.Facades
                           ICRUDService<AuthorBookDTO, AuthorBook> authorBookService,
                           ICRUDService<UserDTO, User> userService,
                           ICRUDService<ReservationBookInstanceDTO, ReservationBookInstance> reserveBookInstance,
+                          ICRUDService<BookGenreDTO, BookGenre> bookGenreService,
                           IAuthorService authorService,
                           IGenreService genreService)
         {
@@ -42,6 +45,7 @@ namespace BL.Facades
             _authorBookService = authorBookService;
             _userService = userService;
             _reserveBookInstance = reserveBookInstance;
+            _bookGenreService = bookGenreService;
             _authorService = authorService;
             _genreService = genreService;
         }
@@ -86,7 +90,7 @@ namespace BL.Facades
             }
 
             return book;
-        }
+        }        
 
         public void Update(BookDTO book)
         {
@@ -174,6 +178,90 @@ namespace BL.Facades
             await _authorService.LoadAuthors(previews);
 
             return previews;
+        }
+
+        public async Task<IEnumerable<AuthorDTO>> GetAllAuthors()
+        {
+            var predicate = new PredicateDto(nameof(AuthorDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);
+
+            var filter = new FilterDto()
+            {
+                Predicate = predicate
+            };
+
+            return await _authorService.FilterBy(filter);
+        }
+
+        public async Task AddAuthorToBook(AuthorBookDTO newAuthorBookEntry)
+        {
+            var predicates = new List<PredicateDto>()
+            {
+                new PredicateDto(nameof(AuthorBookDTO.BookID), newAuthorBookEntry.BookID, ValueComparingOperator.Equal),
+                new PredicateDto(nameof(AuthorBookDTO.AuthorID), newAuthorBookEntry.AuthorID, ValueComparingOperator.Equal)
+            };
+
+            var compPredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
+
+            var filter = new FilterDto()
+            {
+                Predicate = compPredicate
+            };
+
+            var result = await _authorBookService.FilterBy(filter);
+
+            if (result.Count() == 0)
+            {
+                await _authorBookService.Insert(newAuthorBookEntry);
+                _unitOfWork.Commit();
+            }
+        }
+
+        public async Task AddGenreToBook(BookGenreDTO newBookGenreEntry)
+        {
+            var predicates = new List<PredicateDto>()
+            {
+                new PredicateDto(nameof(BookGenreDTO.BookID),newBookGenreEntry.BookID,ValueComparingOperator.Equal),
+                new PredicateDto(nameof(BookGenreDTO.GenreID),newBookGenreEntry.GenreID,ValueComparingOperator.Equal)
+            };
+
+            var compPredicate = new CompositePredicateDto(predicates,LogicalOperator.AND);
+
+            var filter = new FilterDto()
+            {
+                Predicate = compPredicate
+            };
+
+            var result = await _bookGenreService.FilterBy(filter);
+
+            if (result.Count() == 0)
+            {
+                await _bookGenreService.Insert(newBookGenreEntry);
+                _unitOfWork.Commit();
+            }
+        }
+
+        public void RemoveGenreFromBook(int bookId, int genreId)
+        {
+            var entry = new BookGenreDTO()
+            {
+                BookID = bookId,
+                GenreID = genreId
+            };
+
+            _bookGenreService.Delete(entry);
+            _unitOfWork.Commit();
+        }
+
+        public void RemoveAuthorFromBook(int bookId, int authorId)
+        {
+            var entry = new AuthorBookDTO()
+            {
+                BookID = bookId,
+                AuthorID = authorId
+            };
+
+            _authorBookService.Delete(entry);
+            _unitOfWork.Commit();
         }
 
         public async Task<IEnumerable<AuthorBookDTO>> GetAuthorBooksByBook(int id)

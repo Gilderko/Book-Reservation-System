@@ -28,6 +28,18 @@
                 <a asp-controller="Author" asp-action="Details" asp-route-id="@item.AuthorID">
                     @Html.DisplayFor(modelItem => item.Author.Name) @Html.DisplayFor(modelItem => item.Author.Surname)
                 </a>
+                if (User.IsInRole(GlobalConstants.AdminRoleName))
+                {
+                    <form asp-action="Details">
+                        <input type="hidden" name="bookId" value=@Model.Id>
+                        <input type="hidden" name="authorId" value=@item.AuthorID>
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+                }
+            }
+            @if (User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                <a asp-controller="Book" asp-action="AddAuthorToBook" asp-route-id="@Model.Id"> | Add author</a>
             }
         </dd>
         <dt class="col-sm-2">
@@ -37,6 +49,18 @@
             @foreach (var item in Model.Genres)
             {
                 <p style="margin-bottom: 0px">@((GenreTypeDTO)item.GenreID)</p>
+                if (User.IsInRole(GlobalConstants.AdminRoleName))
+                {
+                    <form asp-action="Details">
+                        <input type="hidden" name="bookId" value=@Model.Id>
+                        <input type="hidden" name="genreId" value=@item.GenreID>
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+                }
+            }
+            @if (User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                <a asp-controller="Book" asp-action="AddGenreToBook" asp-route-id="@Model.Id"> | Add genre</a>
             }
         </dd>
         <dt class="col-sm-2">
@@ -72,7 +96,7 @@
     </dl>
 </div>
 <div>
-    <h5>Reviews</h5>
+    <h5>Reviews</h5>    
     <table class="table">
         <thead>
             <tr>
@@ -85,28 +109,35 @@
                 <th>
                     Content
                 </th>
-                <th></th>
+                <th>
+                    @if (!Model.Reviews.Any(entry => entry.UserID == int.Parse(User.Identity.Name)))
+                    {
+                        <a asp-controller="Review" asp-action="CreateReview" asp-route-id="@Model.Id">
+                            Create new review
+                        </a>
+                    }
+                </th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Reviews)
             {
-            <tr>
-                <td>
-                    <a asp-controller="User" asp-action="Details" asp-route-id="@item.UserID">
-                        @Html.DisplayFor(modelItem => item.User.Name) @Html.DisplayFor(modelItem => item.User.Surname)
-                    </a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StarsAmmount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    <a asp-controller="Review" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                </td>                
-            </tr>
+                <tr>
+                    <td>
+                        <a asp-controller="User" asp-action="Details" asp-route-id="@item.UserID">
+                            @Html.DisplayFor(modelItem => item.User.Name) @Html.DisplayFor(modelItem => item.User.Surname)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StarsAmmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Content)
+                    </td>
+                    <td>
+                        <a asp-controller="Review" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
