@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<BL.DTOs.Entities.EBook.EBookPrevDTO>
+@using MVCProject.Config
 @{
     ViewData["Title"] = "Index";
 }
@@ -67,7 +68,7 @@
                             <br />
                         </div>
 
-                        @if (User.HasClaim(x => x.Value == "Admin"))
+                        @if (User.HasClaim(x => x.Value == GlobalConstants.AdminRoleName))
                         {
                             <div>
                                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>

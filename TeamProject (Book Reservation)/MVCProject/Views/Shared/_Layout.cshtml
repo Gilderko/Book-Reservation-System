@@ -1,4 +1,5 @@
 ﻿@using MVCProject.StateManager
+@using MVCProject.Config 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +63,7 @@
                             </li>
                         </ul>
                     }
-                    @if (User.IsInRole("Admin"))
+                    @if (User.IsInRole(GlobalConstants.AdminRoleName))
                     {
                         <a class="nav-link text-dark" asp-area="" asp-controller="AdminAnimal" asp-action="Index">SuperAdminButton</a>
                     }

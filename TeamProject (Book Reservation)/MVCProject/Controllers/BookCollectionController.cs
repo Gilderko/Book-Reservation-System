@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BL.Facades;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.ConnectionTables;
+using MVCProject.Config;
 
 namespace MVCProject.Controllers
 {
@@ -242,7 +243,7 @@ namespace MVCProject.Controllers
 
             var bookCollection = await _bookCollectionFacade.Get((int)id);
 
-            if (bookCollection == null || (bookCollection.UserId != userId && User.Claims.FirstOrDefault(x => x.Value == "Admin") != null))
+            if (bookCollection == null || (bookCollection.UserId != userId && User.Claims.FirstOrDefault(x => x.Value == GlobalConstants.AdminRoleName) != null))
             {
                 return NotFound();
             }
