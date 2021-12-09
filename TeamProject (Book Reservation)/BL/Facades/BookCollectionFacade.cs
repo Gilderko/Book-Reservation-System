@@ -9,6 +9,8 @@ using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Infrastructure.Query.Operators;
+using System.Linq;
 
 namespace BL.Facades
 {
@@ -74,31 +76,28 @@ namespace BL.Facades
 
         public async Task AddBookToCollection(AddBookInCollectionDTO bookCollectionDTO)
         {
-            try
+            var predicates = new List<PredicateDto>()
             {
-                await _bookPrevService.GetByID(bookCollectionDTO.BookID);
-            }
-            catch (Exception)
-            {
-                throw new ArgumentException("Invalid book id");
-            }
+                new PredicateDto(nameof(BookCollectionBookDTO.BookID),bookCollectionDTO.BookID,ValueComparingOperator.Equal),
+                new PredicateDto(nameof(BookCollectionBookDTO.BookCollectionID),bookCollectionDTO.BookCollectionID,ValueComparingOperator.Equal),
+            };
 
-            try
+            var compPredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
+            var filter = new FilterDto()
             {
-                await _bookCollectionService.GetByID(bookCollectionDTO.BookCollectionID);
-            }
-            catch (Exception)
-            {
-                throw new ArgumentException("Invalid book collection id");
-            }
+                Predicate = compPredicate
+            };
 
-            await _bookCollectionBookService.Insert(new BookCollectionBookDTO
+            if ((await _bookCollectionBookService.FilterBy(filter)).Count() == 0)
             {
-                BookCollectionID = bookCollectionDTO.BookCollectionID,
-                BookID = bookCollectionDTO.BookID
-            });
+                await _bookCollectionBookService.Insert(new BookCollectionBookDTO
+                {
+                    BookCollectionID = bookCollectionDTO.BookCollectionID,
+                    BookID = bookCollectionDTO.BookID
+                });
 
-            _unitOfWork.Commit();
+                _unitOfWork.Commit();
+            }
         }
 
         public void DeleteBookFromCollection(BookCollectionDTO bookCollection, BookDTO book)
@@ -162,7 +161,7 @@ namespace BL.Facades
 
             FilterDto filter = new FilterDto()
             {
-                Predicate = new PredicateDto(nameof(Book.Id), bookIds, Infrastructure.Query.Operators.ValueComparingOperator.In)
+                Predicate = new PredicateDto(nameof(Book.Id), bookIds, ValueComparingOperator.In)
             };
 
             var books = await _bookPrevService.FilterBy(filter, null, collectionsToLoad);
@@ -170,11 +169,6 @@ namespace BL.Facades
             await _authorService.LoadAuthors(books);
 
             return books;
-        }
-
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
         }
     }
 }

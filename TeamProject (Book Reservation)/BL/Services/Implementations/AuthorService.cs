@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
 {
-    class AuthorService : CRUDService<AuthorDTO, Author>, IAuthorService
+    public class AuthorService : CRUDService<AuthorDTO, Author>, IAuthorService
     {
         private readonly QueryObject<AuthorBookDTO, AuthorBook> _queryObjectBookAuthor;
 

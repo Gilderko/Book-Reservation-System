@@ -113,10 +113,5 @@ namespace BL.Facades
             await _userService.RegisterUser(user);
             _unitOfWork.Commit();
         }
-
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
-        }
     }
 }

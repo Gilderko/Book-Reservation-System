@@ -5,10 +5,8 @@ using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookCollection;
-using BL.DTOs.Entities.BookInstance;
-using BL.DTOs.Entities.EBook;
+using BL.DTOs.Entities.EReader;
 using BL.DTOs.Entities.EReaderInstance;
-using BL.DTOs.Entities.Reservation;
 using BL.Facades;
 using BL.QueryObjects;
 using BL.Services;
@@ -18,6 +16,7 @@ using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
 using Infrastructure.Query;
+using Infrastructure.Query.Predicates;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -26,142 +25,268 @@ using System.Threading.Tasks;
 using Xunit;
 
 
+
 namespace MoqTest
 {   
     public class EReaderInstanceFacadeTests
     {
         private IMapper _mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
 
-        private EReaderInstanceFacade Setup(AutoMock mock)
-        { 
+        private EReaderInstanceFacade Setup(AutoMock mock, Func<Tuple<string, string, string, int?, int?, QueryResult<EReader>, QueryResult<EReaderInstance>>> result)
+        {
             var uow = mock.Mock<IUnitOfWork>().Object;
-            var eReaderInstanceRepo = mock.Mock<IRepository<EReaderInstance>>().Object;
-            var reservationRepo = mock.Mock<IRepository<Reservation>>().Object;
-            var eBookEReaderInstanceRepo = mock.Mock<IRepository<EBookEReaderInstance>>().Object;
 
-            mock.Mock<IQuery<Reservation>>()
-               .Setup(x => x.Execute())
-               .Returns(GetReservationEntries());
+            mock.Mock<IQuery<EReader>>()
+                .Setup(x => x.Execute().Result)
+                .Returns(result().Item6);
 
-            var resBookQuery = mock.Create<IQuery<Reservation>>();
+            var ereaderQuery = mock.Create<IQuery<EReader>>();
 
-            var quer1 = new QueryObject<ReservationPrevDTO, Reservation>(_mapper, resBookQuery);
-            var quer2 = new QueryObject<ReservationBookInstanceDTO, ReservationBookInstance>(_mapper, null);
+            mock.Mock<IQuery<EReaderInstance>>()
+                .Setup(x => x.Execute().Result)
+                .Returns(result().Item7);
 
-            var reservationService = new ReservationService(reservationRepo, _mapper, quer1, quer2);
-            var eReaderInstanceService = new CRUDService<EReaderInstanceDTO, EReaderInstance>(eReaderInstanceRepo, _mapper);
-            var eBookEReaderInstanceService = new CRUDService<EBookEReaderInstanceDTO, EBookEReaderInstance>(eBookEReaderInstanceRepo, _mapper);
+            var ereaderInstanceQuery = mock.Create<IQuery<EReaderInstance>>();
+            
+            var ereaderQueryObject = new QueryObject<EReaderPrevDTO, EReader>(_mapper, ereaderQuery);
+            var ereaderInstanceQueryObject = 
+                new QueryObject<EReaderInstancePrevDTO, EReaderInstance>(_mapper, ereaderInstanceQuery);
 
-            var eReaderInstanceFacade = new EReaderInstanceFacade(uow, eReaderInstanceService, eBookEReaderInstanceService, reservationService);
-            return eReaderInstanceFacade;
+            var ereaderService = new CRUDService<EReaderPrevDTO, EReader>(null,_mapper, ereaderQueryObject);
+            var ereaderInstanceService = new EReaderInstancePreviewService(null,_mapper, ereaderInstanceQueryObject);
+
+            var ereaderInstanceFacade = new EReaderInstanceFacade(uow, null, null, null, ereaderInstanceService,
+                ereaderService, null, null);
+
+            return ereaderInstanceFacade;
         }
 
         [Fact]
-        public void TestEReaderInstanceFacade()
+        public async Task GetEReaderInstancePrevsBy1()
         {
             using (var mock = AutoMock.GetLoose())
             {
-                TestQuery(mock, new DateTime(1895, 1, 1), new DateTime(2010, 1, 1), 1);
-                TestAddEBook(mock);
-                TestDeleteEBook(mock);
+                var bookCollectionFacade = Setup(mock, GetEntries);
+
+                var data = GetEntries();
+                await Evaluate(mock, bookCollectionFacade, data);
             }
         }
 
-        private void TestQuery(AutoMock mock, DateTime dateFrom, DateTime dateTill, int eReaderId)
+        [Fact]
+        public async Task GetEReaderInstancePrevsBy2()
         {
-            EReaderInstanceFacade eReaderInstanceFacade = Setup(mock);
-
-            var result = eReaderInstanceFacade.GetReservationPrevsByDate(new EReaderInstanceDTO { Id = eReaderId }, dateFrom, dateTill);
-
-            Assert.True(result != null);
-
-            Assert.True(result.Result.Count() == GetReservationEntries().Result.Items.Count());
-        }
-
-        private void TestAddEBook(AutoMock mock)
-        {
-            EReaderInstanceFacade eReaderInstanceFacade = Setup(mock);
-
-            var counter = 0;
-            foreach (var data in GetNewReservations())
+            using (var mock = AutoMock.GetLoose())
             {
-                eReaderInstanceFacade.AddEBook(data.Item1, data.Item2);
-                counter++;
+                var bookCollectionFacade = Setup(mock, GetEntries2);
 
-                Assert.True(mock.Mock<IRepository<EBookEReaderInstance>>().Invocations
-                    .Where(x => x.Method.Name == nameof(IRepository<EBookEReaderInstance>.Insert)).Count() == counter);
-
-                var calledMethod = mock.Mock<IRepository<EBookEReaderInstance>>()
-                    .Invocations.Last((IInvocation x) => x.Method.Name == nameof(IRepository<EBookEReaderInstance>.Insert));
-
-                Assert.True(calledMethod != null); ;
-
-                var argument = (calledMethod.Arguments.First() as EBookEReaderInstance);
-
-                Assert.True(argument != null);
-
-                Assert.True(argument.EReaderInstanceID == data.Item1.Id && argument.EBookID == data.Item2.Id);
+                var data = GetEntries2();
+                await Evaluate(mock, bookCollectionFacade, data);
             }
-
         }
 
-        private void TestDeleteEBook(AutoMock mock)
+        [Fact]
+        public async Task GetEReaderInstancePrevsBy3()
         {
-            EReaderInstanceFacade eReaderInstanceFacade = Setup(mock);
-
-            var counter = 0;
-            foreach (var data in GetNewReservations())
+            using (var mock = AutoMock.GetLoose())
             {
-                eReaderInstanceFacade.DeleteEBook(data.Item1,data.Item2);
-                counter++;
+                var bookCollectionFacade = Setup(mock, GetEntries3);
 
-                Assert.True(mock.Mock<IRepository<EBookEReaderInstance>>().Invocations
-                    .Where(x => x.Method.Name == nameof(IRepository<EBookEReaderInstance>.Delete)).Count() == counter);
-
-                var calledMethod = mock.Mock<IRepository<EBookEReaderInstance>>()
-                    .Invocations.Last((IInvocation x) => x.Method.Name == nameof(IRepository<EBookEReaderInstance>.Delete));
-
-                Assert.True(calledMethod != null); ;
-
-                var argument = (calledMethod.Arguments.First() as EBookEReaderInstance);
-
-                Assert.True(argument != null);
-
-                Assert.True(argument.EReaderInstanceID == data.Item1.Id && argument.EBookID == data.Item2.Id);
-            }            
+                var data = GetEntries3();
+                await Evaluate(mock, bookCollectionFacade, data);
+            }
         }
 
-        private IEnumerable<Tuple<EReaderInstanceDTO,EBookDTO>> GetNewReservations()
+        private static async Task Evaluate(AutoMock mock, EReaderInstanceFacade bookCollectionFacade, Tuple<string, string, string, int?, int?, QueryResult<EReader>, QueryResult<EReaderInstance>> data)
         {
-            var book1 = new EBookDTO() { Id = 1 };
-            var book2 = new EBookDTO() { Id = 2 };
-            var book3 = new EBookDTO() { Id = 3 };
-            var book4 = new EBookDTO() { Id = 4 };
+            var result = await bookCollectionFacade.GetEReaderInstancePrevsBy(data.Item1, data.Item2, data.Item3, data.Item4, data.Item5);
 
-            var eReaderInst1 = new EReaderInstanceDTO() { Id = 1 };
-            var eReaderInst2 = new EReaderInstanceDTO() { Id = 2 };
+            EReaderInstanceInvocationsInclude(mock, data.Item1);
+            EReaderInvocationsInclude(mock, data.Item2);
+            EReaderInvocationsInclude(mock, data.Item3);
+            EReaderInvocationsInclude(mock, data.Item4);
+            EReaderInvocationsInclude(mock, data.Item5);
 
-            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst1, book1);
-            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst2, book2);
-            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst1, book3);
-            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst2, book4);
-            yield return new Tuple<EReaderInstanceDTO, EBookDTO>(eReaderInst1, book4);
+            Assert.True(result.Count() == data.Item7.Items.Count());
+
+            Assert.True(mock.Mock<IQuery<EReader>>()
+                .Invocations.Where(invo => invo.Method.Name == nameof(IQuery<EReader>.Execute)).Count() == 1);
+
+            Assert.True(mock.Mock<IQuery<EReaderInstance>>()
+                .Invocations.Where(invo => invo.Method.Name == nameof(IQuery<EReader>.Execute)).Count() == 1);
         }
 
-        public async Task<QueryResult<Reservation>> GetReservationEntries()
+        private static void EReaderInvocationsInclude(AutoMock mock, object argument)
         {
-            var result = new QueryResult<Reservation>();
-            result.Items = new List<Reservation>()
+            var predicates = mock.Mock<IQuery<EReader>>().Invocations
+                                .Where(invo => invo.Method.Name == nameof(IQuery<EReader>.Where))
+                                .Where(invo => invo.Arguments[0] is CompositePredicate)
+                                .Select(invo => invo.Arguments[0] as CompositePredicate).First();
+
+            Assert.Contains(predicates.Predicates, pred => (pred as SimplePredicate).ComparedValue.Equals(argument));                               
+        }
+
+        private static void EReaderInstanceInvocationsInclude(AutoMock mock, object argument)
+        {
+            var predicates = mock.Mock<IQuery<EReaderInstance>>().Invocations
+                                .Where(invo => invo.Method.Name == nameof(IQuery<EReader>.Where))
+                                .Where(invo => invo.Arguments[0] is CompositePredicate)
+                                .Select(invo => invo.Arguments[0] as CompositePredicate).First();
+
+            Assert.Contains(predicates.Predicates, pred => (pred as SimplePredicate).ComparedValue == argument);
+        }
+
+        public Tuple<string, string, string, int?, int?, QueryResult<EReader>, QueryResult<EReaderInstance>> GetEntries()
+        {
+            string desc = "Ahoj";
+            string company = "Good company";
+            string model = "Good model";
+            int? memorySizeFrom = 2;
+            int? memoerySizeTo = 3;
+
+            var ereaders = new QueryResult<EReader>()
             {
-                new Reservation { Id = 1, DateFrom = new DateTime(256,9,10), DateTill = new DateTime(1875,9,8), EReaderID = 1 },
-                new Reservation { Id = 2, DateFrom = new DateTime(2000,9,10), DateTill = new DateTime(2003,9,8), EReaderID = 4 },
-                new Reservation { Id = 3, DateFrom = new DateTime(2012,9,10), DateTill = new DateTime(2017,9,8), EReaderID = 3 },
-                new Reservation { Id = 4, DateFrom = new DateTime(1999,9,10), DateTill = new DateTime(2005,9,8), EReaderID = 2 },
-                new Reservation { Id = 5, DateFrom = new DateTime(2015,9,10), DateTill = new DateTime(2018,9,8), EReaderID = 4 },
-                new Reservation { Id = 6, DateFrom = new DateTime(2003,9,10), DateTill = new DateTime(2007,9,8), EReaderID = 5 },
-                new Reservation { Id = 7, DateFrom = new DateTime(2001,9,10), DateTill = new DateTime(2004,9,8), EReaderID = 3 },
-                new Reservation { Id = 8, DateFrom = new DateTime(2565,9,10), DateTill = new DateTime(2565,10,8), EReaderID = 2 },
+                Items = new List<EReader>
+                {
+                    new EReader()
+                    {
+                        Id = 1
+                    },
+                    new EReader()
+                    {
+                        Id = 2
+                    }
+                }
             };
+
+            var ereaderInstances = new QueryResult<EReaderInstance>()
+            {
+                Items = new List<EReaderInstance>
+                {
+                    new EReaderInstance()
+                    {
+                        Id = 1
+                    },
+                    new EReaderInstance()
+                    {
+                        Id = 2
+                    }
+                }
+            };
+
+
+            var result = new Tuple<string, string, string, int?, int?,
+                QueryResult<EReader>, QueryResult<EReaderInstance>>
+                (desc, company, model, memorySizeFrom, memoerySizeTo, ereaders, ereaderInstances);
+
+            return result;
+        }
+
+        public Tuple<string, string, string, int?, int?, QueryResult<EReader>, QueryResult<EReaderInstance>> GetEntries2()
+        {
+            string desc = "Nazdar";
+            string company = "Kto company";
+            string model = "Some model";
+            int? memorySizeFrom = 555;
+            int? memoerySizeTo = 2155;
+
+            var ereaders = new QueryResult<EReader>()
+            {
+                Items = new List<EReader>
+                {
+                    new EReader()
+                    {
+                        Id = 3
+                    },
+                    new EReader()
+                    {
+                        Id = 6
+                    }
+                }
+            };
+
+            var ereaderInstances = new QueryResult<EReaderInstance>()
+            {
+                Items = new List<EReaderInstance>
+                {
+                    new EReaderInstance()
+                    {
+                        Id = 1,
+                        EReaderTemplateID = 3
+                    },
+                    new EReaderInstance()
+                    {
+                        Id = 2,
+                        EReaderTemplateID = 6
+                    }
+                }
+            };
+
+
+            var result = new Tuple<string, string, string, int?, int?,
+                QueryResult<EReader>, QueryResult<EReaderInstance>>
+                (desc, company, model, memorySizeFrom, memoerySizeTo, ereaders, ereaderInstances);
+
+            return result;
+        }
+
+        public Tuple<string, string, string, int?, int?, QueryResult<EReader>, QueryResult<EReaderInstance>> GetEntries3()
+        {
+            string desc = "";
+            string company = "";
+            string model = "";
+            int? memorySizeFrom = 55;
+            int? memoerySizeTo = 2114;
+
+            var ereaders = new QueryResult<EReader>()
+            {
+                Items = new List<EReader>
+                {
+                    new EReader()
+                    {
+                        Id = 3
+                    },
+                    new EReader()
+                    {
+                        Id = 4
+                    },
+                    new EReader()
+                    {
+                        Id = 5
+                    },
+                    new EReader()
+                    {
+                        Id = 6
+                    }
+                }
+            };
+
+            var ereaderInstances = new QueryResult<EReaderInstance>()
+            {
+                Items = new List<EReaderInstance>
+                {
+                    new EReaderInstance()
+                    {
+                        Id = 1,
+                        EReaderTemplateID = 5
+                    },
+                    new EReaderInstance()
+                    {
+                        Id = 2,
+                        EReaderTemplateID = 6
+                    },
+                    new EReaderInstance()
+                    {
+                        Id = 3,
+                        EReaderTemplateID = 4
+                    }
+                }
+            };
+
+
+            var result = new Tuple<string, string, string, int?, int?,
+                QueryResult<EReader>, QueryResult<EReaderInstance>>
+                (desc, company, model, memorySizeFrom, memoerySizeTo, ereaders, ereaderInstances);
 
             return result;
         }

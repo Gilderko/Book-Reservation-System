@@ -39,10 +39,5 @@ namespace BL.Facades
             _service.DeleteById(id);
             _unitOfWork.Commit();
         }
-
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
-        }
     }
 }

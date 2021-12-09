@@ -24,7 +24,7 @@ namespace BL.Facades
         private ICRUDService<BookPrevDTO, Book> _bookPrevService;
         private ICRUDService<AuthorBookDTO, AuthorBook> _authorBookService;
         private ICRUDService<UserDTO, User> _userService;
-        private ICRUDService<ReservationBookInstanceDTO, ReservationBookInstance> _reserveBookInstance;
+        private ICRUDService<ReservationBookInstanceDTO, ReservationBookInstance> _reserveBookInstanceService;
         private ICRUDService<BookGenreDTO, BookGenre> _bookGenreService;
         private IAuthorService _authorService;
         private IGenreService _genreService;
@@ -44,7 +44,7 @@ namespace BL.Facades
             _bookPrevService = bookPrevService;
             _authorBookService = authorBookService;
             _userService = userService;
-            _reserveBookInstance = reserveBookInstance;
+            _reserveBookInstanceService = reserveBookInstance;
             _bookGenreService = bookGenreService;
             _authorService = authorService;
             _genreService = genreService;
@@ -85,7 +85,7 @@ namespace BL.Facades
                         Predicate = predicate
                     };
 
-                    bookInstance.AllReservations = (await _reserveBookInstance.FilterBy(filter, refsReservBookInstanceToLoad)).ToList();
+                    bookInstance.AllReservations = (await _reserveBookInstanceService.FilterBy(filter, refsReservBookInstanceToLoad)).ToList();
                 }
             }
 
@@ -102,11 +102,6 @@ namespace BL.Facades
         {
             _bookService.DeleteById(id);
             _unitOfWork.Commit();
-        }
-        
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
         }
 
         public async Task<IEnumerable<BookPrevDTO>> GetBookPreviews(string title,

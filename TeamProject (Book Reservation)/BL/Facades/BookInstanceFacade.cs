@@ -111,10 +111,5 @@ namespace BL.Facades
             await _bookInstanceService.CreateBookInstance(ownerId, bookTemplateId, bookInstance);
             _unitOfWork.Commit();
         }
-
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
-        }
     }
 }

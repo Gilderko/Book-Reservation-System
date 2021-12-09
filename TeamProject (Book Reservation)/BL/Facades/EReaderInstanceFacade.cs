@@ -91,7 +91,6 @@ namespace BL.Facades
 
             var eReader = await _eReaderInstanceService.GetByID(ereaderId, null, collsToLoad);
             return eReader.BooksIncluded.Any(entry => entry.EBookID == bookdId);
-
         }
 
         public async Task AddNewEReaderToUser(EReaderInstanceCreateDTO eReader, int userId)
@@ -193,11 +192,6 @@ namespace BL.Facades
 
             var result = await _eBookEReaderInstanceService.FilterBy(filter, refsToLoad);
             return result;
-        }
-
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
         }
     }
 }

@@ -47,10 +47,5 @@ namespace BL.Facades
             review.BookTemplateID = bookId;
             _unitOfWork.Commit();
         }
-        
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
-        }
     }
 }
