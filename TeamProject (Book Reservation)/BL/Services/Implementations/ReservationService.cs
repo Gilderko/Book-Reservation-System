@@ -52,14 +52,22 @@ namespace BL.Services.Implementations
             return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
 
-        public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByEReader(int eReaderId, DateTime from, DateTime to)
+        public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByEReader(int eReaderId, DateTime? from, DateTime? to)
         {
             List<PredicateDto> predicates = new List<PredicateDto>
             {
-                new PredicateDto(nameof(Reservation.EReaderID), eReaderId, ValueComparingOperator.Equal),
-                new PredicateDto(nameof(Reservation.DateFrom), from, ValueComparingOperator.GreaterThanOrEqual),
-                new PredicateDto(nameof(Reservation.DateTill), to, ValueComparingOperator.LessThanOrEqual)
+                new PredicateDto(nameof(Reservation.EReaderID), eReaderId, ValueComparingOperator.Equal)                
             };
+
+            if (from != null)
+            {
+                predicates.Add(new PredicateDto(nameof(Reservation.DateFrom), from, ValueComparingOperator.GreaterThanOrEqual));
+            }
+
+            if (to != null)
+            {
+                predicates.Add(new PredicateDto(nameof(Reservation.DateTill), to, ValueComparingOperator.LessThanOrEqual));
+            }
 
             CompositePredicateDto compositePredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
 
@@ -73,7 +81,7 @@ namespace BL.Services.Implementations
             return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
         
-        public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByBookInstance(int bookId, DateTime from, DateTime to)
+        public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByBookInstance(int bookId, DateTime? from, DateTime? to)
         {
             string[] referencesToLoad = new[]
             {
@@ -90,13 +98,19 @@ namespace BL.Services.Implementations
             };
             
             var result = (await _reservationBookInstanceQueryObject.ExecuteQuery(filter)).Items;
+
+            var reservations = result;
             
             // Filter by date
-            var reservations = result
-                .Where(x => x.Reservation.DateFrom >= from && x.Reservation.DateTill <= to)
-                .Select(x => Mapper.Map<ReservationDTO, ReservationPrevDTO>(x.Reservation));
-            
-            return reservations.ToList();
+            if (from != null && to != null)
+            {
+                return result.Where(x => x.Reservation.DateFrom >= from && x.Reservation.DateTill <= to)
+                    .Select(x => Mapper.Map<ReservationDTO, ReservationPrevDTO>(x.Reservation));
+            }
+            else
+            {
+                return result.Select(x => Mapper.Map<ReservationDTO, ReservationPrevDTO>(x.Reservation));
+            }
         }
     }
 }

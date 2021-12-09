@@ -124,7 +124,7 @@ namespace BL.Facades
                 return;
             }
 
-            var reservations = await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, reservation.DateFrom, reservation.DateTill);
+            var reservations = await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, null, null);
 
             if (!CheckIsAvailable(reservations,reservation))
             {
@@ -158,7 +158,7 @@ namespace BL.Facades
                 return;
             }
 
-            var reservations = await _reservationService.GetReservationPrevsByEReader(eReaderInstanceId, reservation.DateFrom, reservation.DateTill);
+            var reservations = await _reservationService.GetReservationPrevsByEReader(eReaderInstanceId, null, null);
 
             if (!CheckIsAvailable(reservations, reservation))
             {

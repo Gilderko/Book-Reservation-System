@@ -10,9 +10,9 @@ namespace BL.Services
     {
         public Task<IEnumerable<ReservationPrevDTO>> GetReservationsPreviewByUser(int userId, DateTime from, DateTime to);
 
-        public Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByEReader(int eReaderId, DateTime from, DateTime to);
+        public Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByEReader(int eReaderId, DateTime? from, DateTime? to);
 
         public Task<IEnumerable<ReservationPrevDTO>>
-            GetReservationPrevsByBookInstance(int bookId, DateTime from, DateTime to);
+            GetReservationPrevsByBookInstance(int bookId, DateTime? from, DateTime? to);
     }
 }
