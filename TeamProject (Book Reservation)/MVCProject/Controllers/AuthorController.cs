@@ -12,12 +12,10 @@ namespace MVCProject.Controllers
     public class AuthorController : Controller
     {
         private readonly AuthorFacade _facade;
-        private ILifetimeScope _lifeTime;
 
-        public AuthorController(ILifetimeScope lifeTime)
+        public AuthorController(AuthorFacade facade)
         {
-            _lifeTime = lifeTime;
-            _facade = _lifeTime.Resolve<AuthorFacade>();
+            _facade = facade;
         }
 
         // GET: Author
@@ -175,12 +173,6 @@ namespace MVCProject.Controllers
         {
             var author = await _facade.Get(id);
             return author != null;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _lifeTime.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

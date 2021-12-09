@@ -17,12 +17,10 @@ namespace MVCProject.Controllers
     public class ReviewController : Controller
     {
         private readonly ReviewFacade _facade;
-        private ILifetimeScope _lifeTime;
 
-        public ReviewController(ILifetimeScope lifeTime)
+        public ReviewController(ReviewFacade facade)
         {
-            _lifeTime = lifeTime;
-            _facade = _lifeTime.Resolve<ReviewFacade>();
+            _facade = facade;
         }
 
         // GET: Review
@@ -185,12 +183,6 @@ namespace MVCProject.Controllers
 
             var review = await _facade.Get(id, referencesToLoad);
             return review;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _lifeTime.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

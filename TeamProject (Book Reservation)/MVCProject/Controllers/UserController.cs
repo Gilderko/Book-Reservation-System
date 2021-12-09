@@ -16,12 +16,10 @@ namespace MVCProject.Controllers
     public class UserController : Controller
     {
         private readonly UserFacade _userFacade;
-        private ILifetimeScope _lifeTime;
 
-        public UserController(ILifetimeScope lifeTime)
+        public UserController(UserFacade facade)
         {
-            _lifeTime = lifeTime;
-            _userFacade = _lifeTime.Resolve<UserFacade>();
+            _userFacade = facade;
         }
 
         // GET: User
@@ -316,12 +314,6 @@ namespace MVCProject.Controllers
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identity));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _lifeTime.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

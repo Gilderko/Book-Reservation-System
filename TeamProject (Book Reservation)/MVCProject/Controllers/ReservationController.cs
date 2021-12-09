@@ -19,12 +19,10 @@ namespace MVCProject.Controllers
     public class ReservationController : Controller
     {
         private readonly ReservationFacade _facade;
-        private ILifetimeScope _lifeTime;
 
-        public ReservationController(ILifetimeScope lifeTime)
+        public ReservationController(ReservationFacade facade)
         {
-            _lifeTime = lifeTime;
-            _facade = _lifeTime.Resolve<ReservationFacade>();
+            _facade = facade;
         }
 
         // GET: Reservation
@@ -294,12 +292,6 @@ namespace MVCProject.Controllers
         {
             var reservation = await _facade.Get(id);
             return reservation != null;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _lifeTime.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

@@ -12,12 +12,10 @@ namespace MVCProject.Controllers
     public class EBookController : Controller
     {
         private readonly EBookFacade _eBookFacade;
-        private ILifetimeScope _lifeTime;
 
-        public EBookController(ILifetimeScope lifeTime)
+        public EBookController(EBookFacade facade)
         {
-            _lifeTime = lifeTime;
-            _eBookFacade = _lifeTime.Resolve<EBookFacade>();
+            _eBookFacade = facade;
         }
 
         // GET: EBook
@@ -175,12 +173,6 @@ namespace MVCProject.Controllers
         {
             var eBook = await _eBookFacade.Get(id);
             return eBook != null;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _lifeTime.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

@@ -16,12 +16,10 @@ namespace MVCProject.Controllers
     public class EReaderController : Controller
     {
         private readonly EReaderFacade _facade;
-        private ILifetimeScope _lifeTime;
 
-        public EReaderController(ILifetimeScope lifeTime)
+        public EReaderController(EReaderFacade facade)
         {
-            _lifeTime = lifeTime;
-            _facade = _lifeTime.Resolve<EReaderFacade>();
+            _facade = facade;
         }
 
         // GET: EReader
@@ -149,12 +147,6 @@ namespace MVCProject.Controllers
         {
             var eReader = await _facade.Get(id);
             return eReader != null;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _lifeTime.Dispose();
-            base.Dispose(disposing);
         }
     }
 }
