@@ -10,16 +10,19 @@ using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.BookInstance;
 using MVCProject.Config;
+using Autofac;
 
 namespace MVCProject.Controllers
 {
     public class BookInstanceController : Controller
     {
         private readonly BookInstanceFacade _bookInstanceFacade;
+        private ILifetimeScope _lifeTime;
 
-        public BookInstanceController(BookInstanceFacade facade)
+        public BookInstanceController(IContainer container)
         {
-            _bookInstanceFacade = facade;
+            _lifeTime = container.BeginLifetimeScope();
+            _bookInstanceFacade = _lifeTime.Resolve<BookInstanceFacade>();
         }
 
         // GET: BookInstance
@@ -227,6 +230,12 @@ namespace MVCProject.Controllers
         {
             var bookInstance = await _bookInstanceFacade.Get(id);
             return bookInstance != null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

@@ -24,19 +24,8 @@ namespace MVCProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
-            services.AddTransient<AuthorFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<AuthorFacade>());
-            services.AddTransient<BookCollectionFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookCollectionFacade>());
-            services.AddTransient<BookFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookFacade>());
-            services.AddTransient<BookInstanceFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<BookInstanceFacade>());
-            services.AddTransient<EBookFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EBookFacade>());
-            services.AddTransient<EBookPreviewFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EBookPreviewFacade>());
-            services.AddTransient<EReaderFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderFacade>());
-            services.AddTransient<EReaderFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderFacade>());
-            services.AddTransient<EReaderInstanceFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<EReaderInstanceFacade>());
-            services.AddTransient<ReservationFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<ReservationFacade>());
-            services.AddTransient<ReviewFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<ReviewFacade>());
-            services.AddTransient<UserFacade>(services => StateKeeper.Instance.GetNewScope().Resolve<UserFacade>());
+            
+            services.AddTransient<ILifetimeScope>(services => StateKeeper.Instance.GetContainer().BeginLifetimeScope());
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie();

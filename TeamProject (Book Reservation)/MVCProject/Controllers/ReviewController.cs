@@ -10,16 +10,19 @@ using BL.DTOs.Entities.Review;
 using Microsoft.AspNetCore.Authorization;
 using MVCProject.Config;
 using MVCProject.StateManager;
+using Autofac;
 
 namespace MVCProject.Controllers
 {
     public class ReviewController : Controller
     {
         private readonly ReviewFacade _facade;
+        private ILifetimeScope _lifeTime;
 
-        public ReviewController(ReviewFacade facade)
+        public ReviewController(ILifetimeScope lifeTime)
         {
-            _facade = facade;
+            _lifeTime = lifeTime;
+            _facade = _lifeTime.Resolve<ReviewFacade>();
         }
 
         // GET: Review
@@ -182,6 +185,12 @@ namespace MVCProject.Controllers
 
             var review = await _facade.Get(id, referencesToLoad);
             return review;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

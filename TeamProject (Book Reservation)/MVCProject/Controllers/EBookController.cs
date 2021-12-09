@@ -1,4 +1,5 @@
-﻿using BL.DTOs.Entities.EBook;
+﻿using Autofac;
+using BL.DTOs.Entities.EBook;
 using BL.DTOs.Enums;
 using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace MVCProject.Controllers
     public class EBookController : Controller
     {
         private readonly EBookFacade _eBookFacade;
+        private ILifetimeScope _lifeTime;
 
-        public EBookController(EBookFacade facade)
+        public EBookController(ILifetimeScope lifeTime)
         {
-            _eBookFacade = facade;
+            _lifeTime = lifeTime;
+            _eBookFacade = _lifeTime.Resolve<EBookFacade>();
         }
 
         // GET: EBook
@@ -172,6 +175,12 @@ namespace MVCProject.Controllers
         {
             var eBook = await _eBookFacade.Get(id);
             return eBook != null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

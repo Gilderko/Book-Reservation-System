@@ -9,16 +9,19 @@ using DAL;
 using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.EReader;
+using Autofac;
 
 namespace MVCProject.Controllers
 {
     public class EReaderController : Controller
     {
         private readonly EReaderFacade _facade;
+        private ILifetimeScope _lifeTime;
 
-        public EReaderController(EReaderFacade facade)
+        public EReaderController(ILifetimeScope lifeTime)
         {
-            _facade = facade;
+            _lifeTime = lifeTime;
+            _facade = _lifeTime.Resolve<EReaderFacade>();
         }
 
         // GET: EReader
@@ -146,6 +149,12 @@ namespace MVCProject.Controllers
         {
             var eReader = await _facade.Get(id);
             return eReader != null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

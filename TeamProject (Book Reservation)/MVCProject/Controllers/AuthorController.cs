@@ -5,16 +5,19 @@ using BL.Facades;
 using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using MVCProject.Config;
+using Autofac;
 
 namespace MVCProject.Controllers
 {
     public class AuthorController : Controller
     {
         private readonly AuthorFacade _facade;
+        private ILifetimeScope _lifeTime;
 
-        public AuthorController(AuthorFacade facade)
+        public AuthorController(ILifetimeScope lifeTime)
         {
-            _facade = facade;
+            _lifeTime = lifeTime;
+            _facade = _lifeTime.Resolve<AuthorFacade>();
         }
 
         // GET: Author
@@ -174,16 +177,10 @@ namespace MVCProject.Controllers
             return author != null;
         }
 
-        /* public async Task<IActionResult> AddBookToAuthor(AuthorDTO author, BookDTO book)
+        protected override void Dispose(bool disposing)
         {
-            await _facade.AddBookToAuthor(author, book);
-            return RedirectToAction(nameof(Edit), new { id = book.Id });
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
-
-        public IActionResult DeleteBookFromAuthor(AuthorDTO author, BookDTO book)
-        {
-            _facade.DeleteBookFromAuthor(author, book);
-            return RedirectToAction(nameof(Edit), new { id = book.Id });
-        }*/
     }
 }

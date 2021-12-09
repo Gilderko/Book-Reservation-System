@@ -1,4 +1,5 @@
-﻿using BL.DTOs.Entities.User;
+﻿using Autofac;
+using BL.DTOs.Entities.User;
 using BL.Facades;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,10 +16,12 @@ namespace MVCProject.Controllers
     public class UserController : Controller
     {
         private readonly UserFacade _userFacade;
+        private ILifetimeScope _lifeTime;
 
-        public UserController(UserFacade facade)
+        public UserController(ILifetimeScope lifeTime)
         {
-            _userFacade = facade;
+            _lifeTime = lifeTime;
+            _userFacade = _lifeTime.Resolve<UserFacade>();
         }
 
         // GET: User
@@ -313,6 +316,12 @@ namespace MVCProject.Controllers
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identity));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

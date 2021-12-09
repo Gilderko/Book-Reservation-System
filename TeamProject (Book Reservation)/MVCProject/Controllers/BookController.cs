@@ -1,4 +1,5 @@
-﻿using BL.DTOs.ConnectionTables;
+﻿using Autofac;
+using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Enums;
 using BL.Facades;
@@ -15,10 +16,12 @@ namespace MVCProject.Controllers
     public class BookController : Controller
     {
         private readonly BookFacade _bookFacade;
+        private ILifetimeScope _lifeTime;
 
-        public BookController(BookFacade bookFacade)
+        public BookController(ILifetimeScope lifeTime)
         {
-            _bookFacade = bookFacade;
+            _lifeTime = lifeTime;
+            _bookFacade = _lifeTime.Resolve<BookFacade>();
         }
 
         // GET: Book
@@ -59,11 +62,6 @@ namespace MVCProject.Controllers
         // GET: Book/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (!User.IsInRole(GlobalConstants.AdminRoleName))
-            {
-                return NotFound();
-            }
-
             if (id == null)
             {
                 return NotFound();
@@ -308,6 +306,12 @@ namespace MVCProject.Controllers
         {
             var book = await _bookFacade.Get(id);
             return book != null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

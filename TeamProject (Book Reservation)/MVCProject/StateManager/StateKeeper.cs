@@ -115,27 +115,15 @@ namespace MVCProject.StateManager
             return currSession.Get<ReservationDTO>(_reservationKey);
         }
 
-        // LifeTimeScope
+        // Container
 
         private IContainer _container = null;
 
-        private ILifetimeScope _currentScope = null;
-
-        public ILifetimeScope GetNewScope()
+        public IContainer GetContainer()
         {
-            if (_currentScope == null)
-            {
-                _currentScope = _container.BeginLifetimeScope();
-            }
-            else
-            {
-                _currentScope.Dispose();
-                _currentScope = _container.BeginLifetimeScope();
-            }
-
-            return _currentScope;
+            return _container;
         }
 
-        // LifeTimeScope
+        // Container
     }
 }

@@ -9,16 +9,19 @@ using BL.Facades;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.ConnectionTables;
 using MVCProject.Config;
+using Autofac;
 
 namespace MVCProject.Controllers
 {
     public class BookCollectionController : Controller
     {
         private readonly BookCollectionFacade _bookCollectionFacade;
+        private ILifetimeScope _lifeTime;
 
-        public BookCollectionController(BookCollectionFacade facade)
+        public BookCollectionController(ILifetimeScope lifeTime)
         {
-            _bookCollectionFacade = facade;
+            _lifeTime = lifeTime;
+            _bookCollectionFacade = _lifeTime.Resolve<BookCollectionFacade>();
         }
 
         // GET: BookCollection
@@ -315,6 +318,12 @@ namespace MVCProject.Controllers
         {
             var bookCollection = await _bookCollectionFacade.Get(id);
             return bookCollection != null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

@@ -12,16 +12,19 @@ using BL.DTOs.Entities.Reservation;
 using MVCProject.StateManager;
 using BL.DTOs.ConnectionTables;
 using MVCProject.Config;
+using Autofac;
 
 namespace MVCProject.Controllers
 {
     public class ReservationController : Controller
     {
         private readonly ReservationFacade _facade;
+        private ILifetimeScope _lifeTime;
 
-        public ReservationController(ReservationFacade facade)
+        public ReservationController(ILifetimeScope lifeTime)
         {
-            _facade = facade;
+            _lifeTime = lifeTime;
+            _facade = _lifeTime.Resolve<ReservationFacade>();
         }
 
         // GET: Reservation
@@ -291,6 +294,12 @@ namespace MVCProject.Controllers
         {
             var reservation = await _facade.Get(id);
             return reservation != null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _lifeTime.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
