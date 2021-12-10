@@ -105,7 +105,7 @@ namespace BL.Facades
             }
 
             var previews = await _authorPrevService.FilterBy(filter);
-            return previews;
+            return previews.items;
         }
 
         public async Task<IEnumerable<AuthorBookDTO>> GetAuthorBooksByAuthor(int id)
@@ -122,7 +122,7 @@ namespace BL.Facades
             };
 
             var result = await _authorBookService.FilterBy(filter, refsToLoad);
-            return result;
+            return result.items;
         }
     }
 }

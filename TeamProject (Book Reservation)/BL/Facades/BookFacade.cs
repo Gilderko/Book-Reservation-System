@@ -85,7 +85,7 @@ namespace BL.Facades
                         Predicate = predicate
                     };
 
-                    bookInstance.AllReservations = (await _reserveBookInstanceService.FilterBy(filter, refsReservBookInstanceToLoad)).ToList();
+                    bookInstance.AllReservations = (await _reserveBookInstanceService.FilterBy(filter, refsReservBookInstanceToLoad)).items.ToList();
                 }
             }
 
@@ -104,17 +104,23 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<IEnumerable<BookPrevDTO>> GetBookPreviews(string title,
-                                                                    string authorName,
-                                                                    string authorSurname,
-                                                                    GenreTypeDTO[] genres,
-                                                                    LanguageDTO? language,
-                                                                    int? pageFrom,
-                                                                    int? pageTo,
-                                                                    DateTime? releaseFrom,
-                                                                    DateTime? releaseTo)
+        public async Task<(int totalNumberOfBooks, IEnumerable<BookPrevDTO> bookPrevs)> GetBookPreviews(int pageNumber,
+                                                                                                        int pageSize,
+                                                                                                        string title,
+                                                                                                        string authorName,
+                                                                                                        string authorSurname,
+                                                                                                        GenreTypeDTO[] genres,
+                                                                                                        LanguageDTO? language,
+                                                                                                        int? bookPageFrom,
+                                                                                                        int? bookPageTo,
+                                                                                                        DateTime? releaseFrom,
+                                                                                                        DateTime? releaseTo)
         {
-            FilterDto filter = new FilterDto();
+            FilterDto filter = new FilterDto()
+            {
+                PageSize = pageSize,
+                RequestedPageNumber = pageNumber
+            };
 
             List<PredicateDto> predicates = new();
 
@@ -140,14 +146,14 @@ namespace BL.Facades
                 predicates.Add(new PredicateDto(nameof(Book.Language), (int)language, ValueComparingOperator.Contains));
             }
 
-            if (pageFrom is not null)
+            if (bookPageFrom is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageFrom, ValueComparingOperator.GreaterThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)bookPageFrom, ValueComparingOperator.GreaterThanOrEqual));
             }
 
-            if (pageTo is not null)
+            if (bookPageTo is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)pageTo, ValueComparingOperator.LessThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(Book.PageCount), (int)bookPageTo, ValueComparingOperator.LessThanOrEqual));
             }
 
             if (releaseFrom is not null)
@@ -170,9 +176,9 @@ namespace BL.Facades
             };
 
             var previews = await _bookPrevService.FilterBy(filter, null, collectionsToLoad);
-            await _authorService.LoadAuthors(previews);
+            await _authorService.LoadAuthors(previews.items);
 
-            return previews;
+            return (previews.totalItemsCount, previews.items);
         }
 
         public async Task<IEnumerable<AuthorDTO>> GetAllAuthors()
@@ -184,7 +190,9 @@ namespace BL.Facades
                 Predicate = predicate
             };
 
-            return await _authorService.FilterBy(filter);
+            var result = await _authorService.FilterBy(filter);
+
+            return result.items;
         }
 
         public async Task AddAuthorToBook(AuthorBookDTO newAuthorBookEntry)
@@ -204,7 +212,7 @@ namespace BL.Facades
 
             var result = await _authorBookService.FilterBy(filter);
 
-            if (result.Count() == 0)
+            if (result.items.Count() == 0)
             {
                 await _authorBookService.Insert(newAuthorBookEntry);
                 _unitOfWork.Commit();
@@ -228,7 +236,7 @@ namespace BL.Facades
 
             var result = await _bookGenreService.FilterBy(filter);
 
-            if (result.Count() == 0)
+            if (result.items.Count() == 0)
             {
                 await _bookGenreService.Insert(newBookGenreEntry);
                 _unitOfWork.Commit();
@@ -272,7 +280,7 @@ namespace BL.Facades
             };
 
             var result = await _authorBookService.FilterBy(filter, refsToLoad);
-            return result;
+            return result.items;
         }
     }
 }

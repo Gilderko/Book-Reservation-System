@@ -139,7 +139,7 @@ namespace BL.Facades
             if (eReaderPredicates.Count > 0)
             {
                 eReaderFilter.Predicate = new CompositePredicateDto(eReaderPredicates, LogicalOperator.AND);
-                List<int> eReaders = (await _eReaderPrevService.FilterBy(eReaderFilter)).Select(x => x.Id).ToList();
+                List<int> eReaders = (await _eReaderPrevService.FilterBy(eReaderFilter)).items.Select(x => x.Id).ToList();
 
                 instancesPredicates.Add(new PredicateDto(nameof(EReaderInstance.EReaderTemplateID), eReaders, ValueComparingOperator.In));
             }
@@ -159,7 +159,9 @@ namespace BL.Facades
                 instancesFilter.Predicate = new CompositePredicateDto(instancesPredicates, LogicalOperator.AND);
             }
 
-            return await _eReaderInstancePrevService.FilterBy(instancesFilter, refsToLoad, null);
+            var result = await _eReaderInstancePrevService.FilterBy(instancesFilter, refsToLoad, null);
+
+            return result.items;
         }
 
         public async Task<IEnumerable<EReaderPrevDTO>> GetEReaderTemplates()
@@ -170,7 +172,9 @@ namespace BL.Facades
                 SortCriteria = nameof(EReader.CompanyMake)
             };
 
-            return await _eReaderPrevService.FilterBy(filter);
+            var result = await _eReaderPrevService.FilterBy(filter);
+
+            return result.items;
         }
 
         public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByDate(EReaderInstanceDTO eReader, DateTime from, DateTime to)
@@ -191,7 +195,7 @@ namespace BL.Facades
             };
 
             var result = await _eBookEReaderInstanceService.FilterBy(filter, refsToLoad);
-            return result;
+            return result.items;
         }
     }
 }

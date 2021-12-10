@@ -23,6 +23,6 @@ namespace BL.Services
 
         public void Update(TEntityDTO DTOToUpdate);
 
-        Task<IEnumerable<TEntityDTO>> FilterBy(FilterDto filter, string[] refsToLoad = null, string[] collectToLoad = null);
+        Task<(IEnumerable<TEntityDTO> items, int totalItemsCount)> FilterBy(FilterDto filter, string[] refsToLoad = null, string[] collectToLoad = null);
     }
 }

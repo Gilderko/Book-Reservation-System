@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using AutoMapper;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.EBook;
@@ -7,6 +5,7 @@ using BL.DTOs.Filters;
 using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
@@ -24,7 +23,8 @@ namespace BL.Services.Implementations
 
         public async Task<IEnumerable<BookPrevDTO>> GetEBookPrevsByFilter(FilterDto filter)
         {
-            return (await FilterBy(filter));
+            var result = await FilterBy(filter);
+            return result.items;
         }
     }
 }

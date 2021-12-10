@@ -88,7 +88,7 @@ namespace BL.Facades
                 Predicate = compPredicate
             };
 
-            if ((await _bookCollectionBookService.FilterBy(filter)).Count() == 0)
+            if ((await _bookCollectionBookService.FilterBy(filter)).items.Count() == 0)
             {
                 await _bookCollectionBookService.Insert(new BookCollectionBookDTO
                 {
@@ -166,9 +166,9 @@ namespace BL.Facades
 
             var books = await _bookPrevService.FilterBy(filter, null, collectionsToLoad);
 
-            await _authorService.LoadAuthors(books);
+            await _authorService.LoadAuthors(books.items);
 
-            return books;
+            return books.items;
         }
     }
 }

@@ -24,12 +24,14 @@ namespace BL.Services.Implementations
             Mapper = mapper;
         }
 
-        public async Task<IEnumerable<TEntityDTO>> FilterBy(FilterDto filter, string[] refsToLoad = null, string[] collectToLoad = null)
+        public async Task<(IEnumerable<TEntityDTO> items, int totalItemsCount)> FilterBy(FilterDto filter, string[] refsToLoad = null, string[] collectToLoad = null)
         {
             _queryObject.LoadExplicitReferences(x => refsToLoad);
             _queryObject.LoadExplicitCollections(x => collectToLoad);
 
-            return (await _queryObject.ExecuteQuery(filter)).Items;
+            var queryObject = await _queryObject.ExecuteQuery(filter);
+
+            return (queryObject.Items, queryObject.TotalItemsCount);
         }
 
         public async Task<TEntityDTO> GetByID(int id, string[] refsToLoad = null, string[] collectToLoad = null)

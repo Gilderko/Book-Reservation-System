@@ -26,6 +26,7 @@ namespace BL.Facades
                                   IBookInstanceService bookInstanceService,
                                   IReservationService reservationService,
                                   IBookInstancePreviewService bookInstancePreviewService,
+                                  ICRUDService<UserPrevDTO, User> userPrevService,
                                   IAuthorService authorService)
         {
             _unitOfWork = unitOfWork;
@@ -33,6 +34,7 @@ namespace BL.Facades
             _reservationService = reservationService;
             _bookInstancePreviewService = bookInstancePreviewService;
             _authorService = authorService;
+            _userPrevService = userPrevService;
         }
 
         public async Task<IEnumerable<BookInstancePrevDTO>> GetAllBookInstances()
@@ -51,9 +53,9 @@ namespace BL.Facades
             };
 
             var result = await _bookInstancePreviewService.FilterBy(filter, refsToLoad);
-            await _authorService.LoadAuthors(result);
+            await _authorService.LoadAuthors(result.items);
 
-            return result;
+            return result.items;
         }
         
         public async Task Create(BookInstanceDTO bookInstance)

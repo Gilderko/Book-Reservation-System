@@ -1,5 +1,6 @@
-﻿@model IEnumerable<BL.DTOs.Entities.Book.BookPrevDTO>
-@using BL.DTOs.Enums;
+﻿
+@using BL.DTOs.Entities.Book
+@model  PagedListViewModel<BookPrevDTO>
 @using MVCProject.Config;
 
 @{
@@ -23,22 +24,22 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Title)
+                        @nameof(BookPrevDTO.Title)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Authors)
+                        @nameof(BookPrevDTO.Authors)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Description)
+                        @nameof(BookPrevDTO.Description)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Language)
+                        @nameof(BookPrevDTO.Language)
                     </th>
                     <th width="300px"></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.List)
                 {
                     <tr>
                         <td>
@@ -83,5 +84,10 @@
                 }
             </tbody>
         </table>
+        <div>
+            @{
+                await Html.RenderPartialAsync("_PaginationPartial", Model.Pagination);
+            }
+        </div>
     </div>
 </div>

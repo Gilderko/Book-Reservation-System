@@ -63,33 +63,34 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EReaderTemplate.CompanyMake)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EReaderTemplate.Model)
-                    </td>
-                    <td>
-                        @String.Format(item.EReaderTemplate.MemoryInMB + " MB")
-                    </td>
-                    <td>
-                        @if (User.IsInRole(GlobalConstants.AdminRoleName))
-                        {
-                            <div>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                <br />
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            </div>
-                        }
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EReaderTemplate.CompanyMake)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EReaderTemplate.Model)
+                        </td>
+                        <td>
+                            @String.Format(item.EReaderTemplate.MemoryInMB + " MB")
+                        </td>
+                        <td>
+                            @if (User.IsInRole(GlobalConstants.AdminRoleName))
+                            {
+                                <div>
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                    <br />
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                </div>
+                            }
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
+

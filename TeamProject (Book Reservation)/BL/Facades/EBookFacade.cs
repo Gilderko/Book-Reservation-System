@@ -104,9 +104,9 @@ namespace BL.Facades
             };
 
             var previews = await _eBookPrevService.FilterBy(filter, null, collectionsToLoad);
-            await _authorService.LoadAuthors(previews);
+            await _authorService.LoadAuthors(previews.items);
 
-            return previews;
+            return previews.items;
         }
 
         public async Task Create(EBookDTO eBook)

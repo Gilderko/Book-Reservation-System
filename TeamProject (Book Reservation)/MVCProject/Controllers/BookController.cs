@@ -3,17 +3,17 @@ using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Enums;
 using BL.Facades;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCProject.Config;
+using MVCProject.Models;
 using MVCProject.StateManager;
 using System;
 using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
-    public class BookController : Controller
+    public class BookController : BaseController
     {
         private readonly BookFacade _bookFacade;
         private ILifetimeScope _lifeTime;
@@ -26,16 +26,24 @@ namespace MVCProject.Controllers
 
         // GET: Book
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             ViewData["eBook"] = false;
-            return View(await _bookFacade.GetBookPreviews(null, null, null, null, null, null, null, null, null));
+
+            var model = await _bookFacade.GetBookPreviews(page, PageSize, null, null, null,
+                null, null, null, null, null, null);
+
+            var pagedModel = new PagedListViewModel<BookPrevDTO>(new PaginationViewModel(page, model.totalNumberOfBooks, PageSize),
+                                                                 model.bookPrevs);
+
+            return View(pagedModel);
         }
 
         // POST: Book
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(string title,
+        public async Task<IActionResult> Index(int page,
+                                               string title,
                                                string authorName,
                                                string authorSurname,
                                                GenreTypeDTO[] genres,
@@ -45,6 +53,7 @@ namespace MVCProject.Controllers
                                                DateTime? releaseFrom,
                                                DateTime? releaseTo)
         {
+            page = 1;
             ViewData["eBook"] = false;
             ViewData["bookTitle"] = title;
             ViewData["authorName"] = authorName;
@@ -56,7 +65,13 @@ namespace MVCProject.Controllers
             ViewData["releaseFrom"] = releaseFrom;
             ViewData["releaseTo"] = releaseTo;
 
-            return View(await _bookFacade.GetBookPreviews(title, authorName, authorSurname, genres, language, pageFrom, pageTo, releaseFrom, releaseTo));
+            var model = await _bookFacade.GetBookPreviews(page, PageSize, title, authorName, authorSurname, 
+                genres, language, pageFrom, pageTo, releaseFrom, releaseTo);
+
+            var pagedModel = new PagedListViewModel<BookPrevDTO>(new PaginationViewModel(page, model.totalNumberOfBooks, PageSize), 
+                                                                 model.bookPrevs);
+
+            return View(pagedModel);
         }
 
         // GET: Book/Details/5

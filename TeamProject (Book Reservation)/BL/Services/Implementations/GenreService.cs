@@ -37,7 +37,7 @@ namespace BL.Services.Implementations
 
             HashSet<int> bookIds = new();
 
-            foreach (var genre in genres)
+            foreach (var genre in genres.items)
             {
                 foreach (var id in genre.Books.Select(b => b.BookID))
                 {

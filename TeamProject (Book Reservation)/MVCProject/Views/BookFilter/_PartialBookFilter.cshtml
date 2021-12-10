@@ -41,11 +41,11 @@
                 {
                     @if (ViewData["language"] is not null && (int)lang == (int)ViewData["language"])
                     {
-                        <option selected="selected" value=@(lang)>"@(lang)"</option>
+                        <option selected="selected" value=@(lang)>@(lang)</option>
                     }
                     else
                     {
-                        <option value=@(lang)>"@(lang)"</option>
+                        <option value=@(lang)>@(lang)</option>
                     }
                 }
             </select>

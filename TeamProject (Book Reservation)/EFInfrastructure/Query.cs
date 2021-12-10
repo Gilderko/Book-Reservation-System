@@ -169,12 +169,13 @@ namespace EFInfrastructure
 
         public async Task<QueryResult<TEntity>> Execute()
         {
+            var countSql = _querySql + $"{_where}";
             _querySql += $"{_where} {_sortBy} {_page}";
 
             Console.WriteLine(_querySql);
 
             var entities = await DatabaseContext.Set<TEntity>().FromSqlRaw(_querySql).ToListAsync();
-
+            var totalItemsCount = DatabaseContext.Set<TEntity>().FromSqlRaw(countSql).Count();
 
             foreach (var entry in entities)
             {
@@ -197,7 +198,7 @@ namespace EFInfrastructure
 
             QueryResult<TEntity> result = new QueryResult<TEntity>
             {
-                TotalItemsCount = entities.Count(),
+                TotalItemsCount = totalItemsCount,
                 Items = entities.ToList()
             };
 

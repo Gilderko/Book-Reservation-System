@@ -44,7 +44,9 @@ namespace BL.Facades
                 SortAscending = true
             };
 
-            return await _reservationService.FilterBy(filter);
+            var result = await _reservationService.FilterBy(filter);
+
+            return result.items;
         }
 
         public async Task Create(ReservationDTO reservation)
@@ -262,7 +264,9 @@ namespace BL.Facades
                 SortAscending = false
             };
 
-            return await _reservationService.FilterBy(filter, refsToLoad, collToLoad);
+            var result = await _reservationService.FilterBy(filter, refsToLoad, collToLoad);
+
+            return result.items;
         }
 
         private bool CheckIsAvailable(IEnumerable<ReservationPrevDTO> reservations, ReservationDTO newReservation)

@@ -39,47 +39,48 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @foreach (var author in item.Authors)
-                        {
-                            <a asp-controller="Author" asp-action="Details" asp-route-id="@author.AuthorID">
-                                @Html.DisplayFor(modelItem => author.Author.Name) @Html.DisplayFor(modelItem => author.Author.Surname)
-                            </a>
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Language)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Format)
-                    </td>
-                    <td>
-                        <div>
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                            <br />
-                            <a asp-controller="EReaderInstance" asp-action="UserAddEBookInEReader" asp-route-id="@item.Id">Add in E-Reader</a>
-                            <br />
-                        </div>
-
-                        @if (User.HasClaim(x => x.Value == GlobalConstants.AdminRoleName))
-                        {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @foreach (var author in item.Authors)
+                            {
+                                <a asp-controller="Author" asp-action="Details" asp-route-id="@author.AuthorID">
+                                    @Html.DisplayFor(modelItem => author.Author.Name) @Html.DisplayFor(modelItem => author.Author.Surname)
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Language)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Format)
+                        </td>
+                        <td>
                             <div>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                                 <br />
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                <a asp-controller="EReaderInstance" asp-action="UserAddEBookInEReader" asp-route-id="@item.Id">Add in E-Reader</a>
+                                <br />
                             </div>
-                        }
-                    </td>
-                </tr>
+
+                            @if (User.HasClaim(x => x.Value == GlobalConstants.AdminRoleName))
+                            {
+                                <div>
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                    <br />
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                </div>
+                            }
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
+

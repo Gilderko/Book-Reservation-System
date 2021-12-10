@@ -40,7 +40,9 @@ namespace BL.Services.Implementations
                 Predicate = new PredicateDto(nameof(BookInstance.BookOwnerId), userId, ValueComparingOperator.Equal),
             };
 
-            return (await FilterBy(filter,referencesToLoad));
+            var result = await FilterBy(filter, referencesToLoad);
+
+            return result.items;
         }
 
         public async Task<IEnumerable<BookInstancePrevDTO>> GetAvailableInstancePrevsByDate(BookDTO book, DateTime from, DateTime to, int pageNumber = 1, int pageSize = 20)
@@ -54,9 +56,9 @@ namespace BL.Services.Implementations
             
             var allInstances = (await FilterBy(filter));
             
-            await FilterAvailableInstances(allInstances.ToHashSet(), from, to);
+            await FilterAvailableInstances(allInstances.items.ToHashSet(), from, to);
 
-            return allInstances;
+            return allInstances.items;
         }
         
         private async Task FilterAvailableInstances(HashSet<BookInstancePrevDTO> bookInstances, DateTime from, DateTime to)

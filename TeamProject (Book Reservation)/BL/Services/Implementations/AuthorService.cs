@@ -95,7 +95,7 @@ namespace BL.Services.Implementations
 
             var authors = await FilterBy(filter, null, collectionsToLoad);
 
-            foreach (var author in authors)
+            foreach (var author in authors.items)
             {
                 foreach (var id in author.AuthorsBooks.Select(a => a.BookID))
                 {

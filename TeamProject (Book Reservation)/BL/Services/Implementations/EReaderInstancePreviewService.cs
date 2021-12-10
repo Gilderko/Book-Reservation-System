@@ -32,8 +32,10 @@ namespace BL.Services.Implementations
             {
                 nameof(EReaderInstance.EReaderTemplate)
             };
-            
-            return (await FilterBy(filter, refsToLoad, null));
+
+            var result = await FilterBy(filter, refsToLoad, null);
+
+            return result.items;
         }
     }
 }
