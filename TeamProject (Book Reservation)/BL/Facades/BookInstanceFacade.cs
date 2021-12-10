@@ -81,13 +81,13 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<IEnumerable<ReservationPrevDTO>> GetBookReservationPrevsByUser(int bookInstanceId, DateTime from, DateTime to)
+        public async Task<IEnumerable<ReservationPrevDTO>> GetBookReservationPrevsByBookInstanceAndDate(int bookInstanceId, DateTime? from, DateTime? to)
         {
             var reservationPreviews = await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to);
             
             foreach (var reservationPrev in reservationPreviews)
             {
-                var userPrev = await _userPrevService.GetByID(reservationPrev.Id);
+                var userPrev = await _userPrevService.GetByID(reservationPrev.UserID);
                 reservationPrev.User = userPrev;
             }
 

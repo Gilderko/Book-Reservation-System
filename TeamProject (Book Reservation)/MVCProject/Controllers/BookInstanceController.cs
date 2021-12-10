@@ -133,7 +133,7 @@ namespace MVCProject.Controllers
             };
 
             var bookInstance = await _bookInstanceFacade.Get((int)id, references);
-            var resultQuery = await _bookInstanceFacade.GetBookReservationPrevsByUser(id.Value, StartDate.Value, EndDate.Value);
+            var resultQuery = await _bookInstanceFacade.GetBookReservationPrevsByBookInstanceAndDate(id.Value, StartDate.Value, EndDate.Value);
 
             ViewData.Add("queryResult", resultQuery);
 
