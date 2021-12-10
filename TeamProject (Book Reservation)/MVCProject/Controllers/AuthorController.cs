@@ -21,11 +21,6 @@ namespace MVCProject.Controllers
         // GET: Author
         public async Task<IActionResult> Index()
         {
-            if (!User.IsInRole(GlobalConstants.AdminRoleName))
-            {
-                return NotFound();
-            }
-
             return View(await _facade.GetAuthorPreviews());
         }
 
@@ -33,11 +28,6 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(string name, string surname)
         {
-            if (!User.IsInRole(GlobalConstants.AdminRoleName))
-            {
-                return NotFound();
-            }
-
             ViewData["name"] = name;
             ViewData["surname"] = surname;
 

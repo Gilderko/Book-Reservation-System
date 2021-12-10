@@ -10,9 +10,12 @@
     @await Html.PartialAsync("~/Views/BookFilter/_PartialBookFilter.cshtml")
 
     <div class="float-child-content">
-        <p>
-            <a asp-action="Create">Create New</a>
-        </p>
+        @if (User.IsInRole(GlobalConstants.AdminRoleName))
+        {
+            <p>
+                <a asp-action="Create">Create New</a>
+            </p>
+        }
 
         <table class="table" style="width:1100px; ">
 

@@ -10,6 +10,7 @@ using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.EReader;
 using Autofac;
+using MVCProject.Config;
 
 namespace MVCProject.Controllers
 {
@@ -49,6 +50,11 @@ namespace MVCProject.Controllers
         // GET: EReader/Create
         public IActionResult Create()
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -59,6 +65,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Model,CompanyMake,MemoryInMB,Id")] EReaderDTO eReader)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _facade.Create(eReader);
@@ -70,7 +81,7 @@ namespace MVCProject.Controllers
         // GET: EReader/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -90,7 +101,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Model,CompanyMake,MemoryInMB,Id")] EReaderDTO eReader)
         {
-            if (id != eReader.Id)
+            if (id != eReader.Id || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -120,7 +131,7 @@ namespace MVCProject.Controllers
         // GET: EReader/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -139,6 +150,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            if(!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             _facade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
