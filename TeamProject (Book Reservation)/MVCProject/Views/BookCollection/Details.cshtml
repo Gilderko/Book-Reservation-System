@@ -1,4 +1,5 @@
 ﻿@model BL.DTOs.Entities.BookCollection.BookCollectionDTO
+@using MVCProject.Config;
 
 @{
     ViewData["Title"] = "Details";
@@ -46,54 +47,64 @@
     </dl>
 
     <div>
-        @if(int.Parse(User.Identity.Name) == Model.OwnerUser.Id)
+        @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.UserId == int.Parse(User.Identity.Name))
         {
-                <a asp-action="UserEditCollection" asp-route-id="@Model.Id">Edit</a> <label>|</label>
-                <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> <label>|</label>
+            <div>
+                <a asp-action="UserEditBookInstance" asp-route-id="@Model.Id">User Edit</a>
+                <a asp-action="UserBookInstances"> | Back to my books collections</a>
+            </div>
         }
-        <a asp-action="UserCollections">Back to List</a>
 
-    <br />
+        @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
+        {
+            <div>
+                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a asp-action="Index"> | Back to all book collections</a>
+            </div>
+        }
+        <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
 
-    <h5>Books</h5>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @String.Format("Title")
-                </th>
-                <th>
-                    @String.Format("Authors")
-                </th>
-                <th>
-                    @String.Format("Language")
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in (IEnumerable<BL.DTOs.Entities.Book.BookPrevDTO>)ViewData["books"])
-            {
+        <br />
+
+        <h5>Books</h5>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @book.Title
-                    </td>
-                    <td>
-                        @String.Join(", ", book.Authors.Select(x => x.Author.Name + " " + x.Author.Surname))
-                    </td>
-                    <td>
-                        @book.Language
-                    </td>
-                    <td>
-                        <form asp-action="Details">                            
-                            <input type="hidden" name="bookCollectionId" value=@Model.Id>
-                            <input type="hidden" name="bookToDeleteId" value=@book.Id>
-                            <input type="submit" value="Delete" class="btn btn-danger" />
-                        </form>
-                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id">Details</a>
-                    </td>
+                    <th>
+                        @String.Format("Title")
+                    </th>
+                    <th>
+                        @String.Format("Authors")
+                    </th>
+                    <th>
+                        @String.Format("Language")
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var book in (IEnumerable<BL.DTOs.Entities.Book.BookPrevDTO>)ViewData["books"])
+                {
+                    <tr>
+                        <td>
+                            @book.Title
+                        </td>
+                        <td>
+                            @String.Join(", ", book.Authors.Select(x => x.Author.Name + " " + x.Author.Surname))
+                        </td>
+                        <td>
+                            @book.Language
+                        </td>
+                        <td>
+                            <form asp-action="Details">
+                                <input type="hidden" name="bookCollectionId" value=@Model.Id>
+                                <input type="hidden" name="bookToDeleteId" value=@book.Id>
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                            </form>
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

@@ -95,6 +95,25 @@ namespace MVCProject.Controllers
             return View(bookInstance);
         }
 
+        // GET: Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: BookInstance/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Condition,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
+        {
+            if (ModelState.IsValid)
+            {
+                await _bookInstanceFacade.Create(bookInstance);
+                return RedirectToAction(nameof(UserBookInstances));
+            }
+            return View(bookInstance);
+        }
+
         // GET: BookInstance/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -119,6 +138,7 @@ namespace MVCProject.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details(int? id, DateTime? StartDate, DateTime? EndDate)
         {
             if (id == null || StartDate == null || EndDate == null)
@@ -146,7 +166,7 @@ namespace MVCProject.Controllers
         }
 
         // GET: BookInstance/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> UserEditBookInstance(int? id)
         {
             if (id == null)
             {
@@ -168,12 +188,61 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Condition,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
+        public async Task<IActionResult> UserEditBookInstance(int id, [Bind("Condition,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
         {
             if (id != bookInstance.Id)
             {
                 return NotFound();
             }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _bookInstanceFacade.Update(bookInstance);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await BookInstanceExists(bookInstance.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(UserBookInstances));
+            }
+
+            return View(bookInstance);
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var bookInstance = await _bookInstanceFacade.Get((int)id);
+
+            if (bookInstance == null)
+            {
+                return NotFound();
+            }
+
+            return View(bookInstance);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Condition,BookOwnerId,BookTemplateID,Id")] BookInstanceDTO bookInstance)
+        {
+            if (id != bookInstance.Id)
+            {
+                return NotFound();
+            } 
 
             if (ModelState.IsValid)
             {

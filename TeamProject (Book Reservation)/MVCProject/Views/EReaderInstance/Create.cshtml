@@ -17,8 +17,16 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="EreaderOwnerId" />
-            <input type="hidden" asp-for="EReaderTemplateID" />
+            <div class="form-group">
+                <label asp-for="EreaderOwnerId" class="control-label"></label>
+                <input asp-for="EreaderOwnerId" class="form-control" />
+                <span asp-validation-for="EreaderOwnerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EReaderTemplateID" class="control-label"></label>
+                <input asp-for="EReaderTemplateID" class="form-control" />
+                <span asp-validation-for="EReaderTemplateID" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

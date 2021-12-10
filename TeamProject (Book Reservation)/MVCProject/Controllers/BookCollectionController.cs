@@ -25,7 +25,9 @@ namespace MVCProject.Controllers
         // GET: BookCollection
         public async Task<IActionResult> Index()
         {
-            return View();
+            var bookCollections = await _bookCollectionFacade.GetAllBookCollections();
+
+            return View(bookCollections.Item1);
         }
 
         // GET: BookCollection/UserCollections

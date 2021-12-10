@@ -38,7 +38,9 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            return View(await _facade.Index());
+            var reservations = await _facade.GetAllReservations();
+
+            return View(reservations.Item1);
         }
 
         public async Task<IActionResult> UserReservations()

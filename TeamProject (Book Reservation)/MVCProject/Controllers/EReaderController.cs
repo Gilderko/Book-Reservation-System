@@ -25,8 +25,8 @@ namespace MVCProject.Controllers
         // GET: EReader
         public async Task<IActionResult> Index()
         {
-            /*return View(await _context.EReaderTemplates.ToListAsync());*/
-            return View();
+            var eReaders = await _facade.GetAllEReaders();
+            return View(eReaders.Item1);
         }
 
         // GET: EReader/Details/5

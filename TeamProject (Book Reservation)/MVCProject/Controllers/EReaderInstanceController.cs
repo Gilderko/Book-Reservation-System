@@ -206,7 +206,60 @@ namespace MVCProject.Controllers
             return View(eReaderInstance);
         }
 
-        // GET: EReaderInstance/Edit/5
+        // GET: EReaderInstance/UserEditBookInstance/5
+        public async Task<IActionResult> UserEditBookInstance(int? id)
+        {
+            if (id == null || !User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            var eReaderInstance = await GetWithReferences((int)id);
+            if (eReaderInstance == null || (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId && !User.IsInRole(GlobalConstants.AdminRoleName)))
+            {
+                return NotFound();
+            }
+
+            eReaderInstance.BooksIncluded = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance((int)id);
+
+            return View(eReaderInstance);
+        }
+
+        // POST: EReaderInstance/UserEditBookInstance/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserEditBookInstance(int id, [Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstanceDTO eReaderInstance)
+        {
+            if (id != eReaderInstance.Id || !User.Identity.IsAuthenticated || User.Identity.Name == null || 
+                (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId && !User.IsInRole(GlobalConstants.AdminRoleName)))
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _eReaderInstanceFacade.Update(eReaderInstance);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await EReaderInstanceExists(eReaderInstance.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(eReaderInstance);
+        }
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || !User.Identity.IsAuthenticated || User.Identity.Name == null)
@@ -232,7 +285,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstanceDTO eReaderInstance)
         {
-            if (id != eReaderInstance.Id || !User.Identity.IsAuthenticated || User.Identity.Name == null || 
+            if (id != eReaderInstance.Id || !User.Identity.IsAuthenticated || User.Identity.Name == null ||
                 (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();

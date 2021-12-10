@@ -4,6 +4,9 @@ using BL.Services;
 using DAL.Entities;
 using System.Threading.Tasks;
 using Infrastructure;
+using System.Collections.Generic;
+using BL.DTOs.Filters;
+using Infrastructure.Query.Operators;
 
 namespace BL.Facades
 {

@@ -35,7 +35,7 @@ namespace BL.Facades
             _reservationBookInstanceService = reservationBookInstanceService;
         }
 
-        public async Task<IEnumerable<ReservationDTO>> Index()
+        public async Task<(IEnumerable<ReservationDTO>,int)> GetAllReservations()
         {
             FilterDto filter = new FilterDto()
             {
@@ -46,7 +46,7 @@ namespace BL.Facades
 
             var result = await _reservationService.FilterBy(filter);
 
-            return result.items;
+            return result;
         }
 
         public async Task Create(ReservationDTO reservation)

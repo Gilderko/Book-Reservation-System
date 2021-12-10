@@ -13,13 +13,13 @@
     <h4>EReaderInstance</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Owner)
         </dt>
         <dd class="col-sm-10">
@@ -27,7 +27,7 @@
                 @Html.DisplayFor(model => model.Owner.Name) @Html.DisplayFor(model => model.Owner.Surname)
             </a>
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EReaderTemplate)
         </dt>
         <dd class="col-sm-10">
@@ -58,7 +58,7 @@
                 <tr>
                     <td>
                         <a asp-controller="EBook" asp-action="Details" asp-route-id="@item.Id">
-                           @Html.DisplayFor(modelItem => item.Title)
+                            @Html.DisplayFor(modelItem => item.Title)
                         </a>
                     </td>
                     <td>
@@ -72,13 +72,31 @@
                             <input type="hidden" name="eReaderToModifyId" value=@Model.Id>
                             <input type="hidden" name="eBookToDeleteId" value=@item.Id>
                             <input type="submit" value="Delete" class="btn btn-danger" />
-                        </form>                        
+                        </form>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+@if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.EreaderOwnerId == int.Parse(User.Identity.Name))
+{
+    <div>
+        <a asp-action="UserEditEReaderInstance" asp-route-id="@Model.Id">User Edit</a>
+        <a asp-action="UserEReaders"> | Back to my EReaders</a>
+    </div>
+}
+
+@if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
+{
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a asp-action="Index"> | Back to all EReaders</a>
+    </div>
+}
+<a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+
 <div>
     @{
         var currentReservation = StateKeeper.Instance.GetReservationInSession(ViewContext.HttpContext.Session);
@@ -100,12 +118,4 @@
             }
         }
     }
-    @if ((User.Identity.Name != null && int.Parse(User.Identity.Name) == Model.EreaderOwnerId) || User.IsInRole(GlobalConstants.AdminRoleName))
-    {
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-        </div>
-    }
-    <a asp-action="Index">Back to List</a>
 </div>

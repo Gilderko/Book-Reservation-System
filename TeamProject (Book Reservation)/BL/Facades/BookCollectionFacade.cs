@@ -35,6 +35,18 @@ namespace BL.Facades
             _bookPrevService = bookPrevService;
         }
 
+        public async Task<(IEnumerable<BookCollectionDTO>,int)> GetAllBookCollections()
+        {
+            var simplePredicate = new PredicateDto(nameof(BookCollectionDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);
+
+            var filter = new FilterDto()
+            {
+                Predicate = simplePredicate
+            };
+
+            return await _bookCollectionService.FilterBy(filter);
+        }
+
         public async Task Create(BookCollectionDTO bookCollection)
         {
             await _bookCollectionService.Insert(bookCollection);

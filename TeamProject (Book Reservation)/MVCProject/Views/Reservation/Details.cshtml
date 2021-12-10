@@ -68,16 +68,23 @@
     </dl>
 </div>
 <div>
-    <input type="button" class="btn btn-primary" value="Edit" onclick="location.href = '@(Url.Action("Edit","Reservation") + $"/{Model.Id}")'" />
-    <input type="button" class="btn btn-primary" value="Delete" onclick="location.href='@(Url.Action("Delete","Reservation") + $"/{Model.Id}")'" />
 
-    @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName))
+
+    @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.UserID == int.Parse(User.Identity.Name))
     {
-        <a asp-action="UserReservations"> | Back to my reservations</a>
+        <div>
+            <a asp-action="UserReservations">Back to my reservations</a>
+        </div>
     }
+
     @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
     {
-        <a asp-action="Index"> | Back to all reservations</a>
+        <div>
+            <a asp-action="Index">Back to all reservations </a>
+            <input type="button" class="btn btn-primary" value="Edit" onclick="location.href = '@(Url.Action("Edit","Reservation") + $"/{Model.Id}")'" />
+            <input type="button" class="btn btn-primary" value="Delete" onclick="location.href='@(Url.Action("Delete","Reservation") + $"/{Model.Id}")'" />
+        </div>
     }
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
 
 </div>

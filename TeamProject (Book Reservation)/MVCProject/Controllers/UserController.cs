@@ -25,7 +25,9 @@ namespace MVCProject.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View();
+            var users = await _userFacade.GetAllUsers();
+
+            return View(users.Item1);
         }
 
         // GET: User/Details/5

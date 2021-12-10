@@ -64,45 +64,53 @@
         </table>
     }
 
-<dl class="row">
+    <dl class="row">
 
-    @if (ViewData.TryGetValue("queryResult", out object reservations))
-    {
-        var castedReservations = (IEnumerable<ReservationPrevDTO>)reservations;
-        foreach (var reservation in castedReservations)
+        @if (ViewData.TryGetValue("queryResult", out object reservations))
         {
-            <dt class="col-sm-2">
-                @Html.Raw("User:")
-            </dt>
-            <dd class="col-sm-10">
-                @Html.Raw($"{reservation.User.Name} {reservation.User.Surname}")
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => reservation.DateFrom)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => reservation.DateFrom)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => reservation.DateTill)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => reservation.DateTill)
-            </dd>
+            var castedReservations = (IEnumerable<ReservationPrevDTO>)reservations;
+            foreach (var reservation in castedReservations)
+            {
+                <dt class="col-sm-2">
+                    @Html.Raw("User:")
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.Raw($"{reservation.User.Name} {reservation.User.Surname}")
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => reservation.DateFrom)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => reservation.DateFrom)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => reservation.DateTill)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => reservation.DateTill)
+                </dd>
+            }
         }
-    }
-</dl>
+    </dl>
 
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName))
-    {
+
+
+@if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.BookOwnerId == int.Parse(User.Identity.Name))
+{
+    <div>
+        <a asp-action="UserEditBookInstance" asp-route-id="@Model.Id">User Edit</a>
         <a asp-action="UserBookInstances"> | Back to my books</a>
-    }     
-    @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
-    {
-        <a asp-action="Index"> | Back to all books</a>
-    }
-</div>
+    </div>
+}
+
+@if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
+{
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a asp-action="Index"> | Back to all book</a>
+    </div>
+}
+<a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+

@@ -1,7 +1,10 @@
 ﻿using BL.DTOs.Entities.EReader;
+using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
+using Infrastructure.Query.Operators;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BL.Facades
@@ -15,6 +18,18 @@ namespace BL.Facades
         {
             _unitOfWork = unitOfWork;
             _service = service;
+        }
+
+        public async Task<(IEnumerable<EReaderDTO>,int)> GetAllEReaders()
+        {
+            var simplePredicate = new PredicateDto(nameof(EReaderDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);
+
+            var filter = new FilterDto()
+            {
+                Predicate = simplePredicate
+            };
+
+            return await _service.FilterBy(filter);
         }
 
         public async Task Create(EReaderDTO eReader)

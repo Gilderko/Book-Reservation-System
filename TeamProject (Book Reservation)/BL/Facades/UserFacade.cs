@@ -8,6 +8,9 @@ using DAL.Entities;
 using System.Threading.Tasks;
 using Infrastructure;
 using System.IO;
+using System.Collections.Generic;
+using BL.DTOs.Filters;
+using Infrastructure.Query.Operators;
 
 namespace BL.Facades
 {
@@ -58,6 +61,18 @@ namespace BL.Facades
         {
             _userService.DeleteById(id);
             _unitOfWork.Commit();
+        }
+
+        public async Task<(IEnumerable<UserDTO>,int)> GetAllUsers()
+        {
+            var simplePredicate = new PredicateDto(nameof(UserDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);
+
+            var filter = new FilterDto()
+            {
+                Predicate = simplePredicate
+            };
+
+            return await _userService.FilterBy(filter);
         }
 
         public async Task<UserEditDTO> GetEditDTO(int id)

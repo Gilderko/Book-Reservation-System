@@ -19,16 +19,8 @@
                     <option selected="selected" value="">Please select</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label asp-for="BookOwnerId" class="control-label"></label>
-                <input asp-for="BookOwnerId" class="form-control">
-                <span asp-validation-for="BookOwnerId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BookTemplateID" class="control-label"></label>
-                <input asp-for="BookTemplateID" class="form-control">
-                <span asp-validation-for="BookTemplateID" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="BookTemplateID" />
+            <input type="hidden" asp-for="BookOwnerId" />
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -38,7 +30,7 @@
 </div>
 
 <div>
-    <a asp-action="Index"> | Back to all books</a>
+    <a asp-action="UserBookInstances"> | Back to my books</a>
 </div>
 
 @section Scripts {
