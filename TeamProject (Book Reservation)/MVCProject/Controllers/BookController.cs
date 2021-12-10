@@ -145,7 +145,7 @@ namespace MVCProject.Controllers
             if (ModelState.IsValid)
             {
                 await _bookFacade.Create(book);
-                return RedirectToAction(nameof(Details), new { id = book.Id });
+                return RedirectToAction(nameof(Index));
             }
 
             return View(book);
@@ -275,7 +275,7 @@ namespace MVCProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = book.Id });
             }
             return View(book);
         }

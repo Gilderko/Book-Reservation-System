@@ -21,13 +21,15 @@ namespace BL.Facades
         private IReservationService _reservationService;
         private IBookInstancePreviewService _bookInstancePreviewService;
         private IAuthorService _authorService;
+        private ICRUDService<BookDTO, Book> _bookService;
 
         public BookInstanceFacade(IUnitOfWork unitOfWork,
                                   IBookInstanceService bookInstanceService,
                                   IReservationService reservationService,
                                   IBookInstancePreviewService bookInstancePreviewService,
                                   ICRUDService<UserPrevDTO, User> userPrevService,
-                                  IAuthorService authorService)
+                                  IAuthorService authorService,
+                                  ICRUDService<BookDTO,Book> bookService)
         {
             _unitOfWork = unitOfWork;
             _bookInstanceService = bookInstanceService;
@@ -35,6 +37,12 @@ namespace BL.Facades
             _bookInstancePreviewService = bookInstancePreviewService;
             _authorService = authorService;
             _userPrevService = userPrevService;
+            _bookService = bookService;
+        }
+
+        public async Task<bool> DoesBookExist(int bookId)
+        {
+            return (await _bookService.GetByID(bookId)) != null;
         }
 
         public async Task<IEnumerable<BookInstancePrevDTO>> GetAllBookInstances()

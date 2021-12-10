@@ -89,7 +89,7 @@ namespace MVCProject.Controllers
             if (ModelState.IsValid)
             {
                 await _facade.Create(author);
-                return RedirectToAction(nameof(Details), new { id = author.Id });
+                return RedirectToAction(nameof(Index));
             }
 
             return View(author);
@@ -143,7 +143,7 @@ namespace MVCProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = id });
             }
             return View(author);
         }

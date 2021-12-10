@@ -83,9 +83,9 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            _bookCollectionFacade.DeleteBookFromCollection(bookCollectionId,bookToDeleteId);           
+            _bookCollectionFacade.DeleteBookFromCollection(bookCollectionId,bookToDeleteId);
 
-            return RedirectToAction("Details",new { id = bookCollectionId });
+            return RedirectToAction(nameof(Details), new { id = bookCollectionId });
         }
 
         // GET: BookCollection/UserCreateCollection
@@ -98,6 +98,34 @@ namespace MVCProject.Controllers
             }
 
             return View();
+        }
+
+        // POST: BookCollection/UserCreateCollection
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserCreateCollection([Bind("Title,Description")] BookCollectionCreateDTO bookCollection)
+        {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                int userId;
+                if (User.Identity.Name is not null)
+                {
+                    userId = int.Parse(User.Identity.Name);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                await _bookCollectionFacade.CreateUserCollection(bookCollection, userId);
+                return RedirectToAction(nameof(UserCollections));
+            }
+            return View(bookCollection);
         }
 
         // GET: BookCollection/UserAddBookInCollection
@@ -152,36 +180,7 @@ namespace MVCProject.Controllers
                 return RedirectToAction(nameof(Details), new { id = bookCollectionBook.BookCollectionID });
             }
             return View(bookCollectionBook);
-        }
-
-        // POST: BookCollection/UserCreateCollection
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UserCreateCollection([Bind("Title,Description")] BookCollectionCreateDTO bookCollection)
-        {
-            if (!User.IsInRole(GlobalConstants.UserRoleName))
-            {
-                return NotFound();
-            }
-
-
-            if (ModelState.IsValid)
-            {
-                int userId;
-                if (User.Identity.Name is not null)
-                {
-                    userId = int.Parse(User.Identity.Name);
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-
-                await _bookCollectionFacade.CreateUserCollection(bookCollection, userId);
-                return RedirectToAction(nameof(UserCollections));
-            }
-            return View(bookCollection);
-        }
+        }        
 
         // GET: BookCollection/UserEditCollection/5
         public async Task<IActionResult> UserEditCollection(int? id)
@@ -237,7 +236,7 @@ namespace MVCProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(UserCollections));
+                return RedirectToAction(nameof(Details), new { id = bookCollection.Id });
             }
             return View(bookCollection);
         }
@@ -320,7 +319,7 @@ namespace MVCProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = bookCollection.Id });
             }
             return View(bookCollection);
         }
