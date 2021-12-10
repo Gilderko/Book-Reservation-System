@@ -17,12 +17,11 @@ namespace MVCProject.Controllers
     public class BookInstanceController : Controller
     {
         private readonly BookInstanceFacade _bookInstanceFacade;
-        private ILifetimeScope _lifeTime;
 
-        public BookInstanceController(IContainer container)
+
+        public BookInstanceController(BookInstanceFacade facade)
         {
-            _lifeTime = container.BeginLifetimeScope();
-            _bookInstanceFacade = _lifeTime.Resolve<BookInstanceFacade>();
+            _bookInstanceFacade = facade;
         }
 
         // GET: BookInstance
@@ -230,12 +229,6 @@ namespace MVCProject.Controllers
         {
             var bookInstance = await _bookInstanceFacade.Get(id);
             return bookInstance != null;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _lifeTime.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

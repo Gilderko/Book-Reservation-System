@@ -23,7 +23,7 @@ namespace MVCProject.StateManager
 
         private StateKeeper()
         {
-            _container = AutofacBLConfig.Configure();
+
         }
 
         public static StateKeeper Instance
@@ -114,16 +114,5 @@ namespace MVCProject.StateManager
         {
             return currSession.Get<ReservationDTO>(_reservationKey);
         }
-
-        // Container
-
-        private IContainer _container = null;
-
-        public IContainer GetContainer()
-        {
-            return _container;
-        }
-
-        // Container
     }
 }

@@ -1,4 +1,5 @@
 using Autofac;
+using BL.Config;
 using BL.Facades;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -24,8 +25,6 @@ namespace MVCProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            
-            services.AddTransient<ILifetimeScope>(services => StateKeeper.Instance.GetContainer().BeginLifetimeScope());
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie();
@@ -36,6 +35,11 @@ namespace MVCProject
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new AutofacBLConfig());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
