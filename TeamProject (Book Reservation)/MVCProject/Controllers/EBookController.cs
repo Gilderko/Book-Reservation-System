@@ -4,6 +4,7 @@ using BL.DTOs.Enums;
 using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVCProject.Config;
 using System;
 using System.Threading.Tasks;
 
@@ -75,6 +76,11 @@ namespace MVCProject.Controllers
         // GET: EBook/Create
         public IActionResult Create()
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -85,18 +91,24 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemorySize,Format,Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] EBookDTO eBook)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _eBookFacade.Create(eBook);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(eBook);
         }
 
         // GET: EBook/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -116,7 +128,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MemorySize,Format,Title,Description,ISBN,PageCount,DateOfRelease,Language,Id")] EBookDTO eBook)
         {
-            if (id != eBook.Id)
+            if (id != eBook.Id || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -138,7 +150,7 @@ namespace MVCProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = eBook.Id });
             }
             return View(eBook);
         }
@@ -146,7 +158,7 @@ namespace MVCProject.Controllers
         // GET: EBook/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -165,6 +177,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             _eBookFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }

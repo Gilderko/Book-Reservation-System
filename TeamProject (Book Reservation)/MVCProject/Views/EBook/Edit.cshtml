@@ -1,4 +1,5 @@
 ﻿@model BL.DTOs.Entities.EBook.EBookDTO
+@using BL.DTOs.Enums
 
 @{
     ViewData["Title"] = "Edit";
@@ -19,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Format" class="control-label"></label>
-                <select asp-for="Format" class="form-control"></select>
+                <select asp-for="Format" class="form-control" asp-items="Html.GetEnumSelectList<EBookFormatDTO>()"></select>
                 <span asp-validation-for="Format" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -49,7 +50,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Language" class="control-label"></label>
-                <select asp-for="Language" class="form-control"></select>
+                <select asp-for="Language" class="form-control" asp-items="Html.GetEnumSelectList<LanguageDTO>()"></select>
                 <span asp-validation-for="Language" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
