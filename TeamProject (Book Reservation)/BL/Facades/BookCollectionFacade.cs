@@ -35,6 +35,11 @@ namespace BL.Facades
             _bookPrevService = bookPrevService;
         }
 
+        public async Task<bool> DoesBookExist(int bookId)
+        {
+            return (await _bookPrevService.GetByID(bookId)) != null;
+        }
+
         public async Task<(IEnumerable<BookCollectionDTO>,int)> GetAllBookCollections()
         {
             var simplePredicate = new PredicateDto(nameof(BookCollectionDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);

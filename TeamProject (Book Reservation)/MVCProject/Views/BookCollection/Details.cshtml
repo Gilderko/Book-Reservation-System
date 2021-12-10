@@ -50,8 +50,8 @@
         @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.UserId == int.Parse(User.Identity.Name))
         {
             <div>
-                <a asp-action="UserEditBookInstance" asp-route-id="@Model.Id">User Edit</a>
-                <a asp-action="UserBookInstances"> | Back to my books collections</a>
+                <a asp-action="UserEditCollection" asp-route-id="@Model.Id">User Edit</a>
+                <a asp-action="UserCollections"> | Back to my books collections</a>
             </div>
         }
 

@@ -25,6 +25,11 @@ namespace MVCProject.Controllers
         // GET: BookCollection
         public async Task<IActionResult> Index()
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             var bookCollections = await _bookCollectionFacade.GetAllBookCollections();
 
             return View(bookCollections.Item1);
@@ -33,16 +38,12 @@ namespace MVCProject.Controllers
         // GET: BookCollection/UserCollections
         public async Task<IActionResult> UserCollections()
         {
-            int userId;
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
 
-            if (User.Identity.Name is not null)
-            {
-                userId = int.Parse(User.Identity.Name);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            int userId = int.Parse(User.Identity.Name);
 
             return View(await _bookCollectionFacade.GetBookCollectionPrevsByUser(userId));
         }
@@ -51,13 +52,13 @@ namespace MVCProject.Controllers
         // GET: BookCollection/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            if (id == null || (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
 
             var bookCollection = await _bookCollectionFacade.GetBookCollectionWithBooksAndOwner((int)id);
-            if (bookCollection == null)
+            if (bookCollection == null || (bookCollection.UserId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -69,8 +70,19 @@ namespace MVCProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Details(int bookCollectionId, int bookToDeleteId)
+        public async Task<IActionResult> Details(int bookCollectionId, int bookToDeleteId)
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            var bookCollection = await _bookCollectionFacade.Get(bookCollectionId);
+            if (bookCollection == null || (bookCollection.UserId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
+            {
+                return NotFound();
+            }
+
             _bookCollectionFacade.DeleteBookFromCollection(bookCollectionId,bookToDeleteId);           
 
             return RedirectToAction("Details",new { id = bookCollectionId });
@@ -80,39 +92,59 @@ namespace MVCProject.Controllers
         [HttpGet]
         public IActionResult UserCreateCollection(int? id)
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
-        // GET: BookCollection/Create
-        public IActionResult UserAddBookInCollection()
+        // GET: BookCollection/UserAddBookInCollection
+        public async Task<IActionResult> UserAddBookInCollection(int? id)
         {
-            int userId;
-            if (User.Identity.Name is not null)
+            if (!User.IsInRole(GlobalConstants.UserRoleName) || id == null)
             {
-                userId = int.Parse(User.Identity.Name);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
+                return NotFound();
             }
 
-            var collectionPrevs = _bookCollectionFacade.GetBookCollectionPrevsByUser(userId).Result;
+            bool existsBook = await _bookCollectionFacade.DoesBookExist(id.Value);
+            if (!existsBook)
+            {
+                return NotFound();
+            }
+
+            int userId = int.Parse(User.Identity.Name);            
+
+            var collectionPrevs = await _bookCollectionFacade.GetBookCollectionPrevsByUser(userId);
 
             ViewData["collections"] = collectionPrevs;
             return View();
         }
 
-        // POST: BookCollection/Create
+        // POST: BookCollection/UserAddBookInCollection
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserAddBookInCollection(int? id, [Bind("BookCollectionID")] AddBookInCollectionDTO bookCollectionBook)
         {
-            if (id is null)
+            if (id is null || !User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
+            bool existsBook = await _bookCollectionFacade.DoesBookExist(id.Value);
+            if (!existsBook)
             {
                 return NotFound();
             }
 
             bookCollectionBook.BookID = (int)id;
+
+            var bookCollection = await _bookCollectionFacade.Get(bookCollectionBook.BookCollectionID);
+            if (bookCollection == null || (bookCollection.UserId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
@@ -127,6 +159,12 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserCreateCollection([Bind("Title,Description")] BookCollectionCreateDTO bookCollection)
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
+
             if (ModelState.IsValid)
             {
                 int userId;
@@ -148,20 +186,12 @@ namespace MVCProject.Controllers
         // GET: BookCollection/UserEditCollection/5
         public async Task<IActionResult> UserEditCollection(int? id)
         {
-            int userId;
-            if (User.Identity.Name is not null)
-            {
-                userId = int.Parse(User.Identity.Name);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.UserRoleName))
             {
                 return NotFound();
             }
+
+            int userId = int.Parse(User.Identity.Name);
 
             var bookCollection = await _bookCollectionFacade.GetUserCollectionToEdit((int)id);
 
@@ -178,7 +208,14 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEditCollection(int? id, [Bind("Title,Description,Id,UserId,CreationDate")] BookCollectionCreateDTO bookCollection)
         {
-            if (id != bookCollection.Id)
+            if (id != bookCollection.Id || !User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
+            int userId = int.Parse(User.Identity.Name);
+
+            if (bookCollection == null || (bookCollection.UserId != userId))
             {
                 return NotFound();
             }
@@ -208,6 +245,11 @@ namespace MVCProject.Controllers
         // GET: BookCollection/Create
         public IActionResult Create()
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -218,6 +260,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Description,CreationDate,UserId,Id")] BookCollectionDTO bookCollection)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _bookCollectionFacade.Create(bookCollection);
@@ -229,27 +276,18 @@ namespace MVCProject.Controllers
         // GET: BookCollection/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            int userId;
-            if (User.Identity.Name is not null)
-            {
-                userId = int.Parse(User.Identity.Name);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
 
             var bookCollection = await _bookCollectionFacade.Get((int)id);
 
-            if (bookCollection == null || (bookCollection.UserId != userId && User.Claims.FirstOrDefault(x => x.Value == GlobalConstants.AdminRoleName) != null))
+            if (bookCollection == null)
             {
                 return NotFound();
             }
+
             return View(bookCollection);
         }
 
@@ -260,7 +298,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,Description,CreationDate,UserId,Id")] BookCollectionDTO bookCollection)
         {
-            if (id != bookCollection.Id)
+            if (id != bookCollection.Id || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -290,13 +328,13 @@ namespace MVCProject.Controllers
         // GET: BookCollection/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
 
             var bookCollection = await _bookCollectionFacade.Get((int)id);
-            if (bookCollection == null)
+            if (bookCollection == null || (bookCollection.UserId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -307,8 +345,19 @@ namespace MVCProject.Controllers
         // POST: BookCollection/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            var bookCollection = await _bookCollectionFacade.Get(id);
+            if (bookCollection == null || (bookCollection.UserId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
+            {
+                return NotFound();
+            }
+
             _bookCollectionFacade.Delete(id);
 
             if (User.IsInRole(GlobalConstants.AdminRoleName))
