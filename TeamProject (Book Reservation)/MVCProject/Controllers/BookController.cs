@@ -170,9 +170,9 @@ namespace MVCProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddGenreToBook([Bind("GenreID,BookID")] BookGenreDTO newBookGenreEntry)
+        public async Task<IActionResult> AddGenreToBook(int id, [Bind("GenreID,BookID")] BookGenreDTO newBookGenreEntry)
         {
-            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            if (id != newBookGenreEntry.BookID || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -211,9 +211,9 @@ namespace MVCProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddAuthorToBook([Bind("AuthorID,BookID")] AuthorBookDTO newBookGenreEntry)
+        public async Task<IActionResult> AddAuthorToBook(int id, [Bind("AuthorID,BookID")] AuthorBookDTO newBookGenreEntry)
         {
-            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            if (id != newBookGenreEntry.BookID || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
