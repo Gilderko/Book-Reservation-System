@@ -347,7 +347,15 @@ namespace MVCProject.Controllers
             }
 
             _eReaderInstanceFacade.Delete(id);
-            return RedirectToAction(nameof(Index));
+
+            if (User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(UserEReaders));
+            }
         }
 
         private async Task<bool> EReaderInstanceExists(int id)

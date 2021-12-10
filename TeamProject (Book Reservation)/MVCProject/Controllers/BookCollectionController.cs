@@ -311,7 +311,14 @@ namespace MVCProject.Controllers
         {
             _bookCollectionFacade.Delete(id);
 
-            return RedirectToAction(nameof(UserCollections));
+            if (User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(UserCollections));
+            }
         }
 
         private async Task<bool> BookCollectionExists(int id)

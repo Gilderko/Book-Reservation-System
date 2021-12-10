@@ -291,7 +291,15 @@ namespace MVCProject.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             _bookInstanceFacade.Delete(id);
-            return RedirectToAction(nameof(UserBookInstances));
+
+            if (User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(UserBookInstances));
+            }
         }
 
         private async Task<bool> BookInstanceExists(int id)

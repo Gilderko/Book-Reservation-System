@@ -34,13 +34,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        @if (int.Parse(User.Identity.Name) == Model.UserId)
-        {
-            <a asp-action="Details" asp-route-id="@Model.Id">Back to Detail</a>
-        }
-        else
-        {
-            <a asp-action="UserCollections">Back to List</a>
-        }
+        <a asp-action="Details" asp-route-id="@Model.Id">Back to Detail</a>
     </form>
 </div>

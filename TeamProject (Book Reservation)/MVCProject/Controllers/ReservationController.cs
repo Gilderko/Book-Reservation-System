@@ -287,7 +287,15 @@ namespace MVCProject.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             _facade.Delete(id);
-            return RedirectToAction(nameof(UserReservations));
+
+            if (User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(UserReservations));
+            }
         }
 
         private async Task<bool> ReservationExists(int id)
