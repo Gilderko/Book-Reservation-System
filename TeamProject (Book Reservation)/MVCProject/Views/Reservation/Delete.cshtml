@@ -8,65 +8,52 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Reservation</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DateFrom)
-        </dt>
-        <dd class="col-sm-10">
+    <form asp-action="Delete">
+        <h4>Reservation</h4>
+        <hr />
+
+        <div class="form-group">
+            @Html.DisplayNameFor(model => model.DateFrom)        
             @Html.DisplayFor(model => model.DateFrom)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DateTill)
-        </dt>
-        <dd class="col-sm-10">
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(model => model.DateTill)        
             @Html.DisplayFor(model => model.DateTill)
-        </dd>
+        </div>
 
         @foreach (var bookInst in Model.BookInstances)
         {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => bookInst.BookInstance.FromBookTemplate.Title)
-            </dt>
-            <dt class="col-sm-10">
+            <div class="form-group">
+                @Html.DisplayNameFor(model => bookInst.BookInstance.FromBookTemplate.Title)            
                 @Html.DisplayFor(model => bookInst.BookInstance.FromBookTemplate.Title);
-            </dt>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => bookInst.BookInstance.Owner)
-            </dt>
-            <dt class="col-sm-10">
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(model => bookInst.BookInstance.Owner)            
                 @Html.Raw($"Owner: {bookInst.BookInstance.Owner.Name} {bookInst.BookInstance.Owner.Surname}");
-            </dt>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => bookInst.BookInstance.FromBookTemplate.Description)
-            </dt>
-            <dt class="col-sm-10">
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(model => bookInst.BookInstance.FromBookTemplate.Description)            
                 @Html.DisplayFor(model => bookInst.BookInstance.FromBookTemplate.Description);
-            </dt>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => bookInst.BookInstance.Condition)
-            </dt>
-            <dt class="col-sm-10">
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(model => bookInst.BookInstance.Condition)            
                 @Html.DisplayFor(model => bookInst.BookInstance.Condition);
-            </dt>
+            </div>
+            <input type="hidden" id="@bookInst.BookInstanceID" name="booksToDelete" value=@bookInst.BookInstanceID>
         }
 
         @if (Model.EReader != null)
         {
-            <dt class="col-sm-2">
+            <div class="form-group">
                 @Html.Raw("EReader")
-            </dt>
-            <dt class="col-sm-10">
+            </div>
+            <div class="form-group">
                 @Html.Raw($"EReader Owner: {Model.EReader.Owner.Name}");
-            </dt>
-            <dt class="col-sm-10">
+            </div>
+            <div class="form-group">
                 @Html.Raw($"Description: {Model.EReader.Description}")
-            </dt>
+            </div>
         }
-    </dl>
-    
-    <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>

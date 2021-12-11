@@ -28,12 +28,7 @@ namespace MVCProject.Controllers
         // GET: Reservation
         public async Task<IActionResult> Index()
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return NotFound();
-            }
-
-            if (!HttpContext.User.IsInRole(GlobalConstants.AdminRoleName))
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -45,36 +40,28 @@ namespace MVCProject.Controllers
 
         public async Task<IActionResult> UserReservations()
         {
-            int id;
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
 
-            if (User.Identity.Name is not null)
-            {
-                id = int.Parse(User.Identity.Name);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            int id = int.Parse(User.Identity.Name);            
 
             return View(await _facade.GetReservationsByUserId(id));
         }
 
         // GET: Reservation/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var reservation = await _facade.GetDetailWithLoadedBooks(id);
-
-            if (reservation == null)
+            if (id == null || (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
 
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return NotFound();
-            }
+            var reservation = await _facade.GetDetailWithLoadedBooks(id.Value);
 
-            if (!(int.Parse(HttpContext.User.Identity.Name) == reservation.UserID || HttpContext.User.IsInRole(GlobalConstants.AdminRoleName)))
+            if (reservation == null || 
+                !(int.Parse(User.Identity.Name) == reservation.UserID || User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -84,28 +71,28 @@ namespace MVCProject.Controllers
 
         public IActionResult DetailsCurrent()
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
             var reservation = StateKeeper.Instance.GetReservationInSession(this);
 
-            if (reservation == null)
+            if (reservation == null || int.Parse(User.Identity.Name) != reservation.UserID)
             {
                 return NotFound();
-            }
-
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return NotFound();
-            }
-
-            if (int.Parse(HttpContext.User.Identity.Name) != reservation.UserID)
-            {
-                return NotFound();
-            }
+            }            
 
             return View(reservation);
         }
 
         public async Task<IActionResult> AddedBookInstance(int id)
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
             var reservation = StateKeeper.Instance.GetReservationInSession(this);
 
             if (reservation == null)
@@ -116,11 +103,16 @@ namespace MVCProject.Controllers
             await _facade.AddBookInstance(id, reservation);
             StateKeeper.Instance.SetReservationInSession(this, reservation);
 
-            return RedirectToAction(nameof(this.DetailsCurrent));
+            return RedirectToAction(nameof(DetailsCurrent));
         }
 
         public async Task<IActionResult> AddedEReaderInstance(int id)
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
             var reservation = StateKeeper.Instance.GetReservationInSession(this);
 
             if (reservation == null)
@@ -131,12 +123,17 @@ namespace MVCProject.Controllers
             await _facade.AddEReaderInstance(id, reservation);
             StateKeeper.Instance.SetReservationInSession(this, reservation);
 
-            return RedirectToAction(nameof(this.DetailsCurrent));
+            return RedirectToAction(nameof(DetailsCurrent));
         }
 
         // GET: Reservation/Create
         public IActionResult Create()
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -147,7 +144,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("DateFrom,DateTill,Id")] ReservationDTO reservation)
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
             {
                 return NotFound();
             }
@@ -158,27 +155,22 @@ namespace MVCProject.Controllers
             if (ModelState.IsValid)
             {
                 StateKeeper.Instance.SetReservationInSession(this, reservation);
-                return RedirectToAction(nameof(this.DetailsCurrent));
+                return RedirectToAction(nameof(DetailsCurrent));
             }
 
-            return RedirectToAction(nameof(this.Index));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> SubmitReservation()
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
             var reservation = StateKeeper.Instance.GetReservationInSession(this);
 
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return NotFound();
-            }
-
-            if (int.Parse(HttpContext.User.Identity.Name) != reservation.UserID)
+            if (reservation == null || int.Parse(User.Identity.Name) != reservation.UserID)
             {
                 return NotFound();
             }
@@ -189,31 +181,36 @@ namespace MVCProject.Controllers
                 if (succeded)
                 {
                     StateKeeper.Instance.SetReservationInSession(this, null);
-                    return RedirectToAction(nameof(this.UserReservations));
+                    return RedirectToAction(nameof(UserReservations));
                 }
             }
 
-            return RedirectToAction(nameof(this.DetailsCurrent));
+            return RedirectToAction(nameof(DetailsCurrent));
         }
 
         public IActionResult DeleteInProgressReservation()
         {
-            StateKeeper.Instance.SetReservationInSession(this, null);
-
-            return RedirectToAction(nameof(HomeController.Index), "Home");
-        }
-
-        // GET: Reservation/Edit/5
-        public async Task<IActionResult> Edit(int id)
-        {
-            var reservation = await _facade.GetDetailWithLoadedBooks(id);
-
-            if (reservation == null)
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
             {
                 return NotFound();
             }
 
-            if (!(int.Parse(HttpContext.User.Identity.Name) == reservation.UserID || HttpContext.User.IsInRole(GlobalConstants.AdminRoleName)))
+            StateKeeper.Instance.SetReservationInSession(this, null);
+
+            return RedirectToAction(nameof(UserReservations));
+        }
+
+        // GET: Reservation/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
+            var reservation = await _facade.GetDetailWithLoadedBooks(id.Value);
+
+            if (reservation == null)
             {
                 return NotFound();
             }
@@ -226,9 +223,9 @@ namespace MVCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation, int[] booksToDelete, int? eReaderInstanceDelete)
+        public async Task<IActionResult> Edit(int id, [Bind("DateFrom,DateTill,UserID,EReaderID,Id")] ReservationDTO reservation, int[] booksToDelete, int? eReaderInstanceDelete)
         {
-            if (!(int.Parse(HttpContext.User.Identity.Name) == reservation.UserID || HttpContext.User.IsInRole(GlobalConstants.AdminRoleName)))
+            if (id != reservation.Id || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -267,13 +264,14 @@ namespace MVCProject.Controllers
         // GET: Reservation/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || (!User.IsInRole(GlobalConstants.AdminRoleName) && !User.IsInRole(GlobalConstants.UserRoleName)))
             {
                 return NotFound();
             }
 
-            var reservation = await _facade.Get((int)id);
-            if (reservation == null)
+            var reservation = await _facade.GetDetailWithLoadedBooks(id.Value);
+            if (reservation == null ||
+                !(int.Parse(User.Identity.Name) == reservation.UserID || User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -284,10 +282,15 @@ namespace MVCProject.Controllers
         // POST: Reservation/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id, int[] booksToDelete)
         {
-            _facade.Delete(id);
+            if (!User.IsInRole(GlobalConstants.AdminRoleName) && !User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
 
+            _facade.Delete(id, booksToDelete);     
+            
             if (User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return RedirectToAction(nameof(Index));
