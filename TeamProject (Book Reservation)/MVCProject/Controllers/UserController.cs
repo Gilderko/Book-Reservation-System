@@ -25,6 +25,11 @@ namespace MVCProject.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             var users = await _userFacade.GetAllUsers();
 
             return View(users.Item1);
@@ -50,6 +55,11 @@ namespace MVCProject.Controllers
         // GET: User/Create
         public IActionResult Create()
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -60,6 +70,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Surname,Email,HashedPassword,IsAdmin,Id")] UserDTO user)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _userFacade.Create(user);
@@ -71,16 +86,12 @@ namespace MVCProject.Controllers
         // GET: User/MyAccount
         public async Task<IActionResult> MyAccount()
         {
-            int id;
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
 
-            if (User.Identity.Name is not null)
-            {
-                id = int.Parse(User.Identity.Name);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            int id = int.Parse(User.Identity.Name);            
 
             var user = await _userFacade.Get((int)id);
             if (user == null)
@@ -93,16 +104,12 @@ namespace MVCProject.Controllers
         // GET: User/MyAccount/AccountEdit
         public async Task<IActionResult> AccountEdit()
         {
-            int id;
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
 
-            if (User.Identity.Name is not null)
-            {
-                id = int.Parse(User.Identity.Name);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            int id = int.Parse(User.Identity.Name);
 
             var user = await _userFacade.GetEditDTO((int)id);
             if (user == null)
@@ -117,6 +124,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AccountEdit([Bind("Name,Surname,Email,Password,Id")] UserEditDTO user)
         {
+            if (!User.IsInRole(GlobalConstants.UserRoleName))
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -137,7 +149,7 @@ namespace MVCProject.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -157,7 +169,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Name,Surname,Email,HashedPassword,IsAdmin,Id")] UserDTO user)
         {
-            if (id != user.Id)
+            if (id != user.Id || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -187,7 +199,7 @@ namespace MVCProject.Controllers
         // GET: User/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -206,6 +218,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+                return NotFound();
+            }
+
             _userFacade.Delete(id);
             return RedirectToAction(nameof(Index));
         }
@@ -232,6 +249,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterAsync([Bind("Name,Surname,Email,Password")] UserCreateDTO user)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -265,6 +287,11 @@ namespace MVCProject.Controllers
         [HttpGet, ActionName("Logout")]
         public IActionResult Logout()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
@@ -274,6 +301,11 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginAsync([Bind("Email,Password")] UserLoginDTO userLogin)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (ModelState.IsValid)
             {
                 try
