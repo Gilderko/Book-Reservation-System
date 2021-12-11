@@ -112,5 +112,11 @@
         <a asp-action="Index"> | Back to all book</a>
     </div>
 }
-<a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+@if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName) ||
+          ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.BookOwnerId == int.Parse(User.Identity.Name))
+{
+    <div>
+        <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    </div>
+}
 

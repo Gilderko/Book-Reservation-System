@@ -55,18 +55,22 @@
         <tbody>
             @foreach (var item in (IEnumerable<EBookDTO>)ViewData["eBooks"])
             {
-                <tr>
-                    <td>
-                        <a asp-controller="EBook" asp-action="Details" asp-route-id="@item.Id">
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Format)
-                    </td>
+            <tr>
+                <td>
+                    <a asp-controller="EBook" asp-action="Details" asp-route-id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Format)
+                </td>
+
+                @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName) ||
+                        ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.EreaderOwnerId == int.Parse(User.Identity.Name))
+                {
                     <td>
                         <form asp-action="Details">
                             <input type="hidden" name="eReaderToModifyId" value=@Model.Id>
@@ -74,7 +78,8 @@
                             <input type="submit" value="Delete" class="btn btn-danger" />
                         </form>
                     </td>
-                </tr>
+                }
+            </tr>
             }
         </tbody>
     </table>
@@ -95,27 +100,34 @@
         <a asp-action="Index"> | Back to all EReaders</a>
     </div>
 }
-<a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+@if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName) ||
+ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.EreaderOwnerId == int.Parse(User.Identity.Name))
+{
+    <div>
+        <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    </div>
+}
 
-<div>
-    @{
-        var currentReservation = StateKeeper.Instance.GetReservationInSession(ViewContext.HttpContext.Session);
-        @if (currentReservation != null)
-        {
-            bool shouldDisplay = true;
-            foreach (var reservation in Model.Reservations)
-            {
-                if (currentReservation.DateTill < reservation.DateTill)
+
+        <div>
+            @{
+                var currentReservation = StateKeeper.Instance.GetReservationInSession(ViewContext.HttpContext.Session);
+                @if (currentReservation != null)
                 {
-                    shouldDisplay = false;
-                    break;
+                    bool shouldDisplay = true;
+                    foreach (var reservation in Model.Reservations)
+                    {
+                        if (currentReservation.DateTill < reservation.DateTill)
+                        {
+                            shouldDisplay = false;
+                            break;
+                        }
+                    }
+
+                    if (shouldDisplay)
+                    {
+                        <a asp-controller="Reservation" asp-action="AddedEReaderInstance" asp-route-id="@Model.Id">Reserve |</a>
+                    }
                 }
             }
-
-            if (shouldDisplay)
-            {
-                <a asp-controller="Reservation" asp-action="AddedEReaderInstance" asp-route-id="@Model.Id">Reserve |</a>
-            }
-        }
-    }
-</div>
+        </div>

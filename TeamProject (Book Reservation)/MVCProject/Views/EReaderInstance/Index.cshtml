@@ -6,7 +6,12 @@
 }
 
 <h1>E-Readers</h1>
-
+@if (User.IsInRole(GlobalConstants.AdminRoleName))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 <div>
     <div class="float-child-filter">
         <form asp-action="Index" method="post">
