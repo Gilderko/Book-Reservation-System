@@ -23,12 +23,6 @@ namespace MVCProject.Controllers
             _facade = facade;
         }
 
-        // GET: Review
-        public IActionResult Index()
-        {
-            return NotFound();
-        }
-
         // GET: Review/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -48,7 +42,7 @@ namespace MVCProject.Controllers
 
         public IActionResult CreateReview(int? id)
         {
-            if (id == null || !User.Identity.IsAuthenticated) 
+            if (id == null || !User.IsInRole(GlobalConstants.UserRoleName)) 
             {
                 return NotFound();
             }
@@ -64,7 +58,7 @@ namespace MVCProject.Controllers
         {
             StateKeeper.Instance.SaveSpecificObjectForNextRequest(this, TempDataKeys.BookDTOId);
 
-            if (id == null || User.Identity.Name == null)
+            if (id == null || !User.IsInRole(GlobalConstants.UserRoleName))
             {
                 return NotFound();
             }
@@ -83,13 +77,13 @@ namespace MVCProject.Controllers
         // GET: Review/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || User.Identity.Name == null)
+            if (id == null || (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
 
             var review = await GetWithReferences((int)id);
-            if (review == null || int.Parse(User.Identity.Name) != review.UserID)
+            if (review == null || (review.UserID != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -103,7 +97,12 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CreationDate,Content,StarsAmmount,BookTemplateID,UserID,Id")] ReviewDTO review)
         {
-            if (id != review.Id || User.Identity.Name == null || int.Parse(User.Identity.Name) != review.UserID)
+            if (id != review.Id || (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName)))
+            {
+                return NotFound();
+            }
+
+            if ((review.UserID != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -133,7 +132,7 @@ namespace MVCProject.Controllers
         // GET: Review/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || User.Identity.Name == null)
+            if (id == null || (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
             }
@@ -152,7 +151,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (User.Identity.Name == null)
+            if (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }

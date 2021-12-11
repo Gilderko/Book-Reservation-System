@@ -110,7 +110,8 @@
                     Content
                 </th>
                 <th>
-                    @if (!Model.Reviews.Any(entry => entry.UserID == int.Parse(User.Identity.Name)))
+                    @if (User.IsInRole(GlobalConstants.UserRoleName) && 
+                        !Model.Reviews.Any(entry => entry.UserID == int.Parse(User.Identity.Name)))
                     {
                         <a asp-controller="Review" asp-action="CreateReview" asp-route-id="@Model.Id">
                             Create new review
