@@ -75,10 +75,10 @@ namespace DAL
             modelBuilder.Entity<EBookEReaderInstance>()
                 .HasKey(obj => new { obj.EBookID, obj.EReaderInstanceID });
 
-            modelBuilder.Entity<ReservationBookInstance>()
-                .HasOne(obj => obj.Reservation)
-                .WithMany(obj => obj.BookInstances)
-                .HasForeignKey(obj => obj.ReservationID)
+            modelBuilder.Entity<Reservation>()
+                .HasOne(obj => obj.User)
+                .WithMany(obj => obj.Reservations)
+                .HasForeignKey(obj => obj.UserID)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Seed();

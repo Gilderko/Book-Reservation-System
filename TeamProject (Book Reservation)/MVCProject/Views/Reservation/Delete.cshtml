@@ -13,33 +13,32 @@
         <hr />
 
         <div class="form-group">
-            @Html.DisplayNameFor(model => model.DateFrom)        
+            @Html.DisplayNameFor(model => model.DateFrom)
             @Html.DisplayFor(model => model.DateFrom)
         </div>
         <div class="form-group">
-            @Html.DisplayNameFor(model => model.DateTill)        
+            @Html.DisplayNameFor(model => model.DateTill)
             @Html.DisplayFor(model => model.DateTill)
         </div>
 
         @foreach (var bookInst in Model.BookInstances)
         {
             <div class="form-group">
-                @Html.DisplayNameFor(model => bookInst.BookInstance.FromBookTemplate.Title)            
+                @Html.DisplayNameFor(model => bookInst.BookInstance.FromBookTemplate.Title)
                 @Html.DisplayFor(model => bookInst.BookInstance.FromBookTemplate.Title);
             </div>
             <div class="form-group">
-                @Html.DisplayNameFor(model => bookInst.BookInstance.Owner)            
+                @Html.DisplayNameFor(model => bookInst.BookInstance.Owner)
                 @Html.Raw($"Owner: {bookInst.BookInstance.Owner.Name} {bookInst.BookInstance.Owner.Surname}");
             </div>
             <div class="form-group">
-                @Html.DisplayNameFor(model => bookInst.BookInstance.FromBookTemplate.Description)            
+                @Html.DisplayNameFor(model => bookInst.BookInstance.FromBookTemplate.Description)
                 @Html.DisplayFor(model => bookInst.BookInstance.FromBookTemplate.Description);
             </div>
             <div class="form-group">
-                @Html.DisplayNameFor(model => bookInst.BookInstance.Condition)            
+                @Html.DisplayNameFor(model => bookInst.BookInstance.Condition)
                 @Html.DisplayFor(model => bookInst.BookInstance.Condition);
             </div>
-            <input type="hidden" id="@bookInst.BookInstanceID" name="booksToDelete" value=@bookInst.BookInstanceID>
         }
 
         @if (Model.EReader != null)

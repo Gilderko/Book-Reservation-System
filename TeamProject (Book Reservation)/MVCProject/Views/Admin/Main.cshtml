@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "AdminPage";
+}
+
+<h1>Indexes to manage</h1>
+
+<div>
+    <input type="button" class="btn btn-primary" value="Authors" onclick="location.href='@Url.Action("Index", "Author")'" />
+    <input type="button" class="btn btn-primary" value="Books" onclick="location.href='@Url.Action("Index", "Book")'" />
+    <input type="button" class="btn btn-primary" value="Book collections" onclick="location.href='@Url.Action("Index", "BookCollection")'" />
+    <input type="button" class="btn btn-primary" value="Book Instances" onclick="location.href='@Url.Action("Index", "BookInstance")'" />
+    <input type="button" class="btn btn-primary" value="EBooks" onclick="location.href='@Url.Action("Index", "EBook")'" />
+</div>
+<div>
+    <hr />
+</div>
+<div>
+    <input type="button" class="btn btn-primary" value="EReaders" onclick="location.href='@Url.Action("Index", "EReader")'" />
+    <input type="button" class="btn btn-primary" value="EReader Instances" onclick="location.href='@Url.Action("Index", "EReaderInstance")'" />
+    <input type="button" class="btn btn-primary" value="Reservations" onclick="location.href='@Url.Action("Index", "Reservation")'" />
+    <input type="button" class="btn btn-primary" value="Users" onclick="location.href='@Url.Action("Index", "User")'" />
+</div>

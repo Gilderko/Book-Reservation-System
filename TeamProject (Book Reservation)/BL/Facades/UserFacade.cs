@@ -48,11 +48,6 @@ namespace BL.Facades
 
         public async Task Update(UserDTO user)
         {
-            if (await _userService.GetUserShowDtoByEmailAsync(user.Email) != null)
-            {
-                throw new ArgumentException("User with this email already exist!");
-            }
-
             _userService.Update(user);
             _unitOfWork.Commit();
         }

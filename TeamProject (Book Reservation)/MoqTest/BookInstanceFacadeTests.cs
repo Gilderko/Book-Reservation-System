@@ -66,7 +66,7 @@ namespace MoqTest
                 (null, _mapper, bookInstanceQueryObject, null);
             var authorService = new AuthorService(authorRepo,_mapper,null,authorBookQueryObject);
 
-            var bookInstanceFacadee = new BookInstanceFacade(uow, null, null, bookInstancePrevService, null, authorService);
+            var bookInstanceFacadee = new BookInstanceFacade(uow, null, null, bookInstancePrevService, null, authorService, null);
 
             return bookInstanceFacadee;
         }
@@ -249,7 +249,7 @@ namespace MoqTest
             var userService = new CRUDService<UserPrevDTO, User>(userRepo, _mapper, null);
             var reservationServivce = new ReservationService(null, _mapper, null, null, reservationBookInstanceQueryObject);
 
-            var bookInstanceFacadee = new BookInstanceFacade(uow, null, reservationServivce, null, userService, null);
+            var bookInstanceFacadee = new BookInstanceFacade(uow, null, reservationServivce, null, userService, null,null);
 
             return bookInstanceFacadee;
         }
@@ -434,7 +434,7 @@ namespace MoqTest
                 (null, _mapper, bookInstanceQueryObject, null);
             var authorService = new AuthorService(authorRepo, _mapper, null, authorBookQueryObject);
 
-            var bookInstanceFacadee = new BookInstanceFacade(uow, null, null, bookInstancePrevService, null, authorService);
+            var bookInstanceFacadee = new BookInstanceFacade(uow, null, null, bookInstancePrevService, null, authorService,null);
 
             return bookInstanceFacadee;
         }

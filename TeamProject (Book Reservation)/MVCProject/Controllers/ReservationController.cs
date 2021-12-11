@@ -152,13 +152,13 @@ namespace MVCProject.Controllers
             reservation.BookInstances = new List<ReservationBookInstanceDTO>();
             reservation.UserID = int.Parse(HttpContext.User.Identity.Name);
 
-            if (ModelState.IsValid)
+            if (reservation.DateFrom <= reservation.DateTill && ModelState.IsValid)
             {
                 StateKeeper.Instance.SetReservationInSession(this, reservation);
                 return RedirectToAction(nameof(DetailsCurrent));
             }
 
-            return RedirectToAction(nameof(Index));
+            return View(reservation);
         }
 
         public async Task<IActionResult> SubmitReservation()
@@ -282,14 +282,14 @@ namespace MVCProject.Controllers
         // POST: Reservation/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id, int[] booksToDelete)
+        public IActionResult DeleteConfirmed(int id)
         {
             if (!User.IsInRole(GlobalConstants.AdminRoleName) && !User.IsInRole(GlobalConstants.UserRoleName))
             {
                 return NotFound();
             }
 
-            _facade.Delete(id, booksToDelete);     
+            _facade.Delete(id);     
             
             if (User.IsInRole(GlobalConstants.AdminRoleName))
             {

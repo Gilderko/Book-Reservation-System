@@ -100,15 +100,8 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public void Delete(int id, int[] booksToDelete)
+        public void Delete(int id)
         {
-            var dummyReservation = new ReservationDTO()
-            {
-                Id = id
-            };
-
-            RemoveBookInstances(dummyReservation, booksToDelete);
-
             _reservationService.DeleteById(id);
 
             _unitOfWork.Commit();

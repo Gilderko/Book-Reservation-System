@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(BookRentalDbContext))]
-    [Migration("20211128175235_Initial")]
+    [Migration("20211211191300_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1158,7 +1158,7 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entities.Reservation", "Reservation")
                         .WithMany("BookInstances")
                         .HasForeignKey("ReservationID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("BookInstance");
@@ -1188,13 +1188,13 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.Reservation", b =>
                 {
                     b.HasOne("DAL.Entities.EReaderInstance", "EReader")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("EReaderID");
 
                     b.HasOne("DAL.Entities.User", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("EReader");
@@ -1252,6 +1252,8 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.EReaderInstance", b =>
                 {
                     b.Navigation("BooksIncluded");
+
+                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("DAL.Entities.Genre", b =>
