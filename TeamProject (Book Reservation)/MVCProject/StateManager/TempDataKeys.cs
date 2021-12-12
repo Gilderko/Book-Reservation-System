@@ -10,6 +10,7 @@ namespace MVCProject.StateManager
         EReaderInstanceDTOId,
         BookCollectionDTOId,
         BookInstanceDTOId,
-        BookDTOId
+        BookDTOId,
+        BookFilter
     }
 }

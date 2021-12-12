@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MVCProject.Config;
 using MVCProject.Models;
 using MVCProject.StateManager;
+using MVCProject.StateManager.FilterStates;
 using System;
 using System.Threading.Tasks;
 
@@ -26,16 +27,24 @@ namespace MVCProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int page = 1)
         {
-            ViewData["eBook"] = false;
+            var bookFilterState = TempData.Get<BookFilterState>(TempDataKeys.BookFilter.ToString());
+            if (bookFilterState == null)
+            {
+                bookFilterState = new BookFilterState();
+            }
 
-            var model = await _bookFacade.GetBookPreviews(page, PageSize, null, null, null,
-                null, null, null, null, null, null);
+            SetViewDataForIndex(bookFilterState);
+
+            var model = await _bookFacade.GetBookPreviews(page, PageSize, bookFilterState.Title, bookFilterState.AuthorName,
+                bookFilterState.AuthorSurname, bookFilterState.Genres, bookFilterState.Language,
+                bookFilterState.PageFrom, bookFilterState.PageTo, bookFilterState.ReleaseFrom, bookFilterState.ReleaseTo);
 
             var pagedModel = new PagedListViewModel<BookPrevDTO>(new PaginationViewModel(page, model.totalNumberOfBooks, PageSize),
                                                                  model.bookPrevs);
 
+            TempData.Put<BookFilterState>(TempDataKeys.BookFilter.ToString(), bookFilterState);
             return View(pagedModel);
-        }
+        }       
 
         // POST: Book
         [HttpPost]
@@ -52,24 +61,46 @@ namespace MVCProject.Controllers
                                                DateTime? releaseTo)
         {
             page = 1;
-            ViewData["eBook"] = false;
-            ViewData["bookTitle"] = title;
-            ViewData["authorName"] = authorName;
-            ViewData["authorSurname"] = authorSurname;
-            ViewData["genres"] = genres;
-            ViewData["language"] = language;
-            ViewData["pageFrom"] = pageFrom;
-            ViewData["pageTo"] = pageTo;
-            ViewData["releaseFrom"] = releaseFrom;
-            ViewData["releaseTo"] = releaseTo;
+            var bookFilterState = new BookFilterState()
+            {
+                Title = title,
+                AuthorName = authorName,
+                AuthorSurname = authorSurname,
+                Genres = genres,
+                Language = language,
+                PageFrom = pageFrom,
+                PageTo = pageTo,
+                ReleaseFrom = releaseFrom,
+                ReleaseTo = releaseTo
+            };
 
-            var model = await _bookFacade.GetBookPreviews(page, PageSize, title, authorName, authorSurname, 
-                genres, language, pageFrom, pageTo, releaseFrom, releaseTo);
+            SetViewDataForIndex(bookFilterState);
+
+            var model = await _bookFacade.GetBookPreviews(page, PageSize, bookFilterState.Title,
+                bookFilterState.AuthorName, bookFilterState.AuthorSurname, bookFilterState.Genres,
+                bookFilterState.Language, bookFilterState.PageFrom, bookFilterState.PageTo, 
+                bookFilterState.ReleaseFrom, bookFilterState.ReleaseTo);
 
             var pagedModel = new PagedListViewModel<BookPrevDTO>(new PaginationViewModel(page, model.totalNumberOfBooks, PageSize), 
                                                                  model.bookPrevs);
 
+            TempData.Put<BookFilterState>(TempDataKeys.BookFilter.ToString(), bookFilterState);
+
             return View(pagedModel);
+        }
+
+        private void SetViewDataForIndex(BookFilterState bookFilterState)
+        {
+            ViewData["eBook"] = false;
+            ViewData["bookTitle"] = bookFilterState.Title;
+            ViewData["authorName"] = bookFilterState.AuthorName;
+            ViewData["authorSurname"] = bookFilterState.AuthorSurname;
+            ViewData["genres"] = bookFilterState.Genres;
+            ViewData["language"] = bookFilterState.Language;
+            ViewData["pageFrom"] = bookFilterState.PageFrom;
+            ViewData["pageTo"] = bookFilterState.PageTo;
+            ViewData["releaseFrom"] = bookFilterState.ReleaseFrom;
+            ViewData["releaseTo"] = bookFilterState.ReleaseTo;
         }
 
         // GET: Book/Details/5

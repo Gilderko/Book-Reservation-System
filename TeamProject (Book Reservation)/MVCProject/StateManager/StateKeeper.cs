@@ -4,6 +4,7 @@ using BL.DTOs.Entities.Reservation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using MVCProject.StateManager.FilterStates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace MVCProject.StateManager
         public void AddTillNextRequest(Controller controller, TempDataKeys key, object value)
         {
             controller.TempData[key.ToString()] = value;
-        }
+        }        
 
         /// <summary>
         /// Peeks at the value and doesnt destroy it immidiately even if the save wasnt called
