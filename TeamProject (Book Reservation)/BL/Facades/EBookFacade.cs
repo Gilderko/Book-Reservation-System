@@ -32,7 +32,9 @@ namespace BL.Facades
             _eBookPrevService = eBookPrevService;
         }
 
-        public async Task<IEnumerable<EBookPrevDTO>> GetBookPreviews(string title,
+        public async Task<(IEnumerable<EBookPrevDTO>,int)> GetBookPreviews(int? page,
+                                                                   int? pageSize,
+                                                                   string title,
                                                                    string authorName,
                                                                    string authorSurname,
                                                                    GenreTypeDTO[] genres,
@@ -44,54 +46,61 @@ namespace BL.Facades
                                                                    EBookFormatDTO? format)
         {
             FilterDto filter = new FilterDto();
+            
+            if (page != null && pageSize != null)
+            {
+                filter.RequestedPageNumber = page.Value;
+                filter.PageSize = pageSize.Value;
+                filter.SortCriteria = nameof(EBookDTO.Id);
+            }
 
             List<PredicateDto> predicates = new();
 
             if (title is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.Title), title, ValueComparingOperator.Contains));
+                predicates.Add(new PredicateDto(nameof(EBookPrevDTO.Title), title, ValueComparingOperator.Contains));
             }
 
             if (authorName is not null || authorSurname is not null)
             {
                 var bookIds = await _authorService.GetAuthorsBooksIdsByName(authorName, authorSurname);
-                predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, ValueComparingOperator.In));
+                predicates.Add(new PredicateDto(nameof(EBookPrevDTO.Id), bookIds, ValueComparingOperator.In));
             }
 
             if (genres is not null && genres.Length > 0)
             {
                 var bookIds = await _genreService.GetBookIdsByGenres(genres);
-                predicates.Add(new PredicateDto(nameof(Book.Id), bookIds, ValueComparingOperator.In));
+                predicates.Add(new PredicateDto(nameof(EBookPrevDTO.Id), bookIds, ValueComparingOperator.In));
             }
 
             if (language is not null)
             {
-                predicates.Add(new PredicateDto(nameof(EBook.Language), (int)language, ValueComparingOperator.Contains));
+                predicates.Add(new PredicateDto(nameof(EBookPrevDTO.Language), (int)language, ValueComparingOperator.Contains));
             }
 
             if (pageFrom is not null)
             {
-                predicates.Add(new PredicateDto(nameof(EBook.PageCount), (int)pageFrom, ValueComparingOperator.GreaterThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(EBookDTO.PageCount), (int)pageFrom, ValueComparingOperator.GreaterThanOrEqual));
             }
 
             if (pageTo is not null)
             {
-                predicates.Add(new PredicateDto(nameof(EBook.PageCount), (int)pageTo, ValueComparingOperator.LessThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(EBookDTO.PageCount), (int)pageTo, ValueComparingOperator.LessThanOrEqual));
             }
 
             if (releaseFrom is not null)
             {
-                predicates.Add(new PredicateDto(nameof(EBook.DateOfRelease), releaseFrom, ValueComparingOperator.GreaterThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(EBookDTO.DateOfRelease), releaseFrom, ValueComparingOperator.GreaterThanOrEqual));
             }
 
             if (releaseTo is not null)
             {
-                predicates.Add(new PredicateDto(nameof(EBook.DateOfRelease), releaseTo, ValueComparingOperator.LessThanOrEqual));
+                predicates.Add(new PredicateDto(nameof(EBookDTO.DateOfRelease), releaseTo, ValueComparingOperator.LessThanOrEqual));
             }
 
             if (format is not null)
             {
-                predicates.Add(new PredicateDto(nameof(EBook.Format), (int)format, ValueComparingOperator.Equal));
+                predicates.Add(new PredicateDto(nameof(EBookDTO.Format), (int)format, ValueComparingOperator.Equal));
             }
 
             if (predicates.Count > 0)
@@ -100,13 +109,13 @@ namespace BL.Facades
             }
 
             string[] collectionsToLoad = new string[] {
-                nameof(Book.Authors)
+                nameof(EBookDTO.Authors)
             };
 
             var previews = await _eBookPrevService.FilterBy(filter, null, collectionsToLoad);
             await _authorService.LoadAuthors(previews.items);
 
-            return previews.items;
+            return previews;
         }
 
         public async Task Create(EBookDTO eBook)

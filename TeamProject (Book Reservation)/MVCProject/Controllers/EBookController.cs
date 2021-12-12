@@ -5,12 +5,15 @@ using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCProject.Config;
+using MVCProject.Models;
+using MVCProject.StateManager;
+using MVCProject.StateManager.FilterStates;
 using System;
 using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
-    public class EBookController : Controller
+    public class EBookController : BaseController
     {
         private readonly EBookFacade _eBookFacade;
 
@@ -21,16 +24,34 @@ namespace MVCProject.Controllers
 
         // GET: EBook
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            ViewData["eBook"] = true;
-            return View(await _eBookFacade.GetBookPreviews(null, null, null, null, null, null, null, null, null, null));
+            var ebookFilterState = TempData.Get<EBookFilterState>(TempDataKeys.EBookFilter.ToString());
+            if (ebookFilterState == null)
+            {
+                ebookFilterState = new EBookFilterState();
+            }
+
+            SetViewDataForIndex(ebookFilterState);
+
+            var model = await _eBookFacade.GetBookPreviews(page, PageSize, ebookFilterState.Title,
+                ebookFilterState.AuthorName, ebookFilterState.AuthorSurname, ebookFilterState.Genres,
+                ebookFilterState.Language, ebookFilterState.PageFrom, ebookFilterState.PageTo,
+                ebookFilterState.ReleaseFrom, ebookFilterState.ReleaseTo, ebookFilterState.Format);
+
+            var pagedModel = new PagedListViewModel<EBookPrevDTO>(new PaginationViewModel(page, model.Item2, PageSize),
+                                                                 model.Item1);
+
+            TempData.Put<EBookFilterState>(TempDataKeys.EBookFilter.ToString(), ebookFilterState);
+
+            return View(pagedModel);
         }
 
         // POST: EBook
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(string title,
+        public async Task<IActionResult> Index(int page,
+                                               string title,
                                                string authorName,
                                                string authorSurname,
                                                GenreTypeDTO[] genres,
@@ -41,19 +62,49 @@ namespace MVCProject.Controllers
                                                DateTime? releaseTo,
                                                EBookFormatDTO? format)
         {
-            ViewData["eBook"] = true;
-            ViewData["bookTitle"] = title;
-            ViewData["authorName"] = authorName;
-            ViewData["authorSurname"] = authorSurname;
-            ViewData["genres"] = genres;
-            ViewData["language"] = language;
-            ViewData["pageFrom"] = pageFrom;
-            ViewData["pageTo"] = pageTo;
-            ViewData["releaseFrom"] = releaseFrom;
-            ViewData["releaseTo"] = releaseTo;
-            ViewData["format"] = format;
+            page = 1;
+            var ebookFilterState = new EBookFilterState()
+            {
+                Title = title,
+                AuthorName = authorName,
+                AuthorSurname = authorSurname,
+                Genres = genres,
+                Language = language,
+                PageFrom = pageFrom,
+                PageTo = pageTo,
+                ReleaseFrom = releaseFrom,
+                ReleaseTo = releaseTo,
+                Format = format
+            };
 
-            return View(await _eBookFacade.GetBookPreviews(title, authorName, authorSurname, genres, language, pageFrom, pageTo, releaseFrom, releaseTo, format));
+            SetViewDataForIndex(ebookFilterState);
+
+            var model = await _eBookFacade.GetBookPreviews(page, PageSize, ebookFilterState.Title,
+                ebookFilterState.AuthorName, ebookFilterState.AuthorSurname, ebookFilterState.Genres,
+                ebookFilterState.Language, ebookFilterState.PageFrom, ebookFilterState.PageTo,
+                ebookFilterState.ReleaseFrom, ebookFilterState.ReleaseTo, ebookFilterState.Format);
+
+            var pagedModel = new PagedListViewModel<EBookPrevDTO>(new PaginationViewModel(page, model.Item2, PageSize),
+                                                                 model.Item1);
+
+            TempData.Put<EBookFilterState>(TempDataKeys.EBookFilter.ToString(), ebookFilterState);
+
+            return View(pagedModel);
+        }
+
+        private void SetViewDataForIndex(EBookFilterState bookFilterState)
+        {
+            ViewData["eBook"] = false;
+            ViewData["bookTitle"] = bookFilterState.Title;
+            ViewData["authorName"] = bookFilterState.AuthorName;
+            ViewData["authorSurname"] = bookFilterState.AuthorSurname;
+            ViewData["genres"] = bookFilterState.Genres;
+            ViewData["language"] = bookFilterState.Language;
+            ViewData["pageFrom"] = bookFilterState.PageFrom;
+            ViewData["pageTo"] = bookFilterState.PageTo;
+            ViewData["releaseFrom"] = bookFilterState.ReleaseFrom;
+            ViewData["releaseTo"] = bookFilterState.ReleaseTo;
+            ViewData["format"] = bookFilterState.Format;
         }
 
         // GET: EBook/Details/5

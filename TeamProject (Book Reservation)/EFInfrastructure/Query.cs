@@ -163,7 +163,11 @@ namespace EFInfrastructure
             _pageSize = pageSize;
             _pageNumber = ipageToFetch;
 
-            SortBy("Id", true);
+            if (_sortBy == "")
+            {
+                SortBy(nameof(BaseEntity.Id), true);
+            }
+           
             _page = $"OFFSET {(ipageToFetch - 1) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
         }
 
