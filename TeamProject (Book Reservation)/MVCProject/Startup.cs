@@ -35,6 +35,8 @@ namespace MVCProject
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            services.AddHttpContextAccessor();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

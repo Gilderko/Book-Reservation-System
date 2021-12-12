@@ -83,9 +83,14 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<IEnumerable<AuthorPrevDTO>> GetAuthorPreviews(string name = null, string surname = null)
+        public async Task<(IEnumerable<AuthorPrevDTO>, int)> GetAuthorPreviews(int page, int pageSize,
+            string name = null, string surname = null)
         {
-            var filter = new FilterDto();
+            var filter = new FilterDto()
+            {
+                RequestedPageNumber = page,
+                PageSize = pageSize
+            }; 
 
             List<PredicateDto> predicates = new();
 
@@ -105,7 +110,7 @@ namespace BL.Facades
             }
 
             var previews = await _authorPrevService.FilterBy(filter);
-            return previews.items;
+            return previews;
         }
 
         public async Task<IEnumerable<AuthorBookDTO>> GetAuthorBooksByAuthor(int id)

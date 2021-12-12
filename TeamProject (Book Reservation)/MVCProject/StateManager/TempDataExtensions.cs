@@ -12,8 +12,7 @@ namespace MVCProject.StateManager
 
         public static T Get<T>(this ITempDataDictionary tempData, string key) where T : class
         {
-            object o;
-            tempData.TryGetValue(key, out o);
+            object o = tempData[key];
             return o == null ? null : JsonConvert.DeserializeObject<T>((string)o, SerialisSettings.GetSettings());
         }
     }

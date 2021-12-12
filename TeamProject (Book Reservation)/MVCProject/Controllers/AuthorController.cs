@@ -6,12 +6,15 @@ using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using MVCProject.Config;
 using Autofac;
+using MVCProject.Models;
+using MVCProject.StateManager.FilterStates;
+using MVCProject.StateManager;
 
 namespace MVCProject.Controllers
 {
-    public class AuthorController : Controller
+    public class AuthorController : BaseController
     {
-        private readonly AuthorFacade _facade;
+        private readonly AuthorFacade _facade;        
 
         public AuthorController(AuthorFacade facade)
         {
@@ -19,19 +22,54 @@ namespace MVCProject.Controllers
         }
 
         // GET: Author
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            return View(await _facade.GetAuthorPreviews());
+            var authorFilterState = TempData.Get<AuthorFilterState>(TempDataKeys.AuthorFilter.ToString());
+            if (authorFilterState == null)
+            {
+                authorFilterState = new AuthorFilterState();
+            }
+
+            SetViewDataForIndex(authorFilterState);
+
+            var model = await _facade.GetAuthorPreviews(page, PageSize, authorFilterState.Name, authorFilterState.Surname);
+
+
+            var pagedModel = new PagedListViewModel<AuthorPrevDTO>(new PaginationViewModel(page, model.Item2, PageSize),
+                                                                 model.Item1);
+
+            TempData.Put<AuthorFilterState>(TempDataKeys.AuthorFilter.ToString(), authorFilterState);
+            return View(pagedModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(string name, string surname)
+        public async Task<IActionResult> Index(int page, string name, string surname)
         {
-            ViewData["name"] = name;
-            ViewData["surname"] = surname;
+            page = 1;
+            var authorFilterState = new AuthorFilterState()
+            {
+                Name = name,
+                Surname = surname
+            };
 
-            return View(await _facade.GetAuthorPreviews(name, surname));
+            SetViewDataForIndex(authorFilterState);
+
+            var model = await _facade.GetAuthorPreviews(page, PageSize, authorFilterState.Name, authorFilterState.Surname);
+
+
+            var pagedModel = new PagedListViewModel<AuthorPrevDTO>(new PaginationViewModel(page, model.Item2, PageSize),
+                                                                 model.Item1);
+
+            TempData.Put<AuthorFilterState>(TempDataKeys.AuthorFilter.ToString(), authorFilterState);
+
+            return View(pagedModel);
+        }
+
+        private void SetViewDataForIndex(AuthorFilterState authorFilterState)
+        {
+            ViewData["name"] = authorFilterState.Name;
+            ViewData["surname"] = authorFilterState.Surname;
         }
 
         // GET: Author/Details/5
