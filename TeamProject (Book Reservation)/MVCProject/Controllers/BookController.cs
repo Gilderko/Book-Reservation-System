@@ -25,7 +25,7 @@ namespace MVCProject.Controllers
 
         // GET: Book
         [HttpGet]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 0)
         {
             var bookFilterState = TempData.Get<BookFilterState>(TempDataKeys.BookFilter.ToString());
             if (bookFilterState == null)
@@ -60,7 +60,7 @@ namespace MVCProject.Controllers
                                                DateTime? releaseFrom,
                                                DateTime? releaseTo)
         {
-            page = 1;
+            page = 0;
             var bookFilterState = new BookFilterState()
             {
                 Title = title,

@@ -76,7 +76,7 @@ namespace MoqTest
 
                 var data = GetEntries();
 
-                var result = await bookCollectionFacade.GetBookPreviews(null,null,data.Item1, data.Item2, data.Item3, data.Item4, data.Item5, data.Item6, data.Item7,
+                var (result,_) = await bookCollectionFacade.GetBookPreviews(null,null,data.Item1, data.Item2, data.Item3, data.Item4, data.Item5, data.Item6, data.Item7,
                 data.Rest.Item1, data.Rest.Item2, data.Rest.Item3);
 
                 AuthorInvocationsInclude(mock, data.Item2);

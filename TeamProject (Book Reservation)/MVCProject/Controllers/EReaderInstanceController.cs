@@ -13,10 +13,12 @@ using MVCProject.Config;
 using BL.DTOs.ConnectionTables;
 using MVCProject.StateManager;
 using Autofac;
+using MVCProject.StateManager.FilterStates;
+using MVCProject.Models;
 
 namespace MVCProject.Controllers
 {
-    public class EReaderInstanceController : Controller
+    public class EReaderInstanceController : BaseController
     {
         private readonly EReaderInstanceFacade _eReaderInstanceFacade;
 
@@ -27,27 +29,69 @@ namespace MVCProject.Controllers
 
         // GET: EReaderInstance
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 0)
         {
-            return View(await _eReaderInstanceFacade.GetEReaderInstancePrevsBy(null, null, null, null, null));
+            var eReaderInstanceFilterState = TempData.Get<EReaderInstanceFilterState>(TempDataKeys.EReaderInstanceFilterState.ToString());
+            if (eReaderInstanceFilterState == null)
+            {
+                eReaderInstanceFilterState = new EReaderInstanceFilterState();
+            }
+
+            SetViewDataForIndex(eReaderInstanceFilterState);
+
+            var model = await _eReaderInstanceFacade.GetEReaderInstancePrevsBy(page, PageSize, eReaderInstanceFilterState.Description,
+                eReaderInstanceFilterState.Company, eReaderInstanceFilterState.Model, eReaderInstanceFilterState.MemoryFrom,
+                eReaderInstanceFilterState.MemoryTo);
+
+
+            var pagedModel = new PagedListViewModel<EReaderInstancePrevDTO>(new PaginationViewModel(page, model.Item2, PageSize),
+                                                                 model.Item1);
+
+            TempData.Put<EReaderInstanceFilterState>(TempDataKeys.EReaderInstanceFilterState.ToString(), eReaderInstanceFilterState);
+            return View(pagedModel);
         }
 
         // POST: EReaderInstance
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(string description,
+        public async Task<IActionResult> Index(int page,
+                                               string description,
                                                string company,
                                                string model,
                                                int? memoryFrom,
                                                int? memoryTo)
         {
-            ViewData["description"] = description;
-            ViewData["company"] = company;
-            ViewData["model"] = model;
-            ViewData["memoryFrom"] = memoryFrom;
-            ViewData["memoryTo"] = memoryTo;
- 
-            return View(await _eReaderInstanceFacade.GetEReaderInstancePrevsBy(description, company, model, memoryFrom, memoryTo));
+            page = 0;
+            var eReaderInstanceFilterState = new EReaderInstanceFilterState()
+            {
+                Description = description,
+                Company = company,
+                Model = model,
+                MemoryFrom = memoryFrom,
+                MemoryTo = memoryTo
+            };
+
+            SetViewDataForIndex(eReaderInstanceFilterState);
+
+            var resModel = await _eReaderInstanceFacade.GetEReaderInstancePrevsBy(page, PageSize, eReaderInstanceFilterState.Description,
+                eReaderInstanceFilterState.Company, eReaderInstanceFilterState.Model, eReaderInstanceFilterState.MemoryFrom,
+                eReaderInstanceFilterState.MemoryTo);
+
+
+            var pagedModel = new PagedListViewModel<EReaderInstancePrevDTO>(new PaginationViewModel(page, resModel.Item2, PageSize),
+                                                                 resModel.Item1);
+
+            TempData.Put<EReaderInstanceFilterState>(TempDataKeys.EReaderInstanceFilterState.ToString(), eReaderInstanceFilterState);
+            return View(pagedModel);
+        }
+
+        private void SetViewDataForIndex(EReaderInstanceFilterState authorFilterState)
+        {
+            ViewData["description"] = authorFilterState.Description;
+            ViewData["company"] = authorFilterState.Company;
+            ViewData["model"] = authorFilterState.Model;
+            ViewData["memoryFrom"] = authorFilterState.MemoryFrom;
+            ViewData["memoryTo"] = authorFilterState.MemoryTo;
         }
 
         // GET: UserEReaders

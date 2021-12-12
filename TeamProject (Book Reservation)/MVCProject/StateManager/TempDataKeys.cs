@@ -13,6 +13,7 @@ namespace MVCProject.StateManager
         BookDTOId,
         BookFilter,
         AuthorFilter,
-        EBookFilter
+        EBookFilter,
+        EReaderInstanceFilterState
     }
 }

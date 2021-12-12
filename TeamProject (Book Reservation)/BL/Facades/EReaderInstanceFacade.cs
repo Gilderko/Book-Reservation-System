@@ -104,7 +104,9 @@ namespace BL.Facades
             return await _eReaderInstancePrevService.GetEReaderInstancesByOwner(ownerId);
         }
 
-        public async Task<IEnumerable<EReaderInstancePrevDTO>> GetEReaderInstancePrevsBy(string description,
+        public async Task<(IEnumerable<EReaderInstancePrevDTO>,int)> GetEReaderInstancePrevsBy(int? page,
+                                                                                         int? pageSize,
+                                                                                         string description,
                                                                                          string company,
                                                                                          string model,
                                                                                          int? memorySizeFrom,
@@ -161,7 +163,7 @@ namespace BL.Facades
 
             var result = await _eReaderInstancePrevService.FilterBy(instancesFilter, refsToLoad, null);
 
-            return result.items;
+            return result;
         }
 
         public async Task<IEnumerable<EReaderPrevDTO>> GetEReaderTemplates()

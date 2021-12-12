@@ -1,5 +1,6 @@
-﻿@model IEnumerable<BL.DTOs.Entities.EReaderInstance.EReaderInstancePrevDTO>
+﻿@model PagedListViewModel<EReaderInstancePrevDTO>
 @using MVCProject.Config;
+@using BL.DTOs.Entities.EReaderInstance 
 
 @{
     ViewData["Title"] = "Index";
@@ -51,22 +52,22 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Description)
+                        @nameof(EReaderInstancePrevDTO.Description)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.EReaderTemplate.CompanyMake)
+                        @nameof(EReaderInstancePrevDTO.EReaderTemplate.CompanyMake)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.EReaderTemplate.Model)
+                        @nameof(EReaderInstancePrevDTO.EReaderTemplate.Model)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.EReaderTemplate.MemoryInMB)
+                        @nameof(EReaderInstancePrevDTO.EReaderTemplate.MemoryInMB)
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.List)
                 {
                     <tr>
                         <td>
@@ -96,6 +97,11 @@
                 }
             </tbody>
         </table>
+        <div>
+            @{
+                await Html.RenderPartialAsync("_PaginationPartial", Model.Pagination);
+            }
+        </div>
     </div>
 </div>
 

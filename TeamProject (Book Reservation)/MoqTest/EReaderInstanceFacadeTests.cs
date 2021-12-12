@@ -99,7 +99,7 @@ namespace MoqTest
 
         private static async Task Evaluate(AutoMock mock, EReaderInstanceFacade bookCollectionFacade, Tuple<string, string, string, int?, int?, QueryResult<EReader>, QueryResult<EReaderInstance>> data)
         {
-            var result = await bookCollectionFacade.GetEReaderInstancePrevsBy(data.Item1, data.Item2, data.Item3, data.Item4, data.Item5);
+            var (result, _) = await bookCollectionFacade.GetEReaderInstancePrevsBy(null,null,data.Item1, data.Item2, data.Item3, data.Item4, data.Item5);
 
             EReaderInstanceInvocationsInclude(mock, data.Item1);
             EReaderInvocationsInclude(mock, data.Item2);

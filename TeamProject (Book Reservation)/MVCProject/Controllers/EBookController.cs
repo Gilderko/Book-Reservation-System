@@ -24,7 +24,7 @@ namespace MVCProject.Controllers
 
         // GET: EBook
         [HttpGet]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 0)
         {
             var ebookFilterState = TempData.Get<EBookFilterState>(TempDataKeys.EBookFilter.ToString());
             if (ebookFilterState == null)
@@ -62,7 +62,7 @@ namespace MVCProject.Controllers
                                                DateTime? releaseTo,
                                                EBookFormatDTO? format)
         {
-            page = 1;
+            page = 0;
             var ebookFilterState = new EBookFilterState()
             {
                 Title = title,

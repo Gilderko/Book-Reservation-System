@@ -14,7 +14,6 @@ namespace BL.DTOs.Entities.EReader
         public string CompanyMake { get; set; }
 
         [Required]
-        [StringLength(64)]
         [Display(Name = "Memory size")]
         public int MemoryInMB { get; set; }
     }
