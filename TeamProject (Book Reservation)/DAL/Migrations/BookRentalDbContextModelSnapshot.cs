@@ -767,7 +767,7 @@ namespace DAL.Migrations
                     b.Property<int?>("EReaderID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int?>("UserID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

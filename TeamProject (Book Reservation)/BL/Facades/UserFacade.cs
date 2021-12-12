@@ -11,6 +11,7 @@ using System.IO;
 using System.Collections.Generic;
 using BL.DTOs.Filters;
 using Infrastructure.Query.Operators;
+using BL.DTOs.Entities.Reservation;
 
 namespace BL.Facades
 {
@@ -21,18 +22,21 @@ namespace BL.Facades
         private ICRUDService<BookCollectionDTO, BookCollection> _bookCollCrud;
         private ICRUDService<BookInstanceDTO, BookInstance> _bookInstanceCrud;
         private ICRUDService<EReaderInstanceDTO, EReaderInstance> _eReaderInstanceCrud;
+        private ICRUDService<ReservationDTO, Reservation> _reservationCrud;
 
         public UserFacade(IUnitOfWork unitOfWork,
             IUserService userService,
             ICRUDService<BookCollectionDTO, BookCollection> bookCollCrud,
             ICRUDService<BookInstanceDTO, BookInstance> bookInstanceCrud,
-            ICRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceCrud)
+            ICRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceCrud,
+            ICRUDService<ReservationDTO, Reservation> reservationCrud)
         {
             _unitOfWork = unitOfWork;
             _userService = userService;
             _bookCollCrud = bookCollCrud;
             _bookInstanceCrud = bookInstanceCrud;
             _eReaderInstanceCrud = eReaderInstanceCrud;
+            _reservationCrud = reservationCrud;
         }
 
         public async Task Create(UserDTO user)
@@ -46,14 +50,24 @@ namespace BL.Facades
             return await _userService.GetByID(id, refsToLoad, collectToLoad);
         }
 
-        public async Task Update(UserDTO user)
+        public void Update(UserDTO user)
         {
             _userService.Update(user);
             _unitOfWork.Commit();
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id, int[] reservationIds)
         {
+            foreach (var reservationId in reservationIds)
+            {
+                var reservation = await _reservationCrud.GetById(reservationId);
+                reservation.UserID = null;
+
+                _reservationCrud.Update(reservation);
+            }
+
+            //_unitOfWork.Commit();
+
             _userService.DeleteById(id);
             _unitOfWork.Commit();
         }

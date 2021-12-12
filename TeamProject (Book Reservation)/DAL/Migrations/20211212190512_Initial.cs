@@ -296,7 +296,7 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateFrom = table.Column<DateTime>(type: "Date", nullable: false),
                     DateTill = table.Column<DateTime>(type: "Date", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<int>(type: "int", nullable: true),
                     EReaderID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

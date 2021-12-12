@@ -178,7 +178,7 @@ namespace MVCProject.Controllers
             {
                 try
                 {
-                    await _userFacade.Update(user);
+                    _userFacade.Update(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -204,7 +204,12 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _userFacade.Get((int)id);
+            var collectionsToLoad = new string[]
+            {
+                nameof(UserDTO.Reservations)
+            };
+
+            var user = await _userFacade.Get((int)id,null,collectionsToLoad);
             if (user == null)
             {
                 return NotFound();
@@ -216,14 +221,14 @@ namespace MVCProject.Controllers
         // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int[] reservations)
         {
             if (!User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
 
-            _userFacade.Delete(id);
+            await _userFacade.Delete(id,reservations);
             return RedirectToAction(nameof(Index));
         }
 

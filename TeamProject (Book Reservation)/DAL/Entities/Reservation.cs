@@ -13,7 +13,7 @@ namespace DAL.Entities
         [Column(TypeName = "Date")]
         public DateTime DateTill { get; set; }
 
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
 
         [ForeignKey(nameof(UserID))]
         public User User { get; set; }

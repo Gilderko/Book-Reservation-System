@@ -21,7 +21,7 @@ namespace EFInfrastructure
 
         public async Task<TEntity> GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null)
         {
-            TEntity loadedEntity = await dbSet.FindAsync(id);
+            TEntity loadedEntity = await dbSet.FindAsync(id);            
 
             if (loadedEntity != null)
             {
@@ -41,6 +41,8 @@ namespace EFInfrastructure
                     }
                 }
             }
+
+            dbContext.Entry(loadedEntity).State = EntityState.Detached;
 
             return loadedEntity;
         }

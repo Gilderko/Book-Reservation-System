@@ -15,8 +15,7 @@ namespace BL.DTOs.Entities.Reservation
         [Required]
         public DateTime DateTill { get; set; }
 
-        [Required]
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
 
         public UserDTO User { get; set; }
 
