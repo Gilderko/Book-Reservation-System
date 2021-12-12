@@ -22,7 +22,7 @@ namespace MVCProject.Controllers
         }
 
         // GET: Author
-        public async Task<IActionResult> Index(int page = 0)
+        public async Task<IActionResult> Index(int page = 1)
         {
             var authorFilterState = TempData.Get<AuthorFilterState>(TempDataKeys.AuthorFilter.ToString());
             if (authorFilterState == null)
@@ -46,7 +46,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int page, string name, string surname)
         {
-            page = 0;
+            page = 1;
             var authorFilterState = new AuthorFilterState()
             {
                 Name = name,

@@ -1187,13 +1187,13 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Entities.EReaderInstance", "EReader")
                         .WithMany("Reservations")
-                        .HasForeignKey("EReaderID");
+                        .HasForeignKey("EReaderID")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("DAL.Entities.User", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("EReader");
 

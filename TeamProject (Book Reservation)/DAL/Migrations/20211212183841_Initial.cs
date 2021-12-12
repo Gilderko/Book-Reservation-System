@@ -307,7 +307,7 @@ namespace DAL.Migrations
                         column: x => x.EReaderID,
                         principalTable: "EReaderInstances",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Reservations_Users_UserID",
                         column: x => x.UserID,

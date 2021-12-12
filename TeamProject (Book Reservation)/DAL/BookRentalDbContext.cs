@@ -78,8 +78,16 @@ namespace DAL
             modelBuilder.Entity<Reservation>()
                 .HasOne(obj => obj.User)
                 .WithMany(obj => obj.Reservations)
-                .HasForeignKey(obj => obj.UserID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(obj => obj.UserID)                
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(obj => obj.EReader)
+                .WithMany(obj => obj.Reservations)
+                .HasForeignKey(obj => obj.EReaderID)                
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
 
             modelBuilder.Seed();
 

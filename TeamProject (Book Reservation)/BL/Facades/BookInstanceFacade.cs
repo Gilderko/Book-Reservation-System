@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
@@ -91,7 +92,7 @@ namespace BL.Facades
 
         public async Task<IEnumerable<ReservationPrevDTO>> GetBookReservationPrevsByBookInstanceAndDate(int bookInstanceId, DateTime? from, DateTime? to)
         {
-            var reservationPreviews = await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to);
+            var reservationPreviews = (await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to)).ToList();
             
             foreach (var reservationPrev in reservationPreviews)
             {

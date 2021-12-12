@@ -10,7 +10,7 @@ namespace MVCProject.Models
         public int LeftBound { get; private set; }
         public int RightBound { get; private set; }
         public int Current { get; private set; }
-        public int Last => (_listCount + _pageSize - 1) / _pageSize;
+        public int Last => Math.Max((_listCount + _pageSize - 1) / _pageSize,1);
 
         private readonly int _listCount;
         private readonly int _maxNumberOfPages;
@@ -34,7 +34,7 @@ namespace MVCProject.Models
             }
 
             LeftBound = 1;
-            RightBound = (_listCount + _pageSize - 1) / _pageSize;
+            RightBound = Math.Max((_listCount + _pageSize - 1) / _pageSize,1);
         }
     }
 }

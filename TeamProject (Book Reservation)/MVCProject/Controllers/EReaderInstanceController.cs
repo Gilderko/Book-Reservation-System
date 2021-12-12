@@ -29,7 +29,7 @@ namespace MVCProject.Controllers
 
         // GET: EReaderInstance
         [HttpGet]
-        public async Task<IActionResult> Index(int page = 0)
+        public async Task<IActionResult> Index(int page = 1)
         {
             var eReaderInstanceFilterState = TempData.Get<EReaderInstanceFilterState>(TempDataKeys.EReaderInstanceFilterState.ToString());
             if (eReaderInstanceFilterState == null)
@@ -61,7 +61,7 @@ namespace MVCProject.Controllers
                                                int? memoryFrom,
                                                int? memoryTo)
         {
-            page = 0;
+            page = 1;
             var eReaderInstanceFilterState = new EReaderInstanceFilterState()
             {
                 Description = description,

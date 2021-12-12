@@ -168,7 +168,7 @@ namespace EFInfrastructure
                 SortBy(nameof(BaseEntity.Id), true);
             }
            
-            _page = $"OFFSET {(ipageToFetch) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
+            _page = $"OFFSET {(ipageToFetch - 1) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
         }
 
         public async Task<QueryResult<TEntity>> Execute()
