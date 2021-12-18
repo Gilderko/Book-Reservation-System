@@ -2,7 +2,6 @@
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.Review;
 using BL.DTOs.Enums;
-using DAL.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,6 +35,7 @@ namespace BL.DTOs.Entities.Book
         [Required]
         public LanguageDTO Language { get; set; }
 
+        [DisplayName("Book instances")]
         public IEnumerable<BookInstanceDTO> BookInstances { get; set; }
 
         public ICollection<ReviewDTO> Reviews { get; set; }

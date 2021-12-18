@@ -22,9 +22,10 @@ namespace BL.DTOs.Entities.EReaderInstance
 
         public UserDTO Owner { get; set; }
 
-        [DisplayName("EReader")]
+        [DisplayName("E-Reader")]
         public EReaderDTO EReaderTemplate { get; set; }
 
+        [DisplayName("Books")]
         public IEnumerable<EBookEReaderInstanceDTO> BooksIncluded { get; set; }
 
         public ICollection<ReservationDTO> Reservations { get; set; }

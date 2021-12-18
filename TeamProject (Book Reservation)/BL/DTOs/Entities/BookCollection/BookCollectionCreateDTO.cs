@@ -1,7 +1,4 @@
-﻿using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.User;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BL.DTOs.Entities.BookCollection

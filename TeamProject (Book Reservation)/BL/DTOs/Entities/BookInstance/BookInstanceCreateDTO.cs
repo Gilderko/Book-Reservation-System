@@ -1,9 +1,4 @@
-﻿using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.Book;
-using BL.DTOs.Entities.User;
-using BL.DTOs.Enums;
-using DAL.Enums;
-using System.Collections.Generic;
+﻿using BL.DTOs.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace BL.DTOs.Entities.BookInstance

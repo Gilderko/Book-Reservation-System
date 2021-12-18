@@ -1,7 +1,5 @@
 ﻿using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.Author;
 using BL.DTOs.Enums;
-using DAL.Enums;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

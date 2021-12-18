@@ -1,7 +1,6 @@
 ﻿@model BL.DTOs.Entities.EReaderInstance.EReaderInstanceDTO
 @using MVCProject.Config;
 @using MVCProject.StateManager;
-@using BL.DTOs.Entities.EBook;
 
 @{
     ViewData["Title"] = "Details";
@@ -36,7 +35,7 @@
     </dl>
 </div>
 <div>
-    <h5>BookIncluded</h5>
+    <h5>@Html.DisplayNameFor(model => Model.BooksIncluded)</h5>
     <table class="table">
         <thead>
             <tr>
@@ -53,19 +52,19 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in (IEnumerable<EBookDTO>)ViewData["eBooks"])
+            @foreach (var item in Model.BooksIncluded)
             {
             <tr>
                 <td>
-                    <a asp-controller="EBook" asp-action="Details" asp-route-id="@item.Id">
-                        @Html.DisplayFor(modelItem => item.Title)
+                    <a asp-controller="EBook" asp-action="Details" asp-route-id="@item.EBookID">
+                        @Html.DisplayFor(modelItem => item.EBook.Title)
                     </a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @Html.DisplayFor(modelItem => item.EBook.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Format)
+                    @Html.DisplayFor(modelItem => item.EBook.Format)
                 </td>
 
                 @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName) ||
@@ -74,7 +73,7 @@
                     <td>
                         <form asp-action="Details">
                             <input type="hidden" name="eReaderToModifyId" value=@Model.Id>
-                            <input type="hidden" name="eBookToDeleteId" value=@item.Id>
+                            <input type="hidden" name="eBookToDeleteId" value=@item.EBookID>
                             <input type="submit" value="Delete" class="btn btn-danger" />
                         </form>
                     </td>

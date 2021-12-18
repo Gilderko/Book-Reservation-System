@@ -1,7 +1,7 @@
 ﻿using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.User;
 using BL.DTOs.Enums;
-using DAL.Enums;
+using System.ComponentModel;
 
 namespace BL.DTOs.Entities.BookInstance
 {
@@ -11,6 +11,7 @@ namespace BL.DTOs.Entities.BookInstance
 
         public UserDTO Owner { get; set; }
 
+        [DisplayName("Book")]
         public BookDTO FromBookTemplate { get; set; }
     }
 }

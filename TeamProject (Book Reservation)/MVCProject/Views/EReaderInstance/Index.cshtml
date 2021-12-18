@@ -1,6 +1,6 @@
 ﻿@model PagedListViewModel<EReaderInstancePrevDTO>
 @using MVCProject.Config;
-@using BL.DTOs.Entities.EReaderInstance 
+@using BL.DTOs.Entities.EReaderInstance;
 
 @{
     ViewData["Title"] = "Index";
@@ -52,16 +52,16 @@
             <thead>
                 <tr>
                     <th>
-                        @nameof(EReaderInstancePrevDTO.Description)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Description)
                     </th>
                     <th>
-                        @nameof(EReaderInstancePrevDTO.EReaderTemplate.CompanyMake)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().EReaderTemplate.CompanyMake)
                     </th>
                     <th>
-                        @nameof(EReaderInstancePrevDTO.EReaderTemplate.Model)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().EReaderTemplate.Model)
                     </th>
                     <th>
-                        @nameof(EReaderInstancePrevDTO.EReaderTemplate.MemoryInMB)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().EReaderTemplate.MemoryInMB)
                     </th>
                     <th></th>
                 </tr>

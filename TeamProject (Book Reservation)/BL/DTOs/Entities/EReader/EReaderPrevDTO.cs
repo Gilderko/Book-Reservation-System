@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace BL.DTOs.Entities.EReader
 {
@@ -8,6 +9,7 @@ namespace BL.DTOs.Entities.EReader
         public string Model { get; set; }
 
         [StringLength(64)]
+        [DisplayName("Maufacturer")]
         public string CompanyMake { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using BL.DTOs.Entities.User;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BL.DTOs.Entities.BookCollection
@@ -17,12 +18,13 @@ namespace BL.DTOs.Entities.BookCollection
 
         [Required]
         [DataType(DataType.Date)]
-        [Display(Name = "Created on")]
+        [DisplayName("Created on")]
         public DateTime CreationDate { get; set; }
 
         [Required]
         public int UserId { get; set; }
 
+        [DisplayName("Owner")]
         public UserDTO OwnerUser { get; set; }
 
         // Many to many relationships

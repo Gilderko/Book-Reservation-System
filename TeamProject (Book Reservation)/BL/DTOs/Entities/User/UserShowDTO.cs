@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace BL.DTOs.Entities.User
 {
@@ -6,6 +6,7 @@ namespace BL.DTOs.Entities.User
     {
         public string Email { get; set; }
 
+        [DisplayName("Admin")]
         public bool IsAdmin { get; set; }
     }
 }
