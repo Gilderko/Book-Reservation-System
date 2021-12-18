@@ -1,5 +1,4 @@
-﻿using Autofac;
-using BL.DTOs.ConnectionTables;
+﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Enums;
 using BL.Facades;
@@ -113,13 +112,13 @@ namespace MVCProject.Controllers
 
             var collectToLoad = new[] { nameof(BookDTO.BookInstances), nameof(BookDTO.Reviews), nameof(BookDTO.Genres) };
 
-            var book = await _bookFacade.Get((int)id, collectToLoad: collectToLoad);
+            var book = await _bookFacade.Get(id.Value, collectToLoad: collectToLoad);
             if (book == null)
             {
                 return NotFound();
             }
 
-            book.Authors = await _bookFacade.GetAuthorBooksByBook((int)id);
+            book.Authors = await _bookFacade.GetAuthorBooksByBook(id.Value);
 
             return View(book);
         }
@@ -269,7 +268,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var book = await _bookFacade.Get((int)id);
+            var book = await _bookFacade.Get(id.Value);
             if (book == null)
             {
                 return NotFound();
@@ -289,26 +288,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _bookFacade.Update(book);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await BookExists(book.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = book.Id });
+                return View(book);
             }
-            return View(book);
+
+            try
+            {
+                _bookFacade.Update(book);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await BookExists(book.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details), new { id = book.Id });
         }
 
         // GET: Book/Delete/5
@@ -321,13 +322,13 @@ namespace MVCProject.Controllers
 
             var collectToLoad = new[] { nameof(BookDTO.BookInstances), nameof(BookDTO.Reviews), nameof(BookDTO.Genres) };
 
-            var book = await _bookFacade.Get((int)id, collectToLoad: collectToLoad);
+            var book = await _bookFacade.Get(id.Value, collectToLoad: collectToLoad);
             if (book == null)
             {
                 return NotFound();
             }
 
-            book.Authors = await _bookFacade.GetAuthorBooksByBook((int)id);
+            book.Authors = await _bookFacade.GetAuthorBooksByBook(id.Value);
 
             return View(book);
         }

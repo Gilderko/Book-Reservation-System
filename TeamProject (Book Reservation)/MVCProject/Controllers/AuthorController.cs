@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BL.Facades;
 using BL.DTOs.Entities.Author;
-using BL.DTOs.Entities.Book;
 using MVCProject.Config;
-using Autofac;
 using MVCProject.Models;
 using MVCProject.StateManager.FilterStates;
 using MVCProject.StateManager;
@@ -80,7 +78,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var author = await _facade.Get((int)id);
+            var author = await _facade.Get(id.Value);
             if (author == null)
             {
                 return NotFound();
@@ -131,7 +129,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var author = await _facade.Get((int)id);
+            var author = await _facade.Get(id.Value);
             if (author == null)
             {
                 return NotFound();
@@ -154,26 +152,27 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _facade.Update(author);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await AuthorExists(author.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = id });
+                return View(author);
             }
-            return View(author);
+            
+            try
+            {
+                _facade.Update(author);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await AuthorExists(author.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         // GET: Authors/Delete/5
@@ -184,7 +183,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var author = await _facade.Get((int)id);
+            var author = await _facade.Get(id.Value);
             if (author == null)
             {
                 return NotFound();

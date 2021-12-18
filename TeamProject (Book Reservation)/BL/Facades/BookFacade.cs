@@ -1,7 +1,6 @@
 ﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
-using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.User;
 using BL.DTOs.Enums;
 using BL.DTOs.Filters;
@@ -143,7 +142,7 @@ namespace BL.Facades
 
             if (language is not null)
             {
-                predicates.Add(new PredicateDto(nameof(Book.Language), (int)language, ValueComparingOperator.Contains));
+                predicates.Add(new PredicateDto(nameof(Book.Language), (int)language, ValueComparingOperator.Equal));
             }
 
             if (bookPageFrom is not null)

@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.Reservation;
 using MVCProject.StateManager;
 using BL.DTOs.ConnectionTables;
 using MVCProject.Config;
-using Autofac;
 
 namespace MVCProject.Controllers
 {
@@ -235,30 +229,32 @@ namespace MVCProject.Controllers
                 nameof(ReservationDTO.BookInstances)
             };          
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _facade.RemoveBookInstances(reservation, booksToDelete);
-                    if (eReaderInstanceDelete.HasValue)
-                    {
-                        _facade.RemoveEReaderInstance(reservation);
-                    }
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await ReservationExists(reservation.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = reservation.Id } );
+                return View(reservation);
             }
-            return View(reservation);
+            
+            try
+            {
+                _facade.RemoveBookInstances(reservation, booksToDelete);
+                if (eReaderInstanceDelete.HasValue)
+                {
+                    _facade.RemoveEReaderInstance(reservation);
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await ReservationExists(reservation.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details), new { id = reservation.Id });
         }       
 
         // GET: Reservation/Delete/5

@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.BookInstance;
 using MVCProject.Config;
-using Autofac;
 
 namespace MVCProject.Controllers
 {
@@ -84,7 +78,7 @@ namespace MVCProject.Controllers
 
             if (ModelState.IsValid)
             {
-                await _bookInstanceFacade.CreateUserBookInstance(userId, (int)id, bookInstance);
+                await _bookInstanceFacade.CreateUserBookInstance(userId, id, bookInstance);
                 return RedirectToAction(nameof(UserBookInstances));
             }
 
@@ -135,7 +129,7 @@ namespace MVCProject.Controllers
                 nameof(BookInstanceDTO.FromBookTemplate)
             };
 
-            var bookInstance = await _bookInstanceFacade.Get((int)id,references);
+            var bookInstance = await _bookInstanceFacade.Get(id.Value, references);
             if (bookInstance == null || (bookInstance.BookOwnerId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
@@ -160,7 +154,7 @@ namespace MVCProject.Controllers
                 nameof(BookInstanceDTO.FromBookTemplate)
             };
 
-            var bookInstance = await _bookInstanceFacade.Get((int)id, references);
+            var bookInstance = await _bookInstanceFacade.Get(id.Value, references);
             if (bookInstance == null || (bookInstance.BookOwnerId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
@@ -181,7 +175,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _bookInstanceFacade.Get((int)id);
+            var bookInstance = await _bookInstanceFacade.Get(id.Value);
             if (bookInstance == null || (bookInstance.BookOwnerId != int.Parse(User.Identity.Name)))
             {
                 return NotFound();
@@ -232,7 +226,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _bookInstanceFacade.Get((int)id);
+            var bookInstance = await _bookInstanceFacade.Get(id.Value);
             if (bookInstance == null)
             {
                 return NotFound();
@@ -250,27 +244,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             } 
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _bookInstanceFacade.Update(bookInstance);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await BookInstanceExists(bookInstance.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = bookInstance.Id });
+                return View(bookInstance);
             }
 
-            return View(bookInstance);
+            try
+            {
+                _bookInstanceFacade.Update(bookInstance);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await BookInstanceExists(bookInstance.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details), new { id = bookInstance.Id });
         }
 
         // GET: BookInstance/Delete/5
@@ -281,7 +276,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _bookInstanceFacade.Get((int)id);
+            var bookInstance = await _bookInstanceFacade.Get(id.Value);
 
             if (bookInstance == null || (bookInstance.BookOwnerId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {

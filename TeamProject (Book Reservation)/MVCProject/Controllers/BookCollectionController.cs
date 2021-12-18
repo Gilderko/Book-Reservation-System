@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BL.Facades;
 using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.ConnectionTables;
 using MVCProject.Config;
-using Autofac;
 
 namespace MVCProject.Controllers
 {
@@ -57,7 +52,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _bookCollectionFacade.GetBookCollectionWithBooksAndOwner((int)id);
+            var bookCollection = await _bookCollectionFacade.GetBookCollectionWithBooksAndOwner(id.Value);
             if (bookCollection == null || (bookCollection.UserId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
@@ -110,22 +105,23 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                int userId;
-                if (User.Identity.Name is not null)
-                {
-                    userId = int.Parse(User.Identity.Name);
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-
-                await _bookCollectionFacade.CreateUserCollection(bookCollection, userId);
-                return RedirectToAction(nameof(UserCollections));
+                return View(bookCollection);
             }
-            return View(bookCollection);
+
+            int userId;
+            if (User.Identity.Name is not null)
+            {
+                userId = int.Parse(User.Identity.Name);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            await _bookCollectionFacade.CreateUserCollection(bookCollection, userId);
+            return RedirectToAction(nameof(UserCollections));
         }
 
         // GET: BookCollection/UserAddBookInCollection
@@ -179,6 +175,7 @@ namespace MVCProject.Controllers
                 await _bookCollectionFacade.AddBookToCollection(bookCollectionBook);
                 return RedirectToAction(nameof(Details), new { id = bookCollectionBook.BookCollectionID });
             }
+
             return View(bookCollectionBook);
         }        
 
@@ -219,26 +216,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _bookCollectionFacade.UserEditCollection(bookCollection);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await BookCollectionExists(bookCollection.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = bookCollection.Id });
+                return View(bookCollection);
             }
-            return View(bookCollection);
+            
+            try
+            {
+                _bookCollectionFacade.UserEditCollection(bookCollection);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await BookCollectionExists(bookCollection.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details), new { id = bookCollection.Id });
         }
 
         // GET: BookCollection/Create
@@ -269,6 +268,7 @@ namespace MVCProject.Controllers
                 await _bookCollectionFacade.Create(bookCollection);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(bookCollection);
         }
 
@@ -302,26 +302,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _bookCollectionFacade.Update(bookCollection);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await BookCollectionExists(bookCollection.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = bookCollection.Id });
+                return View(bookCollection);
             }
-            return View(bookCollection);
+
+            try
+            {
+                _bookCollectionFacade.Update(bookCollection);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await BookCollectionExists(bookCollection.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details), new { id = bookCollection.Id });
         }
 
         // GET: BookCollection/Delete/5
@@ -332,7 +334,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookCollection = await _bookCollectionFacade.Get((int)id);
+            var bookCollection = await _bookCollectionFacade.Get(id.Value);
             if (bookCollection == null || (bookCollection.UserId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();

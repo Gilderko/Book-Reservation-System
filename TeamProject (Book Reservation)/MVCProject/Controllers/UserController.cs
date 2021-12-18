@@ -1,5 +1,4 @@
-﻿using Autofac;
-using BL.DTOs.Entities.User;
+﻿using BL.DTOs.Entities.User;
 using BL.Facades;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -43,7 +42,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _userFacade.Get((int)id);
+            var user = await _userFacade.Get(id.Value);
             if (user == null)
             {
                 return NotFound();
@@ -93,11 +92,12 @@ namespace MVCProject.Controllers
 
             int id = int.Parse(User.Identity.Name);            
 
-            var user = await _userFacade.Get((int)id);
+            var user = await _userFacade.Get(id);
             if (user == null)
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
@@ -111,11 +111,12 @@ namespace MVCProject.Controllers
 
             int id = int.Parse(User.Identity.Name);
 
-            var user = await _userFacade.GetEditDTO((int)id);
+            var user = await _userFacade.GetEditDTO(id);
             if (user == null)
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
@@ -129,21 +130,22 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _userFacade.UpdateCredentials(user);
-                }
-
-                catch (ArgumentException)
-                {
-                    ModelState.AddModelError("Email", "Account with that email already exists!");
-                    return View(user);
-                }
-                return RedirectToAction(nameof(MyAccount));
+                return View(user);
             }
-            return View(user);
+            
+            try
+            {
+                _userFacade.UpdateCredentials(user);
+            }
+            catch (ArgumentException)
+            {
+                ModelState.AddModelError("Email", "Account with that email already exists!");
+                return View(user);
+            }
+
+            return RedirectToAction(nameof(MyAccount));
         }
 
         // GET: User/Edit/5
@@ -154,11 +156,12 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var user = await _userFacade.Get((int)id);
+            var user = await _userFacade.Get(id.Value);
             if (user == null)
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
@@ -174,26 +177,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _userFacade.Update(user);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(user);
             }
-            return View(user);
+            
+            try
+            {
+                _userFacade.Update(user);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await UserExists(user.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: User/Delete/5
@@ -209,7 +214,7 @@ namespace MVCProject.Controllers
                 nameof(UserDTO.Reservations)
             };
 
-            var user = await _userFacade.Get((int)id,null,collectionsToLoad);
+            var user = await _userFacade.Get(id.Value, null, collectionsToLoad);
             if (user == null)
             {
                 return NotFound();
@@ -259,22 +264,23 @@ namespace MVCProject.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    //Here should be a check for existing user 
-                    await _userFacade.RegisterUserAsync(user);
-
-                    return RedirectToAction("Login", "User");
-                }
-                catch (Exception)
-                {
-                    ModelState.AddModelError("Email", "Account with that email already exists!");
-                    return View(user);
-                }
+                return View(user);
             }
-            return View(user);
+            
+            try
+            {
+                //Here should be a check for existing user 
+                await _userFacade.RegisterUserAsync(user);
+
+                return RedirectToAction("Login", "User");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("Email", "Account with that email already exists!");
+                return View(user);
+            }
         }
 
         // GET: User/Login
@@ -311,23 +317,24 @@ namespace MVCProject.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {     
-                    var user = await _userFacade.LoginAsync(userLogin);
-
-                    await CreateClaimsAndSignInAsync(user);
-
-                    return RedirectToAction("Index", "Home");
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    ModelState.AddModelError("Password", "Invalid credentials combination!");
-                    return View(userLogin);
-                }
+                return View(userLogin);
             }
-            return View(userLogin);
+            
+            try
+            {
+                var user = await _userFacade.LoginAsync(userLogin);
+
+                await CreateClaimsAndSignInAsync(user);
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (UnauthorizedAccessException)
+            {
+                ModelState.AddModelError("Password", "Invalid credentials combination!");
+                return View(userLogin);
+            }
         }
 
         private async Task CreateClaimsAndSignInAsync(UserShowDTO user)

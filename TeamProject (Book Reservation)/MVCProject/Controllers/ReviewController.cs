@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BL.Facades;
 using BL.DTOs.Entities.Review;
-using Microsoft.AspNetCore.Authorization;
 using MVCProject.Config;
 using MVCProject.StateManager;
-using Autofac;
 
 namespace MVCProject.Controllers
 {
@@ -31,7 +26,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var review = await GetWithReferences((int)id);
+            var review = await GetWithReferences(id.Value);
             if (review == null)
             {
                 return NotFound();
@@ -82,7 +77,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var review = await GetWithReferences((int)id);
+            var review = await GetWithReferences(id.Value);
             if (review == null || (review.UserID != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
@@ -107,26 +102,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _facade.Update(review);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await ReviewExists(review.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), "Book", new { id = review.BookTemplateID });
+                return View(review);
             }
-            return View(review);
+
+            try
+            {
+                _facade.Update(review);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await ReviewExists(review.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details), "Book", new { id = review.BookTemplateID });
         }
 
         // GET: Review/Delete/5
@@ -137,7 +134,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
             
-            var review = await GetWithReferences((int) id);
+            var review = await GetWithReferences(id.Value);
             if (review == null || (int.Parse(User.Identity.Name) != review.UserID && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();

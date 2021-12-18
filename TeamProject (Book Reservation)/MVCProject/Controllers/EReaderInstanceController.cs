@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.EReaderInstance;
 using MVCProject.Config;
 using BL.DTOs.ConnectionTables;
 using MVCProject.StateManager;
-using Autofac;
 using MVCProject.StateManager.FilterStates;
 using MVCProject.Models;
 
@@ -140,7 +134,7 @@ namespace MVCProject.Controllers
                 return NotFound();                    
             }
 
-            eReaderEbook.EBookID = (int)id;
+            eReaderEbook.EBookID = id.Value;
             if (await _eReaderInstanceFacade.CheckIfAlreadyHasBook(eReaderEbook.EReaderInstanceID, id.Value))
             {
                 return RedirectToAction(nameof(Details), new { id = eReaderEbook.EReaderInstanceID });
@@ -183,6 +177,7 @@ namespace MVCProject.Controllers
                 await _eReaderInstanceFacade.AddNewEReaderToUser(eReaderInstance, userId);
                 return RedirectToAction(nameof(UserEReaders));
             }
+
             return View(eReaderInstance);
         }
 
@@ -194,13 +189,13 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await GetWithReferences((int)id);
+            var eReaderInstance = await GetWithReferences(id.Value);
             if (eReaderInstance == null)
             {
                 return NotFound();
             }
 
-            var loadedBooks = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance((int)id);
+            var loadedBooks = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance(id.Value);
             eReaderInstance.BooksIncluded = loadedBooks;
             ViewData["eBooks"] = loadedBooks.Select(entry => entry.EBook);
 
@@ -267,13 +262,13 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await GetWithReferences((int)id);
+            var eReaderInstance = await GetWithReferences(id.Value);
             if (eReaderInstance == null || (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId))
             {
                 return NotFound();
             }
 
-            eReaderInstance.BooksIncluded = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance((int)id);
+            eReaderInstance.BooksIncluded = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance(id.Value);
 
             return View(eReaderInstance);
         }
@@ -291,26 +286,27 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _eReaderInstanceFacade.Update(eReaderInstance);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await EReaderInstanceExists(eReaderInstance.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = eReaderInstance.Id});
+                return View(eReaderInstance);
             }
-            return View(eReaderInstance);
+            
+            try
+            {
+                _eReaderInstanceFacade.Update(eReaderInstance);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await EReaderInstanceExists(eReaderInstance.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Details), new { id = eReaderInstance.Id });
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -320,13 +316,13 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await GetWithReferences((int)id);
+            var eReaderInstance = await GetWithReferences(id.Value);
             if (eReaderInstance == null)
             {
                 return NotFound();
             }
 
-            eReaderInstance.BooksIncluded = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance((int)id);
+            eReaderInstance.BooksIncluded = await _eReaderInstanceFacade.GetEBookEReaderInstancesByEReaderInstance(id.Value);
 
             return View(eReaderInstance);
         }
@@ -343,26 +339,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _eReaderInstanceFacade.Update(eReaderInstance);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await EReaderInstanceExists(eReaderInstance.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = eReaderInstance.Id });
+                return View(eReaderInstance);
             }
-            return View(eReaderInstance);
+
+            try
+            {
+                _eReaderInstanceFacade.Update(eReaderInstance);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await EReaderInstanceExists(eReaderInstance.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details), new { id = eReaderInstance.Id });
         }
 
         // GET: EReaderInstance/Delete/5
@@ -373,7 +371,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReaderInstance = await GetWithReferences((int)id);
+            var eReaderInstance = await GetWithReferences(id.Value);
             if (eReaderInstance == null || (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();

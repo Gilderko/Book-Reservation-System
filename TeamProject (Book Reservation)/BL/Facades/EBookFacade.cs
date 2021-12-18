@@ -75,7 +75,7 @@ namespace BL.Facades
 
             if (language is not null)
             {
-                predicates.Add(new PredicateDto(nameof(EBookPrevDTO.Language), (int)language, ValueComparingOperator.Contains));
+                predicates.Add(new PredicateDto(nameof(EBookPrevDTO.Language), (int)language, ValueComparingOperator.Equal));
             }
 
             if (pageFrom is not null)

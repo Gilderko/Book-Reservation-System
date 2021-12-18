@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
-using DAL.Entities;
 using BL.Facades;
 using BL.DTOs.Entities.EReader;
-using Autofac;
 using MVCProject.Config;
 
 namespace MVCProject.Controllers
@@ -38,7 +31,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReader = await _facade.Get((int)id);
+            var eReader = await _facade.Get(id.Value);
             if (eReader == null)
             {
                 return NotFound();
@@ -75,6 +68,7 @@ namespace MVCProject.Controllers
                 await _facade.Create(eReader);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(eReader);
         }
 
@@ -86,11 +80,12 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReader = await _facade.Get((int)id);
+            var eReader = await _facade.Get(id.Value);
             if (eReader == null)
             {
                 return NotFound();
             }
+
             return View(eReader);
         }
 
@@ -106,26 +101,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _facade.Update(eReader);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await EReaderExists(eReader.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(eReader);
             }
-            return View(eReader);
+            
+            try
+            {
+                _facade.Update(eReader);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await EReaderExists(eReader.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: EReader/Delete/5
@@ -136,7 +133,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eReader = await _facade.Get((int)id);
+            var eReader = await _facade.Get(id.Value);
             if (eReader == null)
             {
                 return NotFound();

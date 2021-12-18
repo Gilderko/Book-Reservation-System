@@ -1,5 +1,4 @@
-﻿using Autofac;
-using BL.DTOs.Entities.EBook;
+﻿using BL.DTOs.Entities.EBook;
 using BL.DTOs.Enums;
 using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
@@ -94,7 +93,7 @@ namespace MVCProject.Controllers
 
         private void SetViewDataForIndex(EBookFilterState bookFilterState)
         {
-            ViewData["eBook"] = false;
+            ViewData["eBook"] = true;
             ViewData["bookTitle"] = bookFilterState.Title;
             ViewData["authorName"] = bookFilterState.AuthorName;
             ViewData["authorSurname"] = bookFilterState.AuthorSurname;
@@ -115,7 +114,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _eBookFacade.Get((int)id);
+            var eBook = await _eBookFacade.Get(id.Value);
             if (eBook == null)
             {
                 return NotFound();
@@ -164,7 +163,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _eBookFacade.Get((int)id);
+            var eBook = await _eBookFacade.Get(id.Value);
             if (eBook == null)
             {
                 return NotFound();
@@ -184,26 +183,28 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _eBookFacade.Update(eBook);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await EBookExists(eBook.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Details), new { id = eBook.Id });
+                return View(eBook);
             }
-            return View(eBook);
+            
+            try
+            {
+                _eBookFacade.Update(eBook);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await EBookExists(eBook.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details), new { id = eBook.Id });
         }
 
         // GET: EBook/Delete/5
@@ -214,7 +215,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var eBook = await _eBookFacade.Get((int)id);
+            var eBook = await _eBookFacade.Get(id.Value);
             if (eBook == null)
             {
                 return NotFound();
