@@ -25,21 +25,27 @@
         <dd class="col-sm-10">
             @foreach (var item in Model.Authors)
             {
-                <a asp-controller="Author" asp-action="Details" asp-route-id="@item.AuthorID">
-                    @Html.DisplayFor(modelItem => item.Author.Name) @Html.DisplayFor(modelItem => item.Author.Surname)
-                </a>
-                if (User.IsInRole(GlobalConstants.AdminRoleName))
-                {
-                    <form asp-action="Details">
-                        <input type="hidden" name="bookId" value=@Model.Id>
-                        <input type="hidden" name="authorId" value=@item.AuthorID>
-                        <input type="submit" value="Delete" class="btn btn-danger" />
-                    </form>
-                }
+                <div class="row mb-1">
+                    <div class="col">
+                        <a asp-controller="Author" asp-action="Details" asp-route-id="@item.AuthorID">
+                            @Html.DisplayFor(modelItem => item.Author.Name) @Html.DisplayFor(modelItem => item.Author.Surname)
+                        </a>
+                    </div>
+                    @if (User.IsInRole(GlobalConstants.AdminRoleName))
+                    {
+                        <form asp-action="Details" class="col">
+                            <input type="hidden" name="bookId" value=@Model.Id>
+                            <input type="hidden" name="authorId" value=@item.AuthorID>
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    }
+                </div>
             }
             @if (User.IsInRole(GlobalConstants.AdminRoleName))
             {
-                <a asp-controller="Book" asp-action="AddAuthorToBook" asp-route-id="@Model.Id"> | Add author</a>
+                <a asp-controller="Book" asp-action="AddAuthorToBook" asp-route-id="@Model.Id" class="btn btn-primary">
+                    Add author
+                </a>
             }
         </dd>
         <dt class="col-sm-2">
@@ -48,19 +54,25 @@
         <dd class="col-sm-10">
             @foreach (var item in Model.Genres)
             {
-                <p style="margin-bottom: 0px">@((GenreTypeDTO)item.GenreID)</p>
-                if (User.IsInRole(GlobalConstants.AdminRoleName))
-                {
-                    <form asp-action="Details">
-                        <input type="hidden" name="bookId" value=@Model.Id>
-                        <input type="hidden" name="genreId" value=@item.GenreID>
-                        <input type="submit" value="Delete" class="btn btn-danger" />
-                    </form>
-                }
+                <div class="row mb-1">
+                    <div class="col">
+                        @((GenreTypeDTO)item.GenreID)
+                    </div>
+                    @if (User.IsInRole(GlobalConstants.AdminRoleName))
+                    {
+                        <form asp-action="Details" class="col">
+                            <input type="hidden" name="bookId" value=@Model.Id>
+                            <input type="hidden" name="genreId" value=@item.GenreID>
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    }
+                </div>
             }
             @if (User.IsInRole(GlobalConstants.AdminRoleName))
             {
-                <a asp-controller="Book" asp-action="AddGenreToBook" asp-route-id="@Model.Id"> | Add genre</a>
+                <a asp-controller="Book" asp-action="AddGenreToBook" asp-route-id="@Model.Id" class="btn btn-primary">
+                    Add genre
+                </a>
             }
         </dd>
         <dt class="col-sm-2">
@@ -96,7 +108,21 @@
     </dl>
 </div>
 <div>
-    <h5>Reviews</h5>    
+    <div class="row mb-1">
+        <div class="col">
+            <h5>Reviews</h5>
+        </div>
+        <div class="col d-flex justify-content-end">
+            @if (User.IsInRole(GlobalConstants.UserRoleName) &&
+                      !Model.Reviews.Any(entry => entry.UserID == int.Parse(User.Identity.Name)))
+            {
+                <a asp-controller="Review" asp-action="CreateReview" asp-route-id="@Model.Id" class="btn btn-primary">
+                    Create new review
+                </a>
+            }
+        </div>
+    </div>
+    
     <table class="table">
         <thead>
             <tr>
@@ -110,13 +136,7 @@
                     Content
                 </th>
                 <th>
-                    @if (User.IsInRole(GlobalConstants.UserRoleName) && 
-                        !Model.Reviews.Any(entry => entry.UserID == int.Parse(User.Identity.Name)))
-                    {
-                        <a asp-controller="Review" asp-action="CreateReview" asp-route-id="@Model.Id">
-                            Create new review
-                        </a>
-                    }
+
                 </th>
             </tr>
         </thead>

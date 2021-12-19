@@ -1,5 +1,4 @@
-﻿
-@using BL.DTOs.Entities.Book
+﻿@using BL.DTOs.Entities.Book
 @model  PagedListViewModel<BookPrevDTO>
 @using MVCProject.Config;
 
@@ -9,7 +8,7 @@
 
 <h1>Books</h1>
 
-<div class="float-container">
+<div class="float-container" style="width: 80vw">
     @await Html.PartialAsync("~/Views/BookFilter/_PartialBookFilter.cshtml")
 
     <div class="float-child-content">
@@ -19,23 +18,23 @@
                 <a asp-action="Create">Create New</a>
             </p>
         }
-        <table class="table" style="width:1100px; ">
+        <table class="table">
 
             <thead>
                 <tr>
                     <th>
-                        @nameof(BookPrevDTO.Title)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Title)
                     </th>
                     <th>
-                        @nameof(BookPrevDTO.Authors)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Authors)
                     </th>
                     <th>
-                        @nameof(BookPrevDTO.Description)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Description)
                     </th>
                     <th>
-                        @nameof(BookPrevDTO.Language)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Language)
                     </th>
-                    <th width="300px"></th>
+                    <th class="col-3"></th>
                 </tr>
             </thead>
             <tbody>

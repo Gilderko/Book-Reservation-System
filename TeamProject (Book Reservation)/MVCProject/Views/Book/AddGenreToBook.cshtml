@@ -6,7 +6,7 @@
     ViewData["Title"] = "AddGenreToBook";
 }
 
-<h1>Choose collection:</h1>
+<h1>Choose @Html.DisplayNameFor(model => model.Genre).ToLower():</h1>
 
 <hr />
 <div class="row">
@@ -14,12 +14,12 @@
         <form asp-action="AddGenreToBook">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="GenreID" class="control-label"></label>
+                <label asp-for="GenreID" class="control-label">@Html.DisplayNameFor(model => model.Genre)</label>
                 <select asp-for="GenreID" class="form-control" asp-items="Html.GetEnumSelectList<GenreTypeDTO>()"></select>
                 <span asp-validation-for="GenreID" class="text-danger"></span>
             </div>
             <div class="form-group">                
-                <input type="hidden" asp-for="BookID" value=@StateKeeper.Instance.ReadDataFromLastRequest(TempData,TempDataKeys.BookDTOId) class="form-control" />                
+                <input type="hidden" asp-for="BookID" value=@StateKeeper.Instance.ReadDataFromLastRequest(TempData, TempDataKeys.BookDTOId) class="form-control" />                
             </div>
             <div class="form-group">
                 <input type="submit" value="Add" class="btn btn-primary" />
@@ -29,7 +29,9 @@
 </div>
 
 <div>
-    <a asp-controller="Book" asp-action="Index">Back to List</a>
+    <a asp-controller="Book" asp-action="Details" asp-route-id="@StateKeeper.Instance.ReadDataFromLastRequest(TempData, TempDataKeys.BookDTOId)">
+        Back to @Html.DisplayNameFor(model => model.Book).ToLower()
+    </a>
 </div>
 
 @section Scripts {

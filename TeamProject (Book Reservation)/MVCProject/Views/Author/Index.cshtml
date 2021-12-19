@@ -37,13 +37,13 @@
             <thead>
                 <tr>
                     <th>
-                        @nameof(AuthorPrevDTO.Name)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Name)
                     </th>
                     <th>
-                        @nameof(AuthorPrevDTO.Surname)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Surname)
                     </th>
                     <th>
-                        @nameof(AuthorPrevDTO.Description)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Description)
                     </th>
                     <th></th>
                 </tr>
