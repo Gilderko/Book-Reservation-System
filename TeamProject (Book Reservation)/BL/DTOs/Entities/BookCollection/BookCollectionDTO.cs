@@ -22,6 +22,7 @@ namespace BL.DTOs.Entities.BookCollection
         public DateTime CreationDate { get; set; }
 
         [Required]
+        [DisplayName("User id")]
         public int UserId { get; set; }
 
         [DisplayName("Owner")]

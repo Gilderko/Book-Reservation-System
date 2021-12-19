@@ -13,28 +13,28 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Owner)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Owner.Name) @Html.DisplayFor(model => model.Owner.Surname)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FromBookTemplate.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FromBookTemplate.Title)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Condition)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Condition)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Owner)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Owner.Id)
-        </dd>
-        @*<dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.FromBookTemplate)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.FromBookTemplate.Discriminator)
-            </dd class>*@
     </dl>
 
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Delete" class="btn btn-danger" />
         @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName))
         {
             <a asp-action="UserBookInstances"> | Back to my books</a>

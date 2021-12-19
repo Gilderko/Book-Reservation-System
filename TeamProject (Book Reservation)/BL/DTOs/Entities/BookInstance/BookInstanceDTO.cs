@@ -14,11 +14,13 @@ namespace BL.DTOs.Entities.BookInstance
         public BookInstanceConditionDTO Condition { get; set; }
 
         [Required]
+        [DisplayName("Owner id")]
         public int BookOwnerId { get; set; }
 
         public UserDTO Owner { get; set; }
 
         [Required]
+        [DisplayName("Book id")]
         public int BookTemplateID { get; set; }
 
         [DisplayName("Book")]

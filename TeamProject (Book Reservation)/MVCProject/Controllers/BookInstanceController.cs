@@ -276,8 +276,13 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            var bookInstance = await _bookInstanceFacade.Get(id.Value);
+            var references = new string[]
+            {
+                nameof(BookInstanceDTO.Owner),
+                nameof(BookInstanceDTO.FromBookTemplate)
+            };
 
+            var bookInstance = await _bookInstanceFacade.Get(id.Value, references);
             if (bookInstance == null || (bookInstance.BookOwnerId != int.Parse(User.Identity.Name) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();

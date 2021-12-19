@@ -1,5 +1,6 @@
 ﻿@model BL.DTOs.Entities.EBook.EBookDTO
-@using MVCProject.Config
+@using BL.DTOs.Enums;
+@using MVCProject.Config;
 
 @{
     ViewData["Title"] = "Details";
@@ -11,53 +12,53 @@
     <h4>EBook</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MemorySize)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MemorySize)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Format)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Format)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ISBN)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ISBN)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PageCount)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PageCount)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DateOfRelease)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DateOfRelease)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Language)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Language)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MemorySize)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MemorySize)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Format)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Format)
         </dd>
     </dl>
 </div>
@@ -68,6 +69,6 @@
             <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
             <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
         </p>
-    }   
+    }
     <a asp-action="Index">Back to List</a>
 </div>

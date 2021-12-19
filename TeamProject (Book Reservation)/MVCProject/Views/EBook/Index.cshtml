@@ -7,7 +7,7 @@
 
 <h1>E-Books</h1>
 
-<div class="float-container">
+<div class="float-container" style="width: 80vw">
     @await Html.PartialAsync("~/Views/BookFilter/_PartialBookFilter.cshtml")
 
     <div class="float-child-content">
@@ -18,26 +18,26 @@
             </p>
         }
 
-        <table class="table" style="width:1100px; ">
+        <table class="table">
 
             <thead>
                 <tr>
                     <th>
-                        @nameof(EBookPrevDTO.Title)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Title)
                     </th>
                     <th>
-                        @nameof(EBookPrevDTO.Authors)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Authors)
                     </th>
                     <th>
-                        @nameof(EBookPrevDTO.Description)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Description)
                     </th>
                     <th>
-                        @nameof(EBookPrevDTO.Language)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Language)
                     </th>
                     <th>
-                        @nameof(EBookPrevDTO.Format)
+                        @Html.DisplayNameFor(model => model.List.FirstOrDefault().Format)
                     </th>
-                    <th width="300px"></th>
+                    <th class="col-3"></th>
                 </tr>
             </thead>
             <tbody>
@@ -72,7 +72,7 @@
                                 <br />
                             </div>
 
-                            @if (User.HasClaim(x => x.Value == GlobalConstants.AdminRoleName))
+                            @if (User.IsInRole(GlobalConstants.AdminRoleName))
                             {
                                 <div>
                                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>

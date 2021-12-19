@@ -18,10 +18,12 @@ namespace BL.DTOs.Entities.Reservation
         [DisplayName("To")]
         public DateTime DateTill { get; set; }
 
+        [DisplayName("User id")]
         public int? UserID { get; set; }
 
         public UserDTO User { get; set; }
 
+        [DisplayName("E-Reader id")]
         public int? EReaderID { get; set; }
 
         [DisplayName("E-Reader")]

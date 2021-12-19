@@ -13,16 +13,10 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Condition)
+            @Html.DisplayNameFor(model => model.Owner)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Condition)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Owner.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Owner.Name)
+            @Html.DisplayFor(model => model.Owner.Name) @Html.DisplayFor(model => model.Owner.Surname)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FromBookTemplate.Title)
@@ -100,7 +94,7 @@
 @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.BookOwnerId == int.Parse(User.Identity.Name))
 {
     <div>
-        <a asp-action="UserEditBookInstance" asp-route-id="@Model.Id">Edit my books</a>
+        <a asp-action="UserEditBookInstance" asp-route-id="@Model.Id">Edit my book</a>
         <a asp-action="UserBookInstances"> | Back to my books</a>
     </div>
 }
