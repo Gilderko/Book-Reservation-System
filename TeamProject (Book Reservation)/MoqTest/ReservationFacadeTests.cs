@@ -2,28 +2,16 @@ using Autofac.Extras.Moq;
 using AutoMapper;
 using BL.Config;
 using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.Author;
-using BL.DTOs.Entities.Book;
-using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.BookInstance;
-using BL.DTOs.Entities.EBook;
-using BL.DTOs.Entities.EReader;
 using BL.DTOs.Entities.EReaderInstance;
-using BL.DTOs.Entities.Genre;
 using BL.DTOs.Entities.Reservation;
-using BL.DTOs.Entities.User;
-using BL.DTOs.Enums;
 using BL.Facades;
 using BL.QueryObjects;
-using BL.Services;
 using BL.Services.Implementations;
-using DAL;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
 using Infrastructure.Query;
-using Infrastructure.Query.Predicates;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -228,8 +216,8 @@ namespace MoqTest
                 .Returns(data.Item2);
             var bookInstanceRepo = mock.Create<IRepository<BookInstance>>();
 
-            var reservBookInstanceQueryObject = 
-                new QueryObject<ReservationBookInstanceDTO, ReservationBookInstance>(_mapper,reservBookInstanceQuery);
+            var reservBookInstanceQueryObject =
+                new QueryObject<ReservationBookInstanceDTO, ReservationBookInstance>(_mapper, reservBookInstanceQuery);
 
             var reservService = new ReservationService(null, _mapper, null, null, reservBookInstanceQueryObject);
             var bookInstService = new CRUDService<BookInstanceDTO, BookInstance>(bookInstanceRepo, _mapper, null);
@@ -318,7 +306,7 @@ namespace MoqTest
                     Reservation = new Reservation()
                     {
                         DateFrom = new DateTime(1998,1,1),
-                        DateTill = new DateTime(1999,1,1) 
+                        DateTill = new DateTime(1999,1,1)
                     }
                 },
                 new ReservationBookInstance()
@@ -332,7 +320,7 @@ namespace MoqTest
             };
 
             return new Tuple<ReservationDTO, BookInstance, string[], string[], List<ReservationBookInstance>>
-                (reservation,bookInstanceToAdd,referencesToLoad,null, queryResult);
+                (reservation, bookInstanceToAdd, referencesToLoad, null, queryResult);
         }
 
         public Tuple<ReservationDTO, BookInstance, string[], string[], List<ReservationBookInstance>> GetEntriesAddBookInstance2()
@@ -413,7 +401,7 @@ namespace MoqTest
 
             var queryResult = new List<ReservationBookInstance>()
             {
-                
+
             };
 
             return new Tuple<ReservationDTO, BookInstance, string[], string[], List<ReservationBookInstance>>
@@ -513,8 +501,8 @@ namespace MoqTest
             var reservationDto = new ReservationDTO()
             {
                 Id = 1,
-                DateFrom = new DateTime(2005,1,1),
-                DateTill = new DateTime(2006,1,1)
+                DateFrom = new DateTime(2005, 1, 1),
+                DateTill = new DateTime(2006, 1, 1)
             };
 
             var referencesToLoad = new string[]
@@ -563,7 +551,7 @@ namespace MoqTest
 
             var queryResult = new List<Reservation>()
             {
-                
+
             };
 
             return new Tuple<ReservationDTO, EReaderInstance, string[], string[], List<Reservation>>
@@ -574,7 +562,7 @@ namespace MoqTest
         {
             var ereaderToadd = new EReaderInstance()
             {
-                Id = 1                
+                Id = 1
             };
 
             var reservationDto = new ReservationDTO()

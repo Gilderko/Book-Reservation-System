@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using BL.DTOs.Entities.BookInstance;
+using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BL.Facades;
-using BL.DTOs.Entities.BookInstance;
 using MVCProject.Config;
+using System;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
@@ -20,7 +20,7 @@ namespace MVCProject.Controllers
         // GET: BookInstance
         public async Task<IActionResult> Index()
         {
-            if(!User.IsInRole(GlobalConstants.AdminRoleName))
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }
@@ -74,7 +74,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            int userId = int.Parse(User.Identity.Name);    
+            int userId = int.Parse(User.Identity.Name);
 
             if (ModelState.IsValid)
             {
@@ -142,7 +142,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details(int? id, DateTime? StartDate, DateTime? EndDate)
         {
-            if (id == null || StartDate == null || EndDate == null 
+            if (id == null || StartDate == null || EndDate == null
                 || (!User.IsInRole(GlobalConstants.UserRoleName) && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
@@ -242,7 +242,7 @@ namespace MVCProject.Controllers
             if (id != bookInstance.Id || !User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
-            } 
+            }
 
             if (!ModelState.IsValid)
             {

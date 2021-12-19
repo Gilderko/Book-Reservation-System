@@ -1,18 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using BL.DTOs.Entities.Author;
+using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BL.Facades;
-using BL.DTOs.Entities.Author;
 using MVCProject.Config;
 using MVCProject.Models;
-using MVCProject.StateManager.FilterStates;
 using MVCProject.StateManager;
+using MVCProject.StateManager.FilterStates;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
     public class AuthorController : BaseController
     {
-        private readonly AuthorFacade _facade;        
+        private readonly AuthorFacade _facade;
 
         public AuthorController(AuthorFacade facade)
         {
@@ -156,7 +156,7 @@ namespace MVCProject.Controllers
             {
                 return View(author);
             }
-            
+
             try
             {
                 _facade.Update(author);

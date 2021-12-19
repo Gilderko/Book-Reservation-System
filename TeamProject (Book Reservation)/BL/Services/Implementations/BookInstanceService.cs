@@ -9,7 +9,7 @@ namespace BL.Services.Implementations
 {
     public class BookInstanceService : CRUDService<BookInstanceDTO, BookInstance>, IBookInstanceService
     {
-        public BookInstanceService(IRepository<BookInstance> repo, IMapper mapper, 
+        public BookInstanceService(IRepository<BookInstance> repo, IMapper mapper,
             QueryObject<BookInstanceDTO, BookInstance> queryObject) : base(repo, mapper, queryObject)
         {
         }

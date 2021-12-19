@@ -6,11 +6,10 @@ using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Infrastructure.Query.Operators;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -40,7 +39,7 @@ namespace BL.Facades
             return (await _bookPrevService.GetByID(bookId)) != null;
         }
 
-        public async Task<(IEnumerable<BookCollectionDTO>,int)> GetAllBookCollections()
+        public async Task<(IEnumerable<BookCollectionDTO>, int)> GetAllBookCollections()
         {
             var simplePredicate = new PredicateDto(nameof(BookCollectionDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);
 
@@ -105,7 +104,7 @@ namespace BL.Facades
                 Predicate = compPredicate
             };
 
-            if ((await _bookCollectionBookService.FilterBy(filter)).items.Count() == 0)
+            if (!(await _bookCollectionBookService.FilterBy(filter)).items.Any())
             {
                 await _bookCollectionBookService.Insert(new BookCollectionBookDTO
                 {
@@ -135,7 +134,6 @@ namespace BL.Facades
             _bookCollectionBookService.Delete(new BookCollectionBookDTO
             {
                 BookCollectionID = bookCollectionId,
-
                 BookID = bookId
             });
             _unitOfWork.Commit();
@@ -176,16 +174,16 @@ namespace BL.Facades
                 nameof(Book.Authors)
             };
 
-            FilterDto filter = new FilterDto()
+            var filter = new FilterDto()
             {
                 Predicate = new PredicateDto(nameof(Book.Id), bookIds, ValueComparingOperator.In)
             };
 
-            var books = await _bookPrevService.FilterBy(filter, null, collectionsToLoad);
+            var books = (await _bookPrevService.FilterBy(filter, null, collectionsToLoad)).items;
 
-            await _authorService.LoadAuthors(books.items);
+            await _authorService.LoadAuthors(books);
 
-            return books.items;
+            return books;
         }
     }
 }

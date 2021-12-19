@@ -1,7 +1,7 @@
+using BL.DTOs.Entities.Reservation;
 using DAL.Entities;
 using System;
 using System.Collections.Generic;
-using BL.DTOs.Entities.Reservation;
 using System.Threading.Tasks;
 
 namespace BL.Services

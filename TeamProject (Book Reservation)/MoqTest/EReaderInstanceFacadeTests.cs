@@ -1,23 +1,15 @@
 using Autofac.Extras.Moq;
 using AutoMapper;
 using BL.Config;
-using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.Author;
-using BL.DTOs.Entities.Book;
-using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.EReader;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.Facades;
 using BL.QueryObjects;
-using BL.Services;
 using BL.Services.Implementations;
-using DAL;
 using DAL.Entities;
-using DAL.Entities.ConnectionTables;
 using Infrastructure;
 using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +19,7 @@ using Xunit;
 
 
 namespace MoqTest
-{   
+{
     public class EReaderInstanceFacadeTests
     {
         private IMapper _mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
@@ -47,13 +39,13 @@ namespace MoqTest
                 .Returns(result().Item7);
 
             var ereaderInstanceQuery = mock.Create<IQuery<EReaderInstance>>();
-            
+
             var ereaderQueryObject = new QueryObject<EReaderPrevDTO, EReader>(_mapper, ereaderQuery);
-            var ereaderInstanceQueryObject = 
+            var ereaderInstanceQueryObject =
                 new QueryObject<EReaderInstancePrevDTO, EReaderInstance>(_mapper, ereaderInstanceQuery);
 
-            var ereaderService = new CRUDService<EReaderPrevDTO, EReader>(null,_mapper, ereaderQueryObject);
-            var ereaderInstanceService = new EReaderInstancePreviewService(null,_mapper, ereaderInstanceQueryObject);
+            var ereaderService = new CRUDService<EReaderPrevDTO, EReader>(null, _mapper, ereaderQueryObject);
+            var ereaderInstanceService = new EReaderInstancePreviewService(null, _mapper, ereaderInstanceQueryObject);
 
             var ereaderInstanceFacade = new EReaderInstanceFacade(uow, null, null, null, ereaderInstanceService,
                 ereaderService, null, null);
@@ -99,7 +91,7 @@ namespace MoqTest
 
         private static async Task Evaluate(AutoMock mock, EReaderInstanceFacade bookCollectionFacade, Tuple<string, string, string, int?, int?, QueryResult<EReader>, QueryResult<EReaderInstance>> data)
         {
-            var (result, _) = await bookCollectionFacade.GetEReaderInstancePrevsBy(null,null,data.Item1, data.Item2, data.Item3, data.Item4, data.Item5);
+            var (result, _) = await bookCollectionFacade.GetEReaderInstancePrevsBy(null, null, data.Item1, data.Item2, data.Item3, data.Item4, data.Item5);
 
             EReaderInstanceInvocationsInclude(mock, data.Item1);
             EReaderInvocationsInclude(mock, data.Item2);
@@ -123,7 +115,7 @@ namespace MoqTest
                                 .Where(invo => invo.Arguments[0] is CompositePredicate)
                                 .Select(invo => invo.Arguments[0] as CompositePredicate).First();
 
-            Assert.Contains(predicates.Predicates, pred => (pred as SimplePredicate).ComparedValue.Equals(argument));                               
+            Assert.Contains(predicates.Predicates, pred => (pred as SimplePredicate).ComparedValue.Equals(argument));
         }
 
         private static void EReaderInstanceInvocationsInclude(AutoMock mock, object argument)

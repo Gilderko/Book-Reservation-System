@@ -1,12 +1,9 @@
-﻿using System;
-using BL.DTOs.Entities.Review;
+﻿using BL.DTOs.Entities.Review;
 using BL.Services;
 using DAL.Entities;
-using System.Threading.Tasks;
 using Infrastructure;
-using System.Collections.Generic;
-using BL.DTOs.Filters;
-using Infrastructure.Query.Operators;
+using System;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {

@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using BL.DTOs.Entities.User;
 using DAL.Entities;
+using System.Threading.Tasks;
 
 namespace BL.Services
 {

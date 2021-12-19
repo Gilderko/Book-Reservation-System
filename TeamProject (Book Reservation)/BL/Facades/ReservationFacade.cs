@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using BL.DTOs.ConnectionTables;
+﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Entities.Reservation;
+using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
-using Infrastructure;
-using System.Threading.Tasks;
-using BL.DTOs.Filters;
-using Infrastructure.Query.Operators;
-using System.Linq;
 using DAL.Entities.ConnectionTables;
+using Infrastructure;
+using Infrastructure.Query.Operators;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -22,7 +22,7 @@ namespace BL.Facades
         private ICRUDService<EReaderInstanceDTO, EReaderInstance> _EReaderInstanceService;
         private ICRUDService<ReservationBookInstanceDTO, ReservationBookInstance> _reservationBookInstanceService;
 
-        public ReservationFacade(IUnitOfWork unitOfWork, 
+        public ReservationFacade(IUnitOfWork unitOfWork,
                                  IReservationService service,
                                  ICRUDService<BookInstanceDTO, BookInstance> bookInstanceService,
                                  ICRUDService<EReaderInstanceDTO, EReaderInstance> eReaderInstanceService,
@@ -35,9 +35,9 @@ namespace BL.Facades
             _reservationBookInstanceService = reservationBookInstanceService;
         }
 
-        public async Task<(IEnumerable<ReservationDTO>,int)> GetAllReservations()
+        public async Task<(IEnumerable<ReservationDTO>, int)> GetAllReservations()
         {
-            FilterDto filter = new FilterDto()
+            var filter = new FilterDto()
             {
                 Predicate = null,
                 SortCriteria = nameof(Reservation.UserID),
@@ -68,7 +68,7 @@ namespace BL.Facades
             };
 
             // Got the reservation
-            var reservation = await _reservationService.GetByID(id, null, collRefToLoad);            
+            var reservation = await _reservationService.GetByID(id, null, collRefToLoad);
 
             var refBookInstToLoad = new string[]
             {
@@ -129,10 +129,10 @@ namespace BL.Facades
 
             var reservations = await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, null, null);
 
-            if (!CheckIsAvailable(reservations,reservation))
+            if (!CheckIsAvailable(reservations, reservation))
             {
                 return;
-            }            
+            }
 
             ReservationBookInstanceDTO resBookInstance = new ReservationBookInstanceDTO()
             {
@@ -151,7 +151,7 @@ namespace BL.Facades
         {
             var referencesToLoad = new string[]
             {
-                nameof(EReaderInstanceDTO.Owner),               
+                nameof(EReaderInstanceDTO.Owner),
             };
 
             var eReaderInstance = await _EReaderInstanceService.GetByID(eReaderInstanceId, referencesToLoad);
@@ -166,10 +166,10 @@ namespace BL.Facades
             if (!CheckIsAvailable(reservations, reservation))
             {
                 return;
-            }            
+            }
 
             reservation.EReaderID = eReaderInstanceId;
-            reservation.EReader = eReaderInstance;     
+            reservation.EReader = eReaderInstance;
 
             _unitOfWork.Commit();
         }
@@ -231,8 +231,8 @@ namespace BL.Facades
 
             newReservation.User = null;
             newReservation.EReader = null;
-            
-            foreach(var bookInstAndReserv in newReservation.BookInstances)
+
+            foreach (var bookInstAndReserv in newReservation.BookInstances)
             {
                 bookInstAndReserv.BookInstance = null;
                 bookInstAndReserv.Reservation = null;
@@ -258,7 +258,7 @@ namespace BL.Facades
                 nameof(ReservationDTO.EReader)
             };
 
-            FilterDto filter = new FilterDto()
+            var filter = new FilterDto()
             {
                 Predicate = predicate,
                 SortCriteria = nameof(Reservation.DateFrom),

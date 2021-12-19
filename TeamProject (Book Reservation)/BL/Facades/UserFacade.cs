@@ -1,17 +1,16 @@
-﻿using System;
-using BL.DTOs.Entities.BookCollection;
+﻿using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.EReaderInstance;
+using BL.DTOs.Entities.Reservation;
 using BL.DTOs.Entities.User;
+using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
-using System.Threading.Tasks;
 using Infrastructure;
-using System.IO;
-using System.Collections.Generic;
-using BL.DTOs.Filters;
 using Infrastructure.Query.Operators;
-using BL.DTOs.Entities.Reservation;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -66,13 +65,11 @@ namespace BL.Facades
                 _reservationCrud.Update(reservation);
             }
 
-            //_unitOfWork.Commit();
-
             _userService.DeleteById(id);
             _unitOfWork.Commit();
         }
 
-        public async Task<(IEnumerable<UserDTO>,int)> GetAllUsers()
+        public async Task<(IEnumerable<UserDTO>, int)> GetAllUsers()
         {
             var simplePredicate = new PredicateDto(nameof(UserDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);
 
@@ -108,14 +105,14 @@ namespace BL.Facades
             await _bookInstanceCrud.Insert(bookInstance);
             _unitOfWork.Commit();
         }
-        
+
         public async Task AddEreaderInstance(int ownerId, EReaderInstanceDTO eReaderInstance)
         {
             eReaderInstance.EreaderOwnerId = ownerId;
             await _eReaderInstanceCrud.Insert(eReaderInstance);
             _unitOfWork.Commit();
         }
-        
+
         public async Task<UserShowDTO> LoginAsync(UserLoginDTO userLogin)
         {
             var user = await _userService.AuthorizeUserAsync(userLogin);
@@ -133,7 +130,7 @@ namespace BL.Facades
             {
                 throw new ArgumentException("User with this email already exist!");
             }
-            
+
             await _userService.RegisterUser(user);
             _unitOfWork.Commit();
         }

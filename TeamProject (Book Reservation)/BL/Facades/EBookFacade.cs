@@ -1,13 +1,13 @@
 ﻿using BL.DTOs.Entities.EBook;
-using System.Threading.Tasks;
+using BL.DTOs.Enums;
+using BL.DTOs.Filters;
 using BL.Services;
 using DAL.Entities;
 using Infrastructure;
-using System.Collections.Generic;
-using BL.DTOs.Enums;
-using System;
-using BL.DTOs.Filters;
 using Infrastructure.Query.Operators;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -19,10 +19,10 @@ namespace BL.Facades
         private IAuthorService _authorService;
         private IGenreService _genreService;
 
-        public EBookFacade(IUnitOfWork unitOfWork, 
-                           ICRUDService<EBookDTO, EBook> service, 
-                           IAuthorService authorService, 
-                           IGenreService genreService, 
+        public EBookFacade(IUnitOfWork unitOfWork,
+                           ICRUDService<EBookDTO, EBook> service,
+                           IAuthorService authorService,
+                           IGenreService genreService,
                            ICRUDService<EBookPrevDTO, EBook> eBookPrevService)
         {
             _unitOfWork = unitOfWork;
@@ -32,7 +32,7 @@ namespace BL.Facades
             _eBookPrevService = eBookPrevService;
         }
 
-        public async Task<(IEnumerable<EBookPrevDTO>,int)> GetBookPreviews(int? page,
+        public async Task<(IEnumerable<EBookPrevDTO>, int)> GetBookPreviews(int? page,
                                                                    int? pageSize,
                                                                    string title,
                                                                    string authorName,
@@ -45,8 +45,8 @@ namespace BL.Facades
                                                                    DateTime? releaseTo,
                                                                    EBookFormatDTO? format)
         {
-            FilterDto filter = new FilterDto();
-            
+            var filter = new FilterDto();
+
             if (page != null && pageSize != null)
             {
                 filter.RequestedPageNumber = page.Value;

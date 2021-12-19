@@ -100,7 +100,7 @@
 @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.BookOwnerId == int.Parse(User.Identity.Name))
 {
     <div>
-        <a asp-action="UserEditBookInstance" asp-route-id="@Model.Id">User Edit</a>
+        <a asp-action="UserEditBookInstance" asp-route-id="@Model.Id">Edit my books</a>
         <a asp-action="UserBookInstances"> | Back to my books</a>
     </div>
 }
@@ -109,7 +109,7 @@
 {
     <div>
         <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        <a asp-action="Index"> | Back to all book</a>
+        <a asp-action="Index"> | Back to all books</a>
     </div>
 }
 @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.AdminRoleName) ||

@@ -2,26 +2,16 @@ using Autofac.Extras.Moq;
 using AutoMapper;
 using BL.Config;
 using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
-using BL.DTOs.Entities.BookCollection;
-using BL.DTOs.Entities.EBook;
-using BL.DTOs.Entities.EReader;
-using BL.DTOs.Entities.EReaderInstance;
-using BL.DTOs.Entities.Genre;
 using BL.DTOs.Entities.User;
-using BL.DTOs.Enums;
 using BL.Facades;
 using BL.QueryObjects;
-using BL.Services;
 using BL.Services.Implementations;
-using DAL;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
 using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +19,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace MoqTest
-{   
+{
     public class BookFacadeTests
     {
         private IMapper _mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
@@ -48,10 +38,10 @@ namespace MoqTest
 
             mock.Mock<IQuery<ReservationBookInstance>>()
                 .Setup(x => x.Execute().Result)
-                .Returns(new QueryResult<ReservationBookInstance>() { Items = new List<ReservationBookInstance>()});
+                .Returns(new QueryResult<ReservationBookInstance>() { Items = new List<ReservationBookInstance>() });
 
             var reservationBookInstanceQuery = mock.Create<IQuery<ReservationBookInstance>>();
-            var reservationBookInstanceQueryObject = 
+            var reservationBookInstanceQueryObject =
                 new QueryObject<ReservationBookInstanceDTO, ReservationBookInstance>(_mapper, reservationBookInstanceQuery);
 
             var userService = new CRUDService<UserDTO, User>(userRepo, _mapper, null);
@@ -125,7 +115,7 @@ namespace MoqTest
         {
             var predicates = mock.Mock<IRepository<User>>().Invocations
                                 .Where(invo => invo.Method.Name == nameof(IRepository<User>.GetByID))
-                                .Select(invo => (int) invo.Arguments[0]);
+                                .Select(invo => (int)invo.Arguments[0]);
 
             Assert.Contains(predicates, pred => pred.Equals(argument));
         }
@@ -139,17 +129,17 @@ namespace MoqTest
             Assert.Contains(predicates, pred => pred.ComparedValue.Equals(argument));
         }
 
-        public Tuple<Book,string[],string[]> GetEntries()
+        public Tuple<Book, string[], string[]> GetEntries()
         {
-            var bookInst1 = new BookInstance() 
-            { 
-                Id = 1, 
-                BookOwnerId = 1 
+            var bookInst1 = new BookInstance()
+            {
+                Id = 1,
+                BookOwnerId = 1
             };
-            var bookInst2 = new BookInstance() 
-            { 
-                Id = 2, 
-                BookOwnerId = 2 
+            var bookInst2 = new BookInstance()
+            {
+                Id = 2,
+                BookOwnerId = 2
             };
 
             var review1 = new Review()
@@ -235,12 +225,12 @@ namespace MoqTest
 
             var book = new Book()
             {
-                Id = 1,                
+                Id = 1,
                 Reviews = new List<Review>
                 {
                     review1, review2
                 },
-                BookInstances = new List<BookInstance>()                
+                BookInstances = new List<BookInstance>()
             };
 
             var colToLoad = new string[]

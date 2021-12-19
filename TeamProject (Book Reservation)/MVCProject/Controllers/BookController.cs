@@ -18,7 +18,7 @@ namespace MVCProject.Controllers
         private readonly BookFacade _bookFacade;
 
         public BookController(BookFacade facade)
-        {            
+        {
             _bookFacade = facade;
         }
 
@@ -43,7 +43,7 @@ namespace MVCProject.Controllers
 
             TempData.Put<BookFilterState>(TempDataKeys.BookFilter.ToString(), bookFilterState);
             return View(pagedModel);
-        }       
+        }
 
         // POST: Book
         [HttpPost]
@@ -77,10 +77,10 @@ namespace MVCProject.Controllers
 
             var model = await _bookFacade.GetBookPreviews(page, PageSize, bookFilterState.Title,
                 bookFilterState.AuthorName, bookFilterState.AuthorSurname, bookFilterState.Genres,
-                bookFilterState.Language, bookFilterState.PageFrom, bookFilterState.PageTo, 
+                bookFilterState.Language, bookFilterState.PageFrom, bookFilterState.PageTo,
                 bookFilterState.ReleaseFrom, bookFilterState.ReleaseTo);
 
-            var pagedModel = new PagedListViewModel<BookPrevDTO>(new PaginationViewModel(page, model.totalNumberOfBooks, PageSize), 
+            var pagedModel = new PagedListViewModel<BookPrevDTO>(new PaginationViewModel(page, model.totalNumberOfBooks, PageSize),
                                                                  model.bookPrevs);
 
             TempData.Put<BookFilterState>(TempDataKeys.BookFilter.ToString(), bookFilterState);
@@ -144,7 +144,7 @@ namespace MVCProject.Controllers
             else if (authorId != null)
             {
                 _bookFacade.RemoveAuthorFromBook(bookId.Value, authorId.Value);
-            }                        
+            }
 
             return RedirectToAction(nameof(Details), new { id = bookId });
         }

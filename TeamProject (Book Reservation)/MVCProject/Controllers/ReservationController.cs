@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.Reservation;
+using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BL.Facades;
-using BL.DTOs.Entities.Reservation;
-using MVCProject.StateManager;
-using BL.DTOs.ConnectionTables;
 using MVCProject.Config;
+using MVCProject.StateManager;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
@@ -39,7 +39,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            int id = int.Parse(User.Identity.Name);            
+            int id = int.Parse(User.Identity.Name);
 
             return View(await _facade.GetReservationsByUserId(id));
         }
@@ -54,7 +54,7 @@ namespace MVCProject.Controllers
 
             var reservation = await _facade.GetDetailWithLoadedBooks(id.Value);
 
-            if (reservation == null || 
+            if (reservation == null ||
                 !(int.Parse(User.Identity.Name) == reservation.UserID || User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
@@ -75,7 +75,7 @@ namespace MVCProject.Controllers
             if (reservation == null || int.Parse(User.Identity.Name) != reservation.UserID)
             {
                 return NotFound();
-            }            
+            }
 
             return View(reservation);
         }
@@ -210,7 +210,7 @@ namespace MVCProject.Controllers
             }
 
             return View(reservation);
-        }        
+        }
 
         // POST: Reservation/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -227,13 +227,13 @@ namespace MVCProject.Controllers
             var collectToLoad = new string[]
             {
                 nameof(ReservationDTO.BookInstances)
-            };          
+            };
 
             if (!ModelState.IsValid)
             {
                 return View(reservation);
             }
-            
+
             try
             {
                 _facade.RemoveBookInstances(reservation, booksToDelete);
@@ -255,7 +255,7 @@ namespace MVCProject.Controllers
             }
 
             return RedirectToAction(nameof(Details), new { id = reservation.Id });
-        }       
+        }
 
         // GET: Reservation/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -285,8 +285,8 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            _facade.Delete(id);     
-            
+            _facade.Delete(id);
+
             if (User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return RedirectToAction(nameof(Index));

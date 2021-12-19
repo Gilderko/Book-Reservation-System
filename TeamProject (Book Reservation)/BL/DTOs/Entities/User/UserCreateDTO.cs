@@ -20,7 +20,7 @@ namespace BL.DTOs.Entities.User
         [Required]
         [StringLength(255)]
         public string Password { get; set; }
-        
+
         public string HashedPassword { get; set; }
 
         [Required]

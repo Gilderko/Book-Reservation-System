@@ -1,13 +1,11 @@
 using Autofac;
 using BL.Config;
-using BL.Facades;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MVCProject.StateManager;
 using System;
 
 namespace MVCProject

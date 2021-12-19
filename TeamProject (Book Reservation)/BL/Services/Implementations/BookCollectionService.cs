@@ -15,7 +15,7 @@ namespace BL.Services.Implementations
     {
         private readonly QueryObject<BookCollectionPrevDTO, BookCollection> _queryObject;
 
-        public BookCollectionService(IRepository<BookCollection> repo, 
+        public BookCollectionService(IRepository<BookCollection> repo,
                                             IMapper mapper,
                                             QueryObject<BookCollectionDTO, BookCollection> queryObjectBase,
                                             QueryObject<BookCollectionPrevDTO, BookCollection> queryObject) : base(repo, mapper, queryObjectBase)

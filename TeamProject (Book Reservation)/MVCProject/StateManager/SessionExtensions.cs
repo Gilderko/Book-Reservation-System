@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using MVCProject.StateManager;
 using Newtonsoft.Json;
 
 namespace MVCProject.StateManager

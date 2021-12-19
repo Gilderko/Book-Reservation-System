@@ -2,8 +2,6 @@
 using DAL.Entities;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EFInfrastructure
@@ -21,7 +19,7 @@ namespace EFInfrastructure
 
         public async Task<TEntity> GetByID(int id, string[] refsToLoad = null, string[] collectionsToLoad = null)
         {
-            TEntity loadedEntity = await dbSet.FindAsync(id);            
+            TEntity loadedEntity = await dbSet.FindAsync(id);
 
             if (loadedEntity != null)
             {
@@ -63,7 +61,7 @@ namespace EFInfrastructure
             if (dbContext.Entry(entityToDelete).State == EntityState.Detached)
             {
                 dbSet.Attach(entityToDelete);
-            }            
+            }
             dbSet.Remove(entityToDelete);
         }
 

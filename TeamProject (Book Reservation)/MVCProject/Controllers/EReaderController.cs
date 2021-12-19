@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using BL.DTOs.Entities.EReader;
+using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BL.Facades;
-using BL.DTOs.Entities.EReader;
 using MVCProject.Config;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
@@ -105,7 +105,7 @@ namespace MVCProject.Controllers
             {
                 return View(eReader);
             }
-            
+
             try
             {
                 _facade.Update(eReader);
@@ -147,7 +147,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            if(!User.IsInRole(GlobalConstants.AdminRoleName))
+            if (!User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 return NotFound();
             }

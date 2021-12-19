@@ -7,7 +7,6 @@ using Infrastructure.Query.Predicates;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -119,10 +118,10 @@ namespace EFInfrastructure
                 }
                 else if (simplePred.ComparedValue is DateTime)
                 {
-                    var date = (DateTime) simplePred.ComparedValue;
+                    var date = (DateTime)simplePred.ComparedValue;
                     cmpValFormat = String.Format("'{0:0000}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}'", date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
                 }
-                else 
+                else
                 {
                     cmpValFormat = $"{simplePred.ComparedValue}";
                 }
@@ -167,7 +166,7 @@ namespace EFInfrastructure
             {
                 SortBy(nameof(BaseEntity.Id), true);
             }
-           
+
             _page = $"OFFSET {(ipageToFetch - 1) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY";
         }
 

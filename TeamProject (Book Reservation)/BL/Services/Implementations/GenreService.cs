@@ -5,10 +5,8 @@ using BL.DTOs.Filters;
 using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BL.Services.Implementations

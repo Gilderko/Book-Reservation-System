@@ -1,15 +1,15 @@
 using AutoMapper;
+using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.Reservation;
 using BL.DTOs.Filters;
 using BL.QueryObjects;
 using DAL.Entities;
+using DAL.Entities.ConnectionTables;
+using Infrastructure;
 using Infrastructure.Query.Operators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.Reservation;
-using DAL.Entities.ConnectionTables;
-using Infrastructure;
 using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
@@ -24,7 +24,7 @@ namespace BL.Services.Implementations
                                   IMapper mapper,
                                   QueryObject<ReservationDTO, Reservation> baseQueryObject,
                                   QueryObject<ReservationPrevDTO, Reservation> resQueryObject,
-                                  QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base (repo, mapper, baseQueryObject)
+                                  QueryObject<ReservationBookInstanceDTO, ReservationBookInstance> reservationBookInstanceQueryObject) : base(repo, mapper, baseQueryObject)
         {
             _baseResQueryObject = baseQueryObject;
             _resQueryObject = resQueryObject;
@@ -56,7 +56,7 @@ namespace BL.Services.Implementations
         {
             List<PredicateDto> predicates = new List<PredicateDto>
             {
-                new PredicateDto(nameof(Reservation.EReaderID), eReaderId, ValueComparingOperator.Equal)                
+                new PredicateDto(nameof(Reservation.EReaderID), eReaderId, ValueComparingOperator.Equal)
             };
 
             if (from != null)
@@ -80,27 +80,27 @@ namespace BL.Services.Implementations
 
             return (await _resQueryObject.ExecuteQuery(filter)).Items;
         }
-        
+
         public async Task<IEnumerable<ReservationPrevDTO>> GetReservationPrevsByBookInstance(int bookId, DateTime? from, DateTime? to)
         {
             string[] referencesToLoad = new[]
             {
                 nameof(ReservationBookInstanceDTO.Reservation)
             };
-                
+
             _reservationBookInstanceQueryObject.LoadExplicitReferences(instance => referencesToLoad);
-            
+
             FilterDto filter = new FilterDto()
             {
                 Predicate = new PredicateDto(nameof(ReservationBookInstanceDTO.BookInstanceID), bookId, ValueComparingOperator.Equal),
                 SortCriteria = nameof(ReservationBookInstanceDTO.ReservationID),
                 SortAscending = false,
             };
-            
+
             var result = (await _reservationBookInstanceQueryObject.ExecuteQuery(filter)).Items;
 
             var reservations = result;
-            
+
             // Filter by date
             if (from != null && to != null)
             {

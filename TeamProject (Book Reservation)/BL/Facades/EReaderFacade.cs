@@ -20,7 +20,7 @@ namespace BL.Facades
             _service = service;
         }
 
-        public async Task<(IEnumerable<EReaderDTO>,int)> GetAllEReaders()
+        public async Task<(IEnumerable<EReaderDTO>, int)> GetAllEReaders()
         {
             var simplePredicate = new PredicateDto(nameof(EReaderDTO.Id), 1, ValueComparingOperator.GreaterThanOrEqual);
 

@@ -1,14 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.EReaderInstance;
+using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BL.Facades;
-using BL.DTOs.Entities.EReaderInstance;
 using MVCProject.Config;
-using BL.DTOs.ConnectionTables;
+using MVCProject.Models;
 using MVCProject.StateManager;
 using MVCProject.StateManager.FilterStates;
-using MVCProject.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
@@ -131,7 +131,7 @@ namespace MVCProject.Controllers
             var eReaderExists = await EReaderInstanceExists(eReaderEbook.EReaderInstanceID);
             if (!eReaderExists)
             {
-                return NotFound();                    
+                return NotFound();
             }
 
             eReaderEbook.EBookID = id.Value;
@@ -170,7 +170,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            int userId = int.Parse(User.Identity.Name);            
+            int userId = int.Parse(User.Identity.Name);
 
             if (ModelState.IsValid)
             {
@@ -211,7 +211,7 @@ namespace MVCProject.Controllers
             };
 
             var eReaderInstance = await _eReaderInstanceFacade.Get(eReaderToModifyId);
-            if (eReaderInstance == null || (eReaderInstance.EreaderOwnerId != int.Parse(User.Identity.Name) 
+            if (eReaderInstance == null || (eReaderInstance.EreaderOwnerId != int.Parse(User.Identity.Name)
                 && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {
                 return NotFound();
@@ -280,7 +280,7 @@ namespace MVCProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEditEReaderInstance(int id, [Bind("Description,EreaderOwnerId,EReaderTemplateID,Id")] EReaderInstanceDTO eReaderInstance)
         {
-            if (id != eReaderInstance.Id || !User.IsInRole(GlobalConstants.UserRoleName) || 
+            if (id != eReaderInstance.Id || !User.IsInRole(GlobalConstants.UserRoleName) ||
                 (int.Parse(User.Identity.Name) != eReaderInstance.EreaderOwnerId))
             {
                 return NotFound();
@@ -290,7 +290,7 @@ namespace MVCProject.Controllers
             {
                 return View(eReaderInstance);
             }
-            
+
             try
             {
                 _eReaderInstanceFacade.Update(eReaderInstance);
@@ -427,7 +427,7 @@ namespace MVCProject.Controllers
                 nameof(EReaderInstanceDTO.Reservations)
             };
 
-            return await _eReaderInstanceFacade.Get(id,refsToLoad,collsToLoad);
+            return await _eReaderInstanceFacade.Get(id, refsToLoad, collsToLoad);
         }
     }
 }

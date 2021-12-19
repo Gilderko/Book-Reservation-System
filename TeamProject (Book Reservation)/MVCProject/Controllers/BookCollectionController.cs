@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using BL.DTOs.ConnectionTables;
+using BL.DTOs.Entities.BookCollection;
+using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BL.Facades;
-using BL.DTOs.Entities.BookCollection;
-using BL.DTOs.ConnectionTables;
 using MVCProject.Config;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
@@ -78,7 +78,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            _bookCollectionFacade.DeleteBookFromCollection(bookCollectionId,bookToDeleteId);
+            _bookCollectionFacade.DeleteBookFromCollection(bookCollectionId, bookToDeleteId);
 
             return RedirectToAction(nameof(Details), new { id = bookCollectionId });
         }
@@ -138,7 +138,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            int userId = int.Parse(User.Identity.Name);            
+            int userId = int.Parse(User.Identity.Name);
 
             var collectionPrevs = await _bookCollectionFacade.GetBookCollectionPrevsByUser(userId);
 
@@ -177,7 +177,7 @@ namespace MVCProject.Controllers
             }
 
             return View(bookCollectionBook);
-        }        
+        }
 
         // GET: BookCollection/UserEditCollection/5
         public async Task<IActionResult> UserEditCollection(int? id)
@@ -220,7 +220,7 @@ namespace MVCProject.Controllers
             {
                 return View(bookCollection);
             }
-            
+
             try
             {
                 _bookCollectionFacade.UserEditCollection(bookCollection);

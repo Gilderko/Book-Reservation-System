@@ -7,10 +7,10 @@ using BL.Services;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
+using Infrastructure.Query.Operators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Infrastructure.Query.Operators;
 using System.Threading.Tasks;
 
 namespace BL.Facades
@@ -82,7 +82,7 @@ namespace BL.Facades
             _unitOfWork.Commit();
         }
 
-        public async Task<bool> CheckIfAlreadyHasBook(int ereaderId,int bookdId)
+        public async Task<bool> CheckIfAlreadyHasBook(int ereaderId, int bookdId)
         {
             var collsToLoad = new string[]
             {
@@ -104,7 +104,7 @@ namespace BL.Facades
             return await _eReaderInstancePrevService.GetEReaderInstancesByOwner(ownerId);
         }
 
-        public async Task<(IEnumerable<EReaderInstancePrevDTO>,int)> GetEReaderInstancePrevsBy(int? page,
+        public async Task<(IEnumerable<EReaderInstancePrevDTO>, int)> GetEReaderInstancePrevsBy(int? page,
                                                                                          int? pageSize,
                                                                                          string description,
                                                                                          string company,
@@ -112,11 +112,11 @@ namespace BL.Facades
                                                                                          int? memorySizeFrom,
                                                                                          int? memorySizeTo)
         {
-            FilterDto eReaderFilter = new FilterDto();
-            List<PredicateDto> eReaderPredicates = new List<PredicateDto>();
+            var eReaderFilter = new FilterDto();
+            var eReaderPredicates = new List<PredicateDto>();
 
-            FilterDto instancesFilter = new FilterDto();
-            List<PredicateDto> instancesPredicates = new List<PredicateDto>();
+            var instancesFilter = new FilterDto();
+            var instancesPredicates = new List<PredicateDto>();
 
             if (company is not null)
             {

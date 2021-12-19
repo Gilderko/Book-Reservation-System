@@ -1,5 +1,4 @@
-﻿using Autofac.Features.OwnedInstances;
-using BL.DTOs.ConnectionTables;
+﻿using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Filters;
@@ -23,7 +22,7 @@ namespace BL.Facades
         public AuthorFacade(IUnitOfWork unitOfWork,
                             ICRUDService<AuthorDTO, Author> authorService,
                             ICRUDService<AuthorBookDTO, AuthorBook> authorBookService,
-                            ICRUDService<AuthorPrevDTO, Author> authorPrevService) 
+                            ICRUDService<AuthorPrevDTO, Author> authorPrevService)
         {
             _unitOfWork = unitOfWork;
             _authorService = authorService;
@@ -58,7 +57,7 @@ namespace BL.Facades
         public async Task AddBookToAuthor(AuthorDTO author, BookDTO book)
         {
             await _authorBookService.Insert(new AuthorBookDTO
-            {                
+            {
                 Author = author,
                 AuthorID = author.Id,
 
@@ -90,7 +89,7 @@ namespace BL.Facades
             {
                 RequestedPageNumber = page,
                 PageSize = pageSize
-            }; 
+            };
 
             List<PredicateDto> predicates = new();
 

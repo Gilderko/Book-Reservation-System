@@ -1,8 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 using AutoMapper;
 using BL.DTOs.Entities.User;
 using BL.DTOs.Filters;
@@ -10,6 +5,10 @@ using BL.QueryObjects;
 using DAL.Entities;
 using Infrastructure;
 using Infrastructure.Query.Operators;
+using System;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
 {
@@ -20,12 +19,12 @@ namespace BL.Services.Implementations
         private const int PBKDF2IterCount = 100000;
         private const int PBKDF2SubkeyLength = 160 / 8;
         private const int saltSize = 128 / 8;
-        
-        public UserService(IRepository<User> repo, 
+
+        public UserService(IRepository<User> repo,
                             IMapper mapper,
-                            QueryObject<UserDTO,User> baseQuery,
-                            QueryObject<UserShowDTO, User> query, 
-                            QueryObject<UserEditDTO, User> queryEdit) : base (repo, mapper, baseQuery)
+                            QueryObject<UserDTO, User> baseQuery,
+                            QueryObject<UserShowDTO, User> query,
+                            QueryObject<UserEditDTO, User> queryEdit) : base(repo, mapper, baseQuery)
         {
             _resQueryObject = query;
             _resEditQueryObject = queryEdit;
@@ -47,7 +46,7 @@ namespace BL.Services.Implementations
 
             return null;
         }
-        
+
         public async Task<UserShowDTO> AuthorizeUserAsync(UserLoginDTO login)
         {
             // get userId
@@ -74,7 +73,7 @@ namespace BL.Services.Implementations
 
             UserDTO userDto = new UserDTO();
             Mapper.Map(user, userDto);
-            
+
             await Insert(userDto);
         }
 

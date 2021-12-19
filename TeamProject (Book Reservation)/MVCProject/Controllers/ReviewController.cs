@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using BL.DTOs.Entities.Review;
+using BL.Facades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BL.Facades;
-using BL.DTOs.Entities.Review;
 using MVCProject.Config;
 using MVCProject.StateManager;
+using System;
+using System.Threading.Tasks;
 
 namespace MVCProject.Controllers
 {
@@ -37,7 +37,7 @@ namespace MVCProject.Controllers
 
         public IActionResult CreateReview(int? id)
         {
-            if (id == null || !User.IsInRole(GlobalConstants.UserRoleName)) 
+            if (id == null || !User.IsInRole(GlobalConstants.UserRoleName))
             {
                 return NotFound();
             }
@@ -133,7 +133,7 @@ namespace MVCProject.Controllers
             {
                 return NotFound();
             }
-            
+
             var review = await GetWithReferences(id.Value);
             if (review == null || (int.Parse(User.Identity.Name) != review.UserID && !User.IsInRole(GlobalConstants.AdminRoleName)))
             {

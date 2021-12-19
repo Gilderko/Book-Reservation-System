@@ -75,7 +75,7 @@ namespace BL.Facades
                 };
 
                 foreach (var bookInstance in book.BookInstances)
-                {   
+                {
                     bookInstance.Owner = await _userService.GetByID(bookInstance.BookOwnerId);
 
                     var predicate = new PredicateDto(nameof(ReservationBookInstanceDTO.BookInstanceID), bookInstance.Id, ValueComparingOperator.Equal);
@@ -89,7 +89,7 @@ namespace BL.Facades
             }
 
             return book;
-        }        
+        }
 
         public void Update(BookDTO book)
         {
@@ -115,7 +115,7 @@ namespace BL.Facades
                                                                                                         DateTime? releaseFrom,
                                                                                                         DateTime? releaseTo)
         {
-            FilterDto filter = new FilterDto()
+            var filter = new FilterDto()
             {
                 PageSize = pageSize,
                 RequestedPageNumber = pageNumber
@@ -211,7 +211,7 @@ namespace BL.Facades
 
             var result = await _authorBookService.FilterBy(filter);
 
-            if (result.items.Count() == 0)
+            if (!result.items.Any())
             {
                 await _authorBookService.Insert(newAuthorBookEntry);
                 _unitOfWork.Commit();
@@ -226,7 +226,7 @@ namespace BL.Facades
                 new PredicateDto(nameof(BookGenreDTO.GenreID),newBookGenreEntry.GenreID,ValueComparingOperator.Equal)
             };
 
-            var compPredicate = new CompositePredicateDto(predicates,LogicalOperator.AND);
+            var compPredicate = new CompositePredicateDto(predicates, LogicalOperator.AND);
 
             var filter = new FilterDto()
             {
@@ -235,7 +235,7 @@ namespace BL.Facades
 
             var result = await _bookGenreService.FilterBy(filter);
 
-            if (result.items.Count() == 0)
+            if (!result.items.Any())
             {
                 await _bookGenreService.Insert(newBookGenreEntry);
                 _unitOfWork.Commit();

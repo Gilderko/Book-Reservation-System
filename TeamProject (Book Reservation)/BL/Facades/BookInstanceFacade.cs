@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BL.DTOs.Entities.Book;
+﻿using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
 using BL.DTOs.Entities.Reservation;
 using BL.DTOs.Entities.User;
@@ -11,6 +7,10 @@ using BL.Services;
 using DAL.Entities;
 using Infrastructure;
 using Infrastructure.Query.Operators;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BL.Facades
 {
@@ -30,7 +30,7 @@ namespace BL.Facades
                                   IBookInstancePreviewService bookInstancePreviewService,
                                   ICRUDService<UserPrevDTO, User> userPrevService,
                                   IAuthorService authorService,
-                                  ICRUDService<BookDTO,Book> bookService)
+                                  ICRUDService<BookDTO, Book> bookService)
         {
             _unitOfWork = unitOfWork;
             _bookInstanceService = bookInstanceService;
@@ -61,12 +61,12 @@ namespace BL.Facades
                 nameof(BookInstancePrevDTO.FromBookTemplate),
             };
 
-            var result = await _bookInstancePreviewService.FilterBy(filter, refsToLoad);
-            await _authorService.LoadAuthors(result.items);
+            var result = (await _bookInstancePreviewService.FilterBy(filter, refsToLoad)).items;
+            await _authorService.LoadAuthors(result);
 
-            return result.items;
+            return result;
         }
-        
+
         public async Task Create(BookInstanceDTO bookInstance)
         {
             await _bookInstanceService.Insert(bookInstance);
@@ -93,7 +93,7 @@ namespace BL.Facades
         public async Task<IEnumerable<ReservationPrevDTO>> GetBookReservationPrevsByBookInstanceAndDate(int bookInstanceId, DateTime? from, DateTime? to)
         {
             var reservationPreviews = (await _reservationService.GetReservationPrevsByBookInstance(bookInstanceId, from, to)).ToList();
-            
+
             foreach (var reservationPrev in reservationPreviews)
             {
                 var userPrev = await _userPrevService.GetByID(reservationPrev.UserID);

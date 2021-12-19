@@ -1,8 +1,5 @@
 ﻿using BL.DTOs.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MVCProject.StateManager.FilterStates
 {
@@ -28,6 +25,6 @@ namespace MVCProject.StateManager.FilterStates
         public int? PageFrom { get; set; }
         public int? PageTo { get; set; }
         public DateTime? ReleaseFrom { get; set; }
-        public DateTime? ReleaseTo { get; set; }  
+        public DateTime? ReleaseTo { get; set; }
     }
 }

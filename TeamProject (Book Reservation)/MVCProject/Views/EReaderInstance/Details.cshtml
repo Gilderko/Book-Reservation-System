@@ -87,7 +87,7 @@
 @if (ViewContext.HttpContext.User.IsInRole(GlobalConstants.UserRoleName) && Model.EreaderOwnerId == int.Parse(User.Identity.Name))
 {
     <div>
-        <a asp-action="UserEditEReaderInstance" asp-route-id="@Model.Id">User Edit</a>
+        <a asp-action="UserEditEReaderInstance" asp-route-id="@Model.Id">Edit my e-readers</a>
         <a asp-action="UserEReaders"> | Back to my EReaders</a>
     </div>
 }

@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace BL.Services.Implementations
 {
-    public class EBookPreviewService : CRUDService<EBookPrevDTO, EBook>, 
+    public class EBookPreviewService : CRUDService<EBookPrevDTO, EBook>,
         IEBookPreviewService
     {
-       
-        public EBookPreviewService(IRepository<EBook> repo, 
-                                   IMapper mapper, 
+
+        public EBookPreviewService(IRepository<EBook> repo,
+                                   IMapper mapper,
                                    QueryObject<EBookPrevDTO, EBook> resQueryObject) : base(repo, mapper, resQueryObject)
         {
 

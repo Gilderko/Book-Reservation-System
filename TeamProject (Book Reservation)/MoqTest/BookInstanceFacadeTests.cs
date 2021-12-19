@@ -2,28 +2,16 @@ using Autofac.Extras.Moq;
 using AutoMapper;
 using BL.Config;
 using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.Author;
-using BL.DTOs.Entities.Book;
-using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.BookInstance;
-using BL.DTOs.Entities.EBook;
-using BL.DTOs.Entities.EReader;
-using BL.DTOs.Entities.EReaderInstance;
-using BL.DTOs.Entities.Genre;
-using BL.DTOs.Entities.Reservation;
 using BL.DTOs.Entities.User;
-using BL.DTOs.Enums;
 using BL.Facades;
 using BL.QueryObjects;
-using BL.Services;
 using BL.Services.Implementations;
-using DAL;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
 using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,14 +45,14 @@ namespace MoqTest
             var authorBookQuery = mock.Create<IQuery<AuthorBook>>();
 
             var bookInstanceQueryObject =
-                new QueryObject<BookInstancePrevDTO, BookInstance>(_mapper,bookInstanceQuery);
-               
+                new QueryObject<BookInstancePrevDTO, BookInstance>(_mapper, bookInstanceQuery);
+
             var authorBookQueryObject =
                  new QueryObject<AuthorBookDTO, AuthorBook>(_mapper, authorBookQuery);
 
             var bookInstancePrevService = new BookInstancePreviewService
                 (null, _mapper, bookInstanceQueryObject, null);
-            var authorService = new AuthorService(authorRepo,_mapper,null,authorBookQueryObject);
+            var authorService = new AuthorService(authorRepo, _mapper, null, authorBookQueryObject);
 
             var bookInstanceFacadee = new BookInstanceFacade(uow, null, null, bookInstancePrevService, null, authorService, null);
 
@@ -115,7 +103,7 @@ namespace MoqTest
             foreach (var entry in data.Item1)
             {
                 Assert.Contains(mock.Mock<IQuery<AuthorBook>>().Invocations.Where(invo => invo.Method.Name == nameof(IQuery<AuthorBook>.Where))
-                    ,invo => (int)(invo.Arguments[0] as SimplePredicate).ComparedValue == entry.BookTemplateID);
+                    , invo => (int)(invo.Arguments[0] as SimplePredicate).ComparedValue == entry.BookTemplateID);
             }
 
             Assert.True(result.Count() == data.Item1.Count());
@@ -154,7 +142,7 @@ namespace MoqTest
             {
                 new AuthorBook()
                 {
-                    AuthorID = 1,                    
+                    AuthorID = 1,
                 },
                 new AuthorBook()
                 {
@@ -173,12 +161,12 @@ namespace MoqTest
         {
             var bookInstances = new List<BookInstance>()
             {
-                
+
             };
 
             var randomAuthors = new List<AuthorBook>()
             {
-                
+
             };
 
             return new Tuple<List<BookInstance>, List<AuthorBook>>(bookInstances, randomAuthors);
@@ -220,7 +208,7 @@ namespace MoqTest
 
             var randomAuthors = new List<AuthorBook>()
             {
-                
+
             };
 
             return new Tuple<List<BookInstance>, List<AuthorBook>>(bookInstances, randomAuthors);
@@ -249,7 +237,7 @@ namespace MoqTest
             var userService = new CRUDService<UserPrevDTO, User>(userRepo, _mapper, null);
             var reservationServivce = new ReservationService(null, _mapper, null, null, reservationBookInstanceQueryObject);
 
-            var bookInstanceFacadee = new BookInstanceFacade(uow, null, reservationServivce, null, userService, null,null);
+            var bookInstanceFacadee = new BookInstanceFacade(uow, null, reservationServivce, null, userService, null, null);
 
             return bookInstanceFacadee;
         }
@@ -307,7 +295,7 @@ namespace MoqTest
             {
                 filteredResult = data.Item4.Where(x => x.Reservation.DateFrom >= data.Item2 && x.Reservation.DateTill <= data.Item3);
             }
-            
+
 
             Assert.True(mock.Mock<IRepository<User>>().
                 Invocations.Where(invo => invo.Method.Name == nameof(IRepository<User>.GetByID)).Count() == filteredResult.Count());
@@ -329,14 +317,14 @@ namespace MoqTest
             var reservationBookInstanceList = new List<ReservationBookInstance>()
             {
                 new ReservationBookInstance()
-                {                    
+                {
                     Reservation = new Reservation()
                     {
                         Id = 1,
                         UserID = 2,
                         DateFrom = new DateTime(1999,1,1),
                         DateTill = new DateTime(2000,1,1)
-                    }, 
+                    },
                 },
                 new ReservationBookInstance()
                 {
@@ -360,7 +348,7 @@ namespace MoqTest
                 }
             };
 
-            return new Tuple<int, DateTime?, DateTime?, List<ReservationBookInstance>>(bookInstance.Id, new DateTime(1998,1,1), new DateTime(2002,1,1), reservationBookInstanceList);
+            return new Tuple<int, DateTime?, DateTime?, List<ReservationBookInstance>>(bookInstance.Id, new DateTime(1998, 1, 1), new DateTime(2002, 1, 1), reservationBookInstanceList);
         }
 
         public Tuple<int, DateTime?, DateTime?, List<ReservationBookInstance>> GetGetBookReservationPrevsByBookInstanceAndDate2()
@@ -381,7 +369,7 @@ namespace MoqTest
                         DateFrom = new DateTime(1999,1,1),
                         DateTill = new DateTime(2000,1,1)
                     },
-                },                
+                },
             };
 
             return new Tuple<int, DateTime?, DateTime?, List<ReservationBookInstance>>(bookInstance.Id, null, null, reservationBookInstanceList);
@@ -396,7 +384,7 @@ namespace MoqTest
 
             var reservationBookInstanceList = new List<ReservationBookInstance>()
             {
-                
+
             };
 
             return new Tuple<int, DateTime?, DateTime?, List<ReservationBookInstance>>(bookInstance.Id, null, null, reservationBookInstanceList);
@@ -434,7 +422,7 @@ namespace MoqTest
                 (null, _mapper, bookInstanceQueryObject, null);
             var authorService = new AuthorService(authorRepo, _mapper, null, authorBookQueryObject);
 
-            var bookInstanceFacadee = new BookInstanceFacade(uow, null, null, bookInstancePrevService, null, authorService,null);
+            var bookInstanceFacadee = new BookInstanceFacade(uow, null, null, bookInstancePrevService, null, authorService, null);
 
             return bookInstanceFacadee;
         }
@@ -494,7 +482,7 @@ namespace MoqTest
             Assert.True(mock.Mock<IRepository<Author>>().Invocations.Count == data.Item2.Count * data.Item3.Count);
         }
 
-        public Tuple<int,List<BookInstance>, List<AuthorBook>> GetEntriesGetBookInstancePrevsByUser()
+        public Tuple<int, List<BookInstance>, List<AuthorBook>> GetEntriesGetBookInstancePrevsByUser()
         {
             var bookInstances = new List<BookInstance>()
             {
@@ -563,7 +551,7 @@ namespace MoqTest
 
             var randomAuthors = new List<AuthorBook>()
             {
-                
+
             };
 
             return new Tuple<int, List<BookInstance>, List<AuthorBook>>(1, bookInstances, randomAuthors);
@@ -581,7 +569,7 @@ namespace MoqTest
                     {
                         Id = 1
                     }
-                },                
+                },
             };
 
             var randomAuthors = new List<AuthorBook>()

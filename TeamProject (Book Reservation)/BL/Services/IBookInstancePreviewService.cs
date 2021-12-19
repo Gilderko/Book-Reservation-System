@@ -1,9 +1,8 @@
-﻿using System;
-using DAL.Entities;
-using System.Collections.Generic;
-using BL.DTOs.Entities.Book;
+﻿using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookInstance;
-using BL.DTOs.Entities.User;
+using DAL.Entities;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BL.Services

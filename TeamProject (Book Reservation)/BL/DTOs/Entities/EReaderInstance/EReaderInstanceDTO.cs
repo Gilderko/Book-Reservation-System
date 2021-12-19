@@ -18,7 +18,7 @@ namespace BL.DTOs.Entities.EReaderInstance
         public int EReaderTemplateID { get; set; }
 
         [Required]
-        public int EreaderOwnerId { get; set; }        
+        public int EreaderOwnerId { get; set; }
 
         public UserDTO Owner { get; set; }
 

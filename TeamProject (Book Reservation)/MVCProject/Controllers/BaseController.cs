@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MVCProject.Controllers 
+namespace MVCProject.Controllers
 {
     public class BaseController : Controller
     {
@@ -9,7 +9,7 @@ namespace MVCProject.Controllers
         protected int PageSize
         {
             get
-            {                
+            {
                 return _pageSize;
             }
             set

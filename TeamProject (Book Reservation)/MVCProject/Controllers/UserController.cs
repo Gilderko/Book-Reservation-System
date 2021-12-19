@@ -90,7 +90,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            int id = int.Parse(User.Identity.Name);            
+            int id = int.Parse(User.Identity.Name);
 
             var user = await _userFacade.Get(id);
             if (user == null)
@@ -134,7 +134,7 @@ namespace MVCProject.Controllers
             {
                 return View(user);
             }
-            
+
             try
             {
                 _userFacade.UpdateCredentials(user);
@@ -181,7 +181,7 @@ namespace MVCProject.Controllers
             {
                 return View(user);
             }
-            
+
             try
             {
                 _userFacade.Update(user);
@@ -233,7 +233,7 @@ namespace MVCProject.Controllers
                 return NotFound();
             }
 
-            await _userFacade.Delete(id,reservations);
+            await _userFacade.Delete(id, reservations);
             return RedirectToAction(nameof(Index));
         }
 
@@ -268,7 +268,7 @@ namespace MVCProject.Controllers
             {
                 return View(user);
             }
-            
+
             try
             {
                 //Here should be a check for existing user 
@@ -321,7 +321,7 @@ namespace MVCProject.Controllers
             {
                 return View(userLogin);
             }
-            
+
             try
             {
                 var user = await _userFacade.LoginAsync(userLogin);
@@ -344,7 +344,7 @@ namespace MVCProject.Controllers
                 //Set User Identity Name to actual user Id - easier access with user connected operations
                 new Claim(ClaimTypes.Name, user.Id.ToString())
             };
-            
+
             if (user.IsAdmin)
             {
                 claims.Add(new Claim(ClaimTypes.Role, GlobalConstants.UserRoleName));

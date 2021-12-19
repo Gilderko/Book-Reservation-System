@@ -1,26 +1,17 @@
 using Autofac.Extras.Moq;
 using AutoMapper;
 using BL.Config;
-using BL.DTOs.ConnectionTables;
 using BL.DTOs.Entities.Author;
-using BL.DTOs.Entities.Book;
-using BL.DTOs.Entities.BookCollection;
 using BL.DTOs.Entities.EBook;
-using BL.DTOs.Entities.EReader;
-using BL.DTOs.Entities.EReaderInstance;
 using BL.DTOs.Entities.Genre;
 using BL.DTOs.Enums;
 using BL.Facades;
 using BL.QueryObjects;
-using BL.Services;
 using BL.Services.Implementations;
-using DAL;
 using DAL.Entities;
-using DAL.Entities.ConnectionTables;
 using Infrastructure;
 using Infrastructure.Query;
 using Infrastructure.Query.Predicates;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +21,7 @@ using Xunit;
 
 
 namespace MoqTest
-{   
+{
     public class EBookFacadeTests
     {
         private IMapper _mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
@@ -76,7 +67,7 @@ namespace MoqTest
 
                 var data = GetEntries();
 
-                var (result,_) = await bookCollectionFacade.GetBookPreviews(null,null,data.Item1, data.Item2, data.Item3, data.Item4, data.Item5, data.Item6, data.Item7,
+                var (result, _) = await bookCollectionFacade.GetBookPreviews(null, null, data.Item1, data.Item2, data.Item3, data.Item4, data.Item5, data.Item6, data.Item7,
                 data.Rest.Item1, data.Rest.Item2, data.Rest.Item3);
 
                 AuthorInvocationsInclude(mock, data.Item2);
@@ -113,7 +104,7 @@ namespace MoqTest
                                 .Where(invo => invo.Arguments[0] is CompositePredicate)
                                 .Select(invo => invo.Arguments[0] as CompositePredicate).First();
 
-            Assert.Contains(predicates.Predicates, pred => (pred as SimplePredicate).ComparedValue.Equals(argument));                               
+            Assert.Contains(predicates.Predicates, pred => (pred as SimplePredicate).ComparedValue.Equals(argument));
         }
 
         private static void GenreInvocationsInclude(AutoMock mock, GenreTypeDTO[] argument)
@@ -145,7 +136,7 @@ namespace MoqTest
         }
 
 
-        public Tuple<string, string, string, GenreTypeDTO[], LanguageDTO?,int?,int?, Tuple<DateTime?, DateTime?, EBookFormatDTO?>>
+        public Tuple<string, string, string, GenreTypeDTO[], LanguageDTO?, int?, int?, Tuple<DateTime?, DateTime?, EBookFormatDTO?>>
             GetEntries()
         {
             string title = "Ahoj";

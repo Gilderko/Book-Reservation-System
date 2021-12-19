@@ -14,7 +14,7 @@ namespace BL.Config
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule(new AutofacEFInfraConfig());                  
+            builder.RegisterModule(new AutofacEFInfraConfig());
 
             builder.RegisterGeneric(typeof(QueryObject<,>))
                 .InstancePerDependency();

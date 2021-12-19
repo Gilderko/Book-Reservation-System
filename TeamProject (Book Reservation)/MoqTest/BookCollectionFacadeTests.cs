@@ -1,20 +1,15 @@
 using Autofac.Extras.Moq;
 using AutoMapper;
 using BL.Config;
-using BL.DTOs.ConnectionTables;
-using BL.DTOs.Entities.Author;
 using BL.DTOs.Entities.Book;
 using BL.DTOs.Entities.BookCollection;
 using BL.Facades;
 using BL.QueryObjects;
-using BL.Services;
 using BL.Services.Implementations;
-using DAL;
 using DAL.Entities;
 using DAL.Entities.ConnectionTables;
 using Infrastructure;
 using Infrastructure.Query;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +18,7 @@ using Xunit;
 
 
 namespace MoqTest
-{   
+{
     public class BookCollectionFacadeTests
     {
         private IMapper _mapper = new Mapper(new MapperConfiguration(MappingProfile.ConfigureMapping));
@@ -36,7 +31,7 @@ namespace MoqTest
                 .Setup(x => x.Execute().Result)
                 .Returns(result().Item2);
 
-            var bookQuery = mock.Create<IQuery<Book>>();           
+            var bookQuery = mock.Create<IQuery<Book>>();
 
             var authorRepo = mock.Mock<IRepository<Author>>().Object;
 
@@ -63,7 +58,7 @@ namespace MoqTest
 
                 Assert.True(result.Count() == data.Item2.Items.Count());
 
-                Assert.True(mock.Mock<IRepository<Author>>().Invocations.Count == authorRepoCount);               
+                Assert.True(mock.Mock<IRepository<Author>>().Invocations.Count == authorRepoCount);
             }
         }
 

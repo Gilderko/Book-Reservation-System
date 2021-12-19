@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace BL.DTOs.Entities.User
 {
-    public class UserShowDTO: BaseEntityDTO
+    public class UserShowDTO : BaseEntityDTO
     {
         public string Email { get; set; }
 

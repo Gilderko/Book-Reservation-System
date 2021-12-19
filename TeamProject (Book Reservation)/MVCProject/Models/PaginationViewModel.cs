@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MVCProject.Models
 {
@@ -10,7 +7,7 @@ namespace MVCProject.Models
         public int LeftBound { get; private set; }
         public int RightBound { get; private set; }
         public int Current { get; private set; }
-        public int Last => Math.Max((_listCount + _pageSize - 1) / _pageSize,1);
+        public int Last => Math.Max((_listCount + _pageSize - 1) / _pageSize, 1);
 
         private readonly int _listCount;
         private readonly int _maxNumberOfPages;
@@ -34,7 +31,7 @@ namespace MVCProject.Models
             }
 
             LeftBound = 1;
-            RightBound = Math.Max((_listCount + _pageSize - 1) / _pageSize,1);
+            RightBound = Math.Max((_listCount + _pageSize - 1) / _pageSize, 1);
         }
     }
 }

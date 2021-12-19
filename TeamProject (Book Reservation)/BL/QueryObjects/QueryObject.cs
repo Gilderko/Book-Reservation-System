@@ -4,7 +4,6 @@ using BL.DTOs;
 using BL.DTOs.Filters;
 using DAL.Entities;
 using Infrastructure.Query;
-using Infrastructure.Query.Predicates;
 using System;
 using System.Threading.Tasks;
 
